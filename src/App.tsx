@@ -703,7 +703,7 @@ function EuropeCorner() {
       </div>)}
     </div>
     <h3 className="eu-nt-t">גביע אירופה (EHF) · המועדונים</h3>
-    <p className="note">שתי קבוצות הנשים כבר בסיבוב 3; רמת השרון וחולון מחזיקות יתרון חוץ לפני הגומלין; מכבי ראשל״צ הודחה בסיבוב 2 אחרי ניצחון והפסד צמוד. מקור: eurohandball.com ו-handballisr.co.il, נבדק 25/10/2026.</p>
+    <p className="note">שתי קבוצות הנשים כבר בסיבוב 3; רמת השרון השלימה ניצחון כפול על יוניקוס ועלתה לסיבוב 3; חולון איבדה יתרון מהמשחק הראשון והודחה; מכבי ראשל״צ הודחה אחרי ניצחון והפסד צמוד. מקור: eurohandball.com ו-handballisr.co.il, נבדק 25/10/2026.</p>
     <div className="eu-grid" ref={euRef}>
       {europe.map((e, i) => <div className="eu-card" key={i}>
         <span className="kick">גביע אירופה · {e.gender}</span>
