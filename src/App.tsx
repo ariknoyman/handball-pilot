@@ -124,13 +124,13 @@ function icsUrl(g: Fx) {
 const form = (name: string) => [...results, ...resultsW].filter(r => r.h === name || r.a === name).sort((x, y) => x.r - y.r).slice(-3).map(r => { if (r.hs === r.as) return 'd'; const hw = r.hs > r.as; const mine = r.h === name; return (hw === mine) ? 'w' : 'l'; });
 function FxCard({ g }: { g: Fx }) {
   return <article className="mc">
-    <div className="mc-top"><span className={'pill p-' + g.g}>{g.league}</span><span className="mc-rd">מחזור {g.round}</span>{g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}{Date.parse(g.iso) <= Date.now() && <span className="tip" tabIndex={0}><Ico d={I.info} /><span className="tip-p">מועד הפתיחה עבר; התוצאה טרם עודכנה במקור הרשמי, לכן אינה מוצגת.</span></span>}</div>
+    <div className="mc-top"><span className={'pill p-' + g.g}>{g.league}</span><span className="mc-rd">מחזור {g.round}</span>{g.pp && <span className="pill pp">משחק נדחה</span>}{g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}{Date.parse(g.iso) <= Date.now() && <span className="tip" tabIndex={0}><Ico d={I.info} /><span className="tip-p">מועד הפתיחה עבר; התוצאה טרם עודכנה במקור הרשמי, לכן אינה מוצגת.</span></span>}</div>
     <div className="mc-body">
       <div className="mc-team"><Crest name={g.h} size={56} /><strong>{sn(g.h)}</strong></div>
       <div className="mc-mid"><b>{g.t}</b><span>{g.day} {g.d}</span></div>
       <div className="mc-team"><Crest name={g.a} size={56} /><strong>{sn(g.a)}</strong></div>
     </div>
-    <div className="mc-foot"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></svg><span className="hall">{g.hall}</span>
+    <div className="mc-foot"><span className="loc"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></svg><span className="hall">{g.hall}</span></span>
       <a className="act" href={icsUrl(g)} download="handball-game.ics" aria-label="הוסף ליומן">יומן</a><ShareBtn kind="fx" g={g} /></div>
   </article>;
 }
@@ -235,7 +235,7 @@ function Table({ n, rows, label, withForm = true, compact = false }: { n?: numbe
     {list.map((r, i) => { const gd = r[5] - r[6];
       return <div key={r[0]} className={'lt-r' + (i < 2 ? ' lead' : '')} role="row">
         <span className="pos">{i + 1}</span>
-        <span className="tm"><Crest name={r[0]} size={30} /><b className="tmf">{(teams[r[0]] || wteams[r[0]])?.full || r[0]}</b>{withForm && <span className="frm" aria-label="כושר: 3 משחקים אחרונים">{form(r[0]).map((x, k) => <i key={k} className={'ft ' + x}>{x === 'w' ? 'נ' : x === 'd' ? 'ת' : 'ה'}</i>)}</span>}</span>
+        <span className="tm"><Crest name={r[0]} size={30} /><b className="tmf">{sn(r[0])}</b></span>
         <span>{r[1]}</span>
         <span className={'gd' + (gd > 0 ? ' plus' : gd < 0 ? ' neg' : '')}>{gd > 0 ? '+' + gd : gd}</span>
         <span className="pts"><CountUp to={r[7]} /></span>
@@ -308,12 +308,13 @@ function SrcI({ url, label }: { url: string; label?: string }) {
   return <a className="srci" href={url} target="_blank" rel="noopener" aria-label={label || 'מקור הנתונים'} title={label || 'מקור הנתונים'}><Ico d={I.info} /></a>;
 }
 function SecHead({ t, to, l, src }: { t: string; to?: string; l?: string; src?: string }) {
-  return <div className="sh"><h2>{t}{src && <SrcI url={src} />}</h2>{to && <Link to={to}>{l || 'הכל'} ‹</Link>}</div>;
+  return <div className="sh"><h2>{t}{src && <>{'\u2060'}<SrcI url={src} /></>}</h2>{to && <Link to={to}><span className="l-full">{l || 'הכל'}</span><span className="l-short">הכל</span> ‹</Link>}</div>;
 }
 
-function NewsCard({ n, big }: { n: News; big?: boolean }) {
+function NewsCard({ n, big, wide }: { n: News; big?: boolean; wide?: boolean }) {
+  const cls = 'nc' + (big ? ' big' : '') + (wide ? ' wide' : '');
   const inner = <><div className="nc-img"><img src={imgs[n.img]} alt="" /></div><div className="nc-t"><span className="tag">{n.tag}</span><h3>{n.title}</h3>{big && n.teaser && <p>{n.teaser}</p>}{n.date && <small>{n.date}</small>}</div></>;
-  return n.id === '36458' ? <Link to="/news/36458" className={'nc' + (big ? ' big' : '')}>{inner}</Link> : <a className={'nc' + (big ? ' big' : '')} href={n.url}>{inner}</a>;
+  return n.id === '36458' ? <Link to="/news/36458" className={cls}>{inner}</Link> : <a className={cls} href={n.url}>{inner}</a>;
 }
 
 function TvBand() {
@@ -466,7 +467,8 @@ function Matches() {
   const list = fixtures.filter(g => f === 'all' || g.g === f);
   const days = [...new Set(list.map(g => g.day + ' ' + g.d))];
   const rds = [6, 5, 4];
-  return <div className="page"><h1 className="pt">מרכז משחקים<SrcI url={SITE} /><span className="tip" tabIndex={0}><Ico d={I.info} /><span className="tip-p">הלוח כפי שמופיע באתר האיגוד. במשחקים שמועד הפתיחה שלהם עבר, התוצאה עדיין לא עודכנה במקור. 0:0 במקור אינו מוצג כתוצאה מאומתת.</span></span></h1>
+  return <div className="page"><h1 className="pt">מרכז משחקים<SrcI url={SITE} /></h1>
+    <p className="note">הלוח כפי שמופיע באתר האיגוד. במשחקים שמועד הפתיחה שלהם עבר, התוצאה עדיין לא עודכנה במקור - 0:0 במקור אינו מוצג כתוצאה מאומתת.</p>
     <div className="seg2" role="tablist"><button role="tab" aria-selected={tab === 'up'} className={tab === 'up' ? 'on' : ''} onClick={() => setTab('up')}>לוח משחקים</button><button role="tab" aria-selected={tab === 'res'} className={tab === 'res' ? 'on' : ''} onClick={() => setTab('res')}>תוצאות</button></div>
     {tab === 'up' ? <>
       <div className="chips">{([['all', 'הכל'], ['m', 'ליגת WINNER'], ['w', 'ליגת אתנה']] as const).map(([k, l]) => <button key={k} className={f === k ? 'on' : ''} onClick={() => setF(k)}>{l}</button>)}</div>
@@ -513,7 +515,7 @@ function Tables() {
 
 function NewsList() {
   useTitle('חדשות');
-  return <div className="page"><h1 className="pt">חדשות<SrcI url={SITE + '/news.asp'} /></h1><div className="ng"><NewsCard n={news[0]} big />{news.slice(1).map(n => <NewsCard key={n.id} n={n} />)}</div>
+  return <div className="page"><h1 className="pt">חדשות<SrcI url={SITE + '/news.asp'} /></h1><div className="ng"><NewsCard n={news[0]} big />{news.slice(1).map((n, i, arr) => <NewsCard key={n.id} n={n} wide={i === arr.length - 1} />)}</div>
     <a className="btn ghost wide" href={SITE + '/archive.asp'}>ארכיון החדשות באתר האיגוד</a></div>;
 }
 
@@ -598,10 +600,10 @@ function V1() {
           <span className="cd-u"><b>{pad(cd.m)}</b><small>דקות</small></span><i>:</i>
           <span className="cd-u"><b>{pad(cd.s)}</b><small>שניות</small></span>
         </div>}
-        <div className="v1-vs"><div><Crest name={NEXT.h} size={140} /><strong>{teams[NEXT.h].full}</strong></div><div className="v1-t"><b>{NEXT.t}</b><small>{NEXT.hall}</small></div><div><Crest name={NEXT.a} size={140} /><strong>{teams[NEXT.a].full}</strong></div></div>
+        <div className="v1-vs"><div><Crest name={NEXT.h} size={140} /><strong>{sn(NEXT.h)}</strong></div><div className="v1-t"><b>{NEXT.t}</b><small>{NEXT.hall}</small></div><div><Crest name={NEXT.a} size={140} /><strong>{sn(NEXT.a)}</strong></div></div>
         <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a><Link className="btn ghost" to="/matches">כל המשחקים</Link>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
       </> : <>
-        <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{teams[finalRes.h].full}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{teams[finalRes.a].full}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
+        <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{sn(finalRes.h)}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{sn(finalRes.a)}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
         <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
       </>}
       <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}>

@@ -159,7 +159,7 @@ main { width: 100%; }
 .ng { display: grid; gap: 14px; }
 .nc { display: grid; gap: 12px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line); overflow: hidden; transition: transform .25s; }
 .nc:hover { transform: translateY(-3px); }
-.nc-img { aspect-ratio: 16/10; overflow: hidden; } .nc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; } .nc:hover .nc-img img { transform: scale(1.05); }
+.nc-img { aspect-ratio: 16/9; overflow: hidden; } .nc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; } .nc:hover .nc-img img { transform: scale(1.05); }
 .nc-t { padding: 2px 16px 16px; display: grid; gap: 8px; align-content: start; }
 .nc h3 { font-size: 19px; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
 .nc.big h3 { font-size: 26px; font-weight: 900; } .nc p { color: var(--mut); font-size: 15px; }
@@ -219,7 +219,7 @@ main { width: 100%; }
 .pc-m { display: flex; align-items: center; gap: 10px; font-size: 19px; } .pc-m em { font-style: normal; color: #b9c3e6; font-size: 14px; } .player-cap small { color: #cfd6f2; }
 .rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; }
 .vcard { flex: none; width: 240px; scroll-snap-align: start; display: grid; gap: 6px; align-content: start; } .vcard b { font-size: 15px; } .vcard small { color: var(--mut); }
-.vc-img { position: relative; aspect-ratio: 16/10; border-radius: 16px; overflow: hidden; } .vc-img img { width: 100%; height: 100%; object-fit: cover; } .vc-img .play { opacity: .95; }
+.vc-img { position: relative; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; } .vc-img img { width: 100%; height: 100%; object-fit: cover; } .vc-img .play { opacity: .95; }
 .pod { display: grid; gap: 0; border-radius: 22px; overflow: hidden; background: var(--s1); border: 1px solid var(--line); } .pod img { aspect-ratio: 16/8; width: 100%; object-fit: cover; } .pod div { padding: 14px 16px 18px; display: grid; gap: 6px; } .pod h3 { font-size: 20px; font-weight: 800; }
 
 .foot { margin-top: 20px; padding: 26px 20px 34px; border-top: 1px solid var(--line); display: flex; gap: 14px; align-items: flex-start; color: var(--mut); font-size: 14px; max-width: 1200px; margin-inline: auto; }
@@ -258,14 +258,14 @@ main { width: 100%; }
 .dnav + .soc { margin-inline-start: 0; }
 .soc a { display: inline-flex; align-items: center; gap: 8px; min-width: 38px; height: 38px; justify-content: center; border-radius: 99px; background: var(--s2); color: var(--ink); font-weight: 700; font-size: 14px; padding: 0 10px; transition: .2s; }
 .soc a:hover { transform: translateY(-2px); background: #1d2850; }
-.soc a.fb:hover { color: #6ea0ff; } .soc a.yt:hover { color: #ff5b5b; } .soc a.ig:hover { color: #ff8fb8; } .soc a.tt:hover { color: #69f0f5; }
+.soc a.fb:hover, .soc a.yt:hover, .soc a.ig:hover, .soc a.tt:hover { color: #fff; }
 .foot .soc { margin: 8px 0; } .foot .soc a { padding: 0 14px; }
 .social .soc-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
 .soc-card { position: relative; display: grid; gap: 4px; padding: 18px; border-radius: 20px; background: linear-gradient(160deg, var(--s2), var(--s1)); border: 1px solid var(--line); transition: .25s; overflow: hidden; }
 a.soc-card:hover { transform: translateY(-3px); border-color: rgba(198,255,61,.5); }
 .soc-card b { font-size: 20px; } .soc-card small { color: var(--mut); font-size: 13.5px; } .soc-card em { font-style: normal; color: var(--lime); font-weight: 800; font-size: 14px; margin-top: 6px; }
 .soc-ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 8px; background: #1b2650; }
-.soc-card.fb .soc-ic { background: #1877f2; } .soc-card.yt .soc-ic { background: #e11d1d; } .soc-card.ig .soc-ic { background: linear-gradient(45deg,#f9a03f,#e1306c,#7b3fe4); } .soc-card.tt .soc-ic { background: #010101; box-shadow: inset 0 0 0 1px rgba(105,240,245,.35); }
+.soc-card.fb .soc-ic, .soc-card.yt .soc-ic, .soc-card.ig .soc-ic, .soc-card.tt .soc-ic { background: var(--s2); border: 1px solid var(--line); color: #fff; border-radius: 50%; box-shadow: none; }
 .soc-card.off { opacity: .75; border-style: dashed; }
 .ph { display: inline-block; font-size: 12px; font-weight: 800; color: #1a1000; background: #ffc83d; border-radius: 99px; padding: 3px 10px; font-style: normal; width: fit-content; }
 .soc-card em.ph { color: #1a1000; }
@@ -472,7 +472,7 @@ a.v1-flash { display: flex; align-items: center; gap: 10px; padding: 10px 16px; 
 
 /* reels */
 .rail.reels .vcard.reel { width: 170px; }
-.rail.reels .vcard.reel .vc-img { aspect-ratio: 9/16; }
+.rail.reels .vcard.reel .vc-img { aspect-ratio: 16/9; }
 @media (min-width: 960px) { .rail.reels { display: grid; grid-template-columns: repeat(6, 1fr); overflow: visible; } .rail.reels .vcard.reel { width: auto; } }
 
 /* match center grid */
@@ -685,3 +685,58 @@ a.skip:focus-visible { top: 10px; }
   .eu-cue { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 7px 16px; border-radius: 99px; border: 1px solid var(--line); background: var(--s2); color: var(--lime); font-weight: 800; font-size: 13px; }
   .eu-cue i { font-style: normal; font-size: 16px; }
 }
+
+
+/* ---- 25/10 גימור batch: user feedback fixes ---- */
+/* ticker: fade edges so names are not clipped hard */
+.tk { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%); }
+
+/* section head: link never wraps mid-text; short 'הכל' label on small screens */
+.sh { flex-wrap: nowrap; }
+.sh h2 { min-width: 0; }
+.sh > a { white-space: nowrap; flex: none; }
+.sh .l-short { display: none; }
+@media (max-width: 640px) { .sh .l-full { display: none; } .sh .l-short { display: inline; } .sh h2 { font-size: 21px; } }
+
+/* news: lead card - cropped 16:9 image, capped height; last card spans the row */
+@media (min-width: 720px) {
+  .ng .nc.big { grid-template-columns: 1.15fr 1fr; align-items: center; }
+  .ng .nc.big .nc-img { aspect-ratio: 16/9; min-height: 0; width: 100%; align-self: center; }
+  .ng .nc.big .nc-t { align-content: center; }
+  .ng .nc.wide { grid-column: 1 / -1; grid-template-columns: 1fr 1.4fr; align-items: center; }
+  .ng .nc.wide .nc-img { aspect-ratio: 16/9; align-self: center; }
+}
+
+/* clubs: one fixed height, socials on the name row */
+.ct { display: flex; align-items: center; gap: 12px; height: 96px; }
+.ct .ct-top { flex: 1; min-width: 0; }
+.ct .ct-top b { font-size: 15px; line-height: 1.15; }
+.ct .cs-row, .ct .cs-none { flex: none; flex-wrap: nowrap; }
+.ct .cs-row a { min-width: 36px; height: 36px; padding: 0 9px; }
+.ct .cs-none { font-size: 12px; color: var(--mut); }
+
+/* matches: a lone card in a day row sits centered at a sane width */
+@media (min-width: 720px) {
+  .day .mc-grid:has(> .mc:only-child) { grid-template-columns: minmax(340px, 480px); justify-content: center; }
+}
+/* postponed-game pill */
+.pill.pp { background: rgba(255,200,61,.12); border: 1px solid rgba(255,200,61,.45); color: #ffd980; font-weight: 700; }
+/* location pin glued to hall name */
+.mc-foot .loc { display: inline-flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.mc-foot .loc .hall { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ghost action buttons (יומן / שיתוף): light border + light text on dark card */
+.mc-foot .act { background: transparent; border: 1px solid rgba(255,255,255,.32); color: var(--ink); display: inline-flex; align-items: center; gap: 5px; }
+.mc-foot .act:hover { background: rgba(255,255,255,.12); color: var(--ink); }
+.mc-foot .act svg { width: 14px; height: 14px; }
+
+/* play: keep the column readable on wide screens instead of hugging the right edge */
+.playpage { max-width: 680px; }
+
+/* gow: cards scroll inside the dashed box on small screens instead of pushing the page wide */
+.gow-in { min-width: 0; }
+.gow-cards { max-width: 100%; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.gow-cards::-webkit-scrollbar { display: none; }
+@media (max-width: 640px) { .gow-c.real { width: 168px; flex: none; } }
+
+/* sponsors: 3 smaller logos per row on mobile */
+@media (max-width: 640px) { .sp-row { gap: 8px; } .sp-row span, .sp-row a { width: 30%; max-width: 110px; height: 64px; border-radius: 12px; padding: 6px; } }
