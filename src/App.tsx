@@ -645,7 +645,7 @@ export function App() {
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
     </Routes></main>
-    <footer className="foot"><img src={logo} alt="" /><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>אבטיפוס עיצוב, לא האתר הרשמי. התוכן והתמונות מתוך handballisr.co.il. סמלי הקבוצות והשותפים מוצגים לצורך זיהוי בלבד. הלוח, התוצאות והטבלאות נבדקים מחדש מול אתר האיגוד מדי יום; עודכנו לאחרונה ב-25/10/2026.</small></div></footer>
+    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>אבטיפוס עיצוב, לא האתר הרשמי. התוכן והתמונות מתוך handballisr.co.il. סמלי הקבוצות והשותפים מוצגים לצורך זיהוי בלבד. הלוח, התוצאות והטבלאות נבדקים מחדש מול אתר האיגוד מדי יום; עודכנו לאחרונה ב-25/10/2026.</small></div></footer>
     <Tabs />
   </div>;
 }
@@ -674,7 +674,7 @@ function WomenCorner() {
 }
 function EuropeCorner() {
   return <section className="sec eu">
-    <SecHead t="ישראל בזירה הבינלאומדית" to="/news" l="לכתבה" />
+    <SecHead t="ישראל בזירה הבינלאומית" to="/news" l="לכתבה" />
     <div className="eu-nt">
       {nationalPride.map((n, i) => <div className="eu-card nt" key={i}>
         <span className="kick">{n.team}</span>
