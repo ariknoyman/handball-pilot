@@ -740,3 +740,14 @@ a.skip:focus-visible { top: 10px; }
 
 /* sponsors: 3 smaller logos per row on mobile */
 @media (max-width: 640px) { .sp-row { gap: 8px; } .sp-row span, .sp-row a { width: 30%; max-width: 110px; height: 64px; border-radius: 12px; padding: 6px; } }
+
+/* mobile home tables: name vertically centered with the crest */
+.lt.compact .lt-r .tm { align-items: center; }
+.lt.compact .lt-r .tm .tmf { line-height: 1.1; display: inline-flex; align-items: center; min-height: 30px; }
+
+/* mobile home tables: room for crest + name on one line */
+@media (max-width: 640px) {
+  .lt.compact .lt-r { grid-template-columns: 26px minmax(0,1fr) 36px 46px 44px; }
+  .lt.compact .lt-r .tm { flex-wrap: nowrap; }
+  .lt.compact .lt-r .tm .tmf { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 0; }
+}
