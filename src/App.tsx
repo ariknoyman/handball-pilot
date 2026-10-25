@@ -320,8 +320,16 @@ function TvBand() {
     </div>
   </section>;
 }
+const SP_LINKS = [
+  'https://www.sheba.co.il/%D7%94%D7%9E%D7%9B%D7%95%D7%9F-%D7%94%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9C%D7%A8%D7%A4%D7%95%D7%90%D7%AA-%D7%A1%D7%A4%D7%95%D7%A8%D7%98-%D7%A9%D7%99%D7%91%D7%90',
+  'https://sports.molten.co.jp/en/',
+  'https://www.winner.co.il/',
+  'https://www.oryzncapital.com/',
+  'https://rozenblatt.co.il/',
+  'http://www.givova.it/',
+];
 function Sponsors() {
-  return <section className="sp"><small>שותפים ונותני חסות</small><div className="sp-row">{sponsors.map((s, i) => <span key={i}><img src={s} alt="" /></span>)}</div></section>;
+  return <section className="sp"><small>שותפים ונותני חסות</small><div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img src={s} alt="" /></a>)}</div></section>;
 }
 
 /* ---------- club social (verified from each club's / umbrella org's own site) ---------- */
@@ -584,14 +592,17 @@ function V1() {
       <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={imgs[n.img]} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
     <Ticker />
     <p className="note" style={{padding: '12px 20px'}}>תוצאות וטבלאות כפי שמופיעים באתר האיגוד, נבדקו מחדש ב-25/10/2026.</p>
-    <section className="sec"><SecHead t="הערב ובימים הקרובים" to="/matches" /><div className="mc-grid">{MEN.slice(1, 7).map((g, i) => <FxCard key={i} g={g} />)}</div></section>
+    <section className="sec"><SecHead t="הערב ובימים הקרובים" to="/matches" /><div className="mc-grid one-row">{MEN.slice(1, 5).map((g, i) => <FxCard key={i} g={g} />)}</div></section>
+    <GoalOfWeek />
     <Broadcast />
-    <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={8} label="טבלת ליגת WINNER" compact /></section>
-    <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} /><p className="legend">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6</p></section>
+    <div className="duo">
+      <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
+      <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} /><p className="legend">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6</p></section>
+    </div>
     <WomenCorner />
     <EuropeCorner />
-    <GoalOfWeek />
     <ClubStrip />
+    <Sponsors />
   </div>;
 }
 /* ---------- הצהרת נגישות ---------- */
@@ -666,10 +677,9 @@ function WomenCorner() {
       </div>
       <div className="wc-side">
         <Table n={5} rows={tableW} label="טבלת ליגת אתנה נשים" compact />
-        <div className="wc-fx">{wf.map((g, i) => <div className="mini" key={i}><Crest name={g.h} size={26} /><span>{sn(g.h)} - {sn(g.a)}</span><b>{g.day} {g.t}</b></div>)}</div>
-        <div className="wc-fx wc-res">{wr.map((r, i) => <div className="mini" key={'r' + i}><Crest name={r.h} size={26} /><span>{sn(r.h)} <b className="sc-l">{r.hs}:{r.as}</b> {sn(r.a)}</span><b>מחזור {r.r}</b></div>)}</div>
       </div>
     </div>
+    <div className="wc-fx wc-line">{wr.map((r, i) => <div className="mini" key={'r' + i}><Crest name={r.h} size={26} /><span>{sn(r.h)} <b className="sc-l">{r.hs}:{r.as}</b> {sn(r.a)}</span><b>מחזור {r.r}</b></div>)}{wf.map((g, i) => <div className="mini up" key={i}><Crest name={g.h} size={26} /><span>{sn(g.h)} - {sn(g.a)}</span><b>{g.day} {g.t}</b></div>)}</div>
   </section>;
 }
 function EuropeCorner() {
@@ -705,6 +715,7 @@ function GoalOfWeek() {
         <h3>שידורים מלאים מהערוץ הרשמי</h3>
         <p>שלושת השידורים האחרונים בערוץ היוטיוב הרשמי של האיגוד - משחקים מלאים, נבדקו מול הערוץ ב-25/10/2026.</p>
         {VOTE_URL && <a className="btn" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע" (פיילוט)</a>}
+        <p className="note">הצעה: הגרלה שבועית בין מציעי המשחקים</p>
       </div>
     </div>
   </section>;

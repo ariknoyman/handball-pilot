@@ -62,7 +62,7 @@ import sRoz from './img/s_roz.png';
 import sGivova from './img/s_givova.jpg';
 let logoMut = logo, tvMut = tv, winnerMut = winner, israelMapMut = i_israelmap;
 export { logoMut as logo, tvMut as tv, winnerMut as winner, israelMapMut as israelMap };
-export const sponsors = [sSheba, sMolten, winner, sHorizon, sShiba, sRoz, sGivova];
+export const sponsors = [sSheba, sMolten, winner, sHorizon, sRoz, sGivova];
 
 // The hosting layer signs asset URLs with a short-lived lease token (about 60s)
 // and serves them no-store, so any image first requested after expiry fails.
