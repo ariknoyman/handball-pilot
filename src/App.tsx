@@ -14,8 +14,9 @@ const TT = 'https://www.tiktok.com/@israelhandballfederation';
 const gLabel = { m: 'גברים', w: 'נשים', y: 'נוער' } as const;
 
 /* ---------- small pieces ---------- */
+const TEAM_ALIAS: Record<string, string> = { 'מכבי ראשון-לציון': 'מכבי ראשל"צ', 'הפועל ראשון-לציון': 'הפועל ראשל"צ' };
 function Crest({ name, size = 44 }: { name: string; size?: number }) {
-  const t = teams[name] || wteams[name];
+  const t = teams[name] || wteams[name] || teams[TEAM_ALIAS[name]] || wteams[TEAM_ALIAS[name]];
   const src = t?.logo ? logos[t.logo] : undefined;
   const label = (t?.short || name).replace(/[^\u0590-\u05FFA-Za-z ]/g, '').trim();
   const ini = label.split(' ').map(w => w[0]).join('').slice(0, 2);
@@ -560,6 +561,9 @@ const NEXT = MEN[0];
 const rd3 = results.filter(r => r.r === 6);
 const Ticker = () => <div className="tk"><div className="tk-in">{[...rd3, ...rd3].map((r, i) => <span key={i}><b>{sn(r.h)}</b> {r.hs}:{r.as} <b>{sn(r.a)}</b></span>)}</div></div>;
 /* V1 - ערב משחק: broadcast-style, one giant fixture */
+function PlayStrip() {
+  return <Link to="/play" className="play-strip"><Ico d={I.ball} /><b>רוצים לשחק כדוריד?</b><span>מצאו מועדון קרוב</span><i className="ps-arrow">‹</i></Link>;
+}
 function V1() {
   const cd = useCountdownSec(NEXT.iso);
   const lead = news[0];
@@ -581,13 +585,13 @@ function V1() {
           <span className="cd-u"><b>{pad(cd.s)}</b><small>שניות</small></span>
         </div>}
         <div className="v1-vs"><div><Crest name={NEXT.h} size={140} /><strong>{teams[NEXT.h].full}</strong></div><div className="v1-t"><b>{NEXT.t}</b><small>{NEXT.hall}</small></div><div><Crest name={NEXT.a} size={140} /><strong>{teams[NEXT.a].full}</strong></div></div>
-        <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a><Link className="btn ghost" to="/matches">כל המשחקים</Link>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
+        <div className="v1-act"><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a><Link className="btn ghost" to="/matches">כל המשחקים</Link>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
       </> : <>
         <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{teams[finalRes.h].full}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{teams[finalRes.a].full}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
-        <div className="v1-act"><Link className="btn" to="/news/36458">לתקציר המחזור</Link><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link></div>
+        <div className="v1-act"><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
       </>}
       <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}>
-        <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <i className="dot" />}</span>
+        <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <><i className="dot" /><em className="ch-tv">📺 {g.tv}</em></>}</span>
         <span className="v1-ch-m"><Crest name={g.h} size={26} /><b>{sn(g.h)}</b><em>־</em><Crest name={g.a} size={26} /><b>{sn(g.a)}</b></span>
       </div>)}</div>
     </section>
@@ -602,7 +606,7 @@ function V1() {
       <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
       <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} foot="הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6" /></section>
     </div>
-    <WomenCorner />
+    <WomenCorner /><PlayStrip />
     <EuropeCorner />
     <ClubStrip />
     <Sponsors />
@@ -717,7 +721,7 @@ function GoalOfWeek() {
       <div className="gow-txt">
         <h3>שידורים מלאים מהערוץ הרשמי</h3>
         <p>שלושת השידורים האחרונים בערוץ היוטיוב הרשמי של האיגוד - משחקים מלאים, נבדקו מול הערוץ ב-25/10/2026.</p>
-        {VOTE_URL && <a className="btn" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע" (פיילוט)</a>}
+        {VOTE_URL && <a className="btn" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע"</a>}
         <p className="note">הצעה: הגרלה שבועית בין מציעי המשחקים</p>
       </div>
     </div>
