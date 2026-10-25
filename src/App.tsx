@@ -586,14 +586,16 @@ function V1() {
         <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{teams[finalRes.h].full}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{teams[finalRes.a].full}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
         <div className="v1-act"><Link className="btn" to="/news/36458">לתקציר המחזור</Link><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link></div>
       </>}
-      <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}><small>{g.day} {g.d} · {g.t}</small><b>{sn(g.h)}</b><b>{sn(g.a)}</b>{g.tv && <i className="dot" />}</div>)}</div>
+      <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}>
+        <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <i className="dot" />}</span>
+        <span className="v1-ch-m"><Crest name={g.h} size={26} /><b>{sn(g.h)}</b><em>־</em><Crest name={g.a} size={26} /><b>{sn(g.a)}</b></span>
+      </div>)}</div>
     </section>
     <section className="sec v1-news"><SecHead t="חדשות" to="/news" />
       <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${imgs[lead.img]})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
       <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={imgs[n.img]} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
     <Ticker />
     <p className="note" style={{padding: '12px 20px'}}>תוצאות וטבלאות כפי שמופיעים באתר האיגוד, נבדקו מחדש ב-25/10/2026.</p>
-    <section className="sec"><SecHead t="הערב ובימים הקרובים" to="/matches" /><div className="mc-grid one-row">{MEN.slice(1, 5).map((g, i) => <FxCard key={i} g={g} />)}</div></section>
     <GoalOfWeek />
     <Broadcast />
     <div className="duo">
