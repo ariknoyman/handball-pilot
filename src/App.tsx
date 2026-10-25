@@ -3,12 +3,14 @@ import { Link, NavLink, Route, Routes } from '@instinct/files';
 import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, ytThumbs, israelMap } from './assets';
-import { results, resultsW, fixtures, table, tableW, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, finderClubs, VOTE_URL, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, nationalPride, finderClubs, VOTE_URL, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
 const FB = 'https://www.facebook.com/Handballisr/';
 const YT = 'https://www.youtube.com/channel/UC_W0XW-HGewdgzjuudDvQww';
+const IG = 'https://www.instagram.com/israel.handball.federation/';
+const TT = 'https://www.tiktok.com/@israelhandballfederation';
 const gLabel = { m: 'גברים', w: 'נשים', y: 'נוער' } as const;
 
 /* ---------- small pieces ---------- */
@@ -62,6 +64,8 @@ function Socials({ label }: { label?: boolean }) {
   return <div className="soc">
     <a href={FB} target="_blank" rel="noopener" aria-label="פייסבוק האיגוד" className="fb">{IFb}{label && <span>פייסבוק</span>}</a>
     <a href={YT} target="_blank" rel="noopener" aria-label="יוטיוב האיגוד" className="yt">{IYt}{label && <span>יוטיוב</span>}</a>
+    <a href={IG} target="_blank" rel="noopener" aria-label="אינסטגרם האיגוד" className="ig">{IIg}{label && <span>אינסטגרם</span>}</a>
+    <a href={TT} target="_blank" rel="noopener" aria-label="טיקטוק האיגוד" className="tt">{ITt}{label && <span>טיקטוק</span>}</a>
   </div>;
 }
 function Social() {
@@ -71,7 +75,8 @@ function Social() {
     <div className="soc-grid">
       <a className="soc-card fb" href={FB} target="_blank" rel="noopener"><span className="soc-ic">{IFb}</span><b>פייסבוק</b><small>איגוד הכדוריד Israel Handball Federation</small><em>לעמוד הרשמי ←</em></a>
       <a className="soc-card yt" href={YT} target="_blank" rel="noopener"><span className="soc-ic">{IYt}</span><b>יוטיוב</b><small>הערוץ של האיגוד</small><em>לערוץ ←</em></a>
-      <div className="soc-card ig off"><span className="soc-ic">{IIg}</span><b>אינסטגרם</b><small>לא נמצא חשבון רשמי מאומת</small><em className="ph">ממתין לכתובת</em></div>
+      <a className="soc-card ig" href={IG} target="_blank" rel="noopener"><span className="soc-ic">{IIg}</span><b>אינסטגרם</b><small>העמוד הרשמי של האיגוד</small><em>לעמוד הרשמי ←</em></a>
+      <a className="soc-card tt" href={TT} target="_blank" rel="noopener"><span className="soc-ic">{ITt}</span><b>טיקטוק</b><small>הערוץ הרשמי של האיגוד</small><em>לערוץ ←</em></a>
     </div>
   </section>;
 }
@@ -669,8 +674,18 @@ function WomenCorner() {
 }
 function EuropeCorner() {
   return <section className="sec eu">
-    <SecHead t="ישראל באירופה · גביע אירופה (EHF)" to="/news" l="לכתבה" />
-    <p className="note">ארבע קבוצות ישראליות במפעל: שתי קבוצות הנשים כבר בסיבוב 3, קבוצות הגברים מחזיקות יתרון לפני הגומלין. מקור: eurohandball.com ו-handballisr.co.il, נבדק 25/10/2026.</p>
+    <SecHead t="ישראל בזירה הבינלאומדית" to="/news" l="לכתבה" />
+    <div className="eu-nt">
+      {nationalPride.map((n, i) => <div className="eu-card nt" key={i}>
+        <span className="kick">{n.team}</span>
+        <b className="eu-nt-title">{n.title}</b>
+        {n.lines.map((l, k) => <small key={k} className="eu-nt-line">{l}</small>)}
+        <div className="eu-nt-videos">{n.videos.map((v, k) => <a key={k} className="tvbtn" href={v.url} target="_blank" rel="noopener"><Ico d={I.play} />{v.label}</a>)}</div>
+        <small className="eu-nt-credit">הסרטונים באתר ספורט 5 · {n.sources.map((x, k) => <span key={k}><a href={x.url} target="_blank" rel="noopener">{x.label}</a>{k < n.sources.length - 1 ? ' · ' : ''}</span>)}</small>
+      </div>)}
+    </div>
+    <h3 className="eu-nt-t">גביע אירופה (EHF) · המועדונים</h3>
+    <p className="note">שתי קבוצות הנשים כבר בסיבוב 3; רמת השרון וחולון מחזיקות יתרון חוץ לפני הגומלין; מכבי ראשל״צ הודחה בסיבוב 2 אחרי ניצחון והפסד צמוד. מקור: eurohandball.com ו-handballisr.co.il, נבדק 25/10/2026.</p>
     <div className="eu-grid">
       {europe.map((e, i) => <div className="eu-card" key={i}>
         <span className="kick">גביע אירופה · {e.gender}</span>

@@ -169,6 +169,32 @@ export const europe: EuTie[] = [
  { club: 'מכבי ארזים אהל שם ר"ג', gender: 'נשים', opp: 'ADAA São Pedro do Sul', oppCountry: 'פורטוגל', result: '52:44 בסיכום', note: '28:22 ו-24:22 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול Westfriesland (הולנד), 14-15/11', },
  { club: 'רמת השרון', gender: 'גברים', opp: 'יוניקוס', oppCountry: 'יוון', result: '25:31 (חוץ)', note: 'ניצחון חוץ במשחק הראשון בסיבוב 2 · טורקניץ 8, פאבלוביץ\' 7', next: 'הגומלין: 25/10', },
  { club: 'חולון', gender: 'גברים', opp: 'פולבה סרביטי', oppCountry: 'אסטוניה', result: '26:30 (חוץ)', note: 'ניצחון חוץ במשחק הראשון בסיבוב 2 · אור לוי 11', next: 'הגומלין: 25/10', },
+ { club: 'מכבי ראשון-לציון', gender: 'גברים', opp: 'וייבודינה', oppCountry: 'סרביה', result: '32:31, 32:36', note: 'ניצחון בית במשחק הראשון בסיבוב 2 (17/10), הפסד בית בגומלין (18/10) · הודחה', next: 'סיימה את דרכה בסיבוב 2', },
+];
+
+export type NatAch = { team: string; title: string; lines: string[]; videos: { label: string; url: string }[]; sources: { label: string; url: string }[] };
+/* Verified 25/10/2026: sport5 articles (highlights played), eurohandball history, handballisr news, ynet */
+export const nationalPride: NatAch[] = [
+ { team: 'נבחרת הנוער · עד 19', title: 'בפעם הראשונה בהיסטוריה: כרטיס לאליפות העולם 2027',
+   lines: ['35:34 דרמטי על פולין באליפות אירופה עד 18 בבלגרד (6.8.26) הבטיח את ההעפלה ההיסטורית', 'יום למחרת הושלמה עוד הצגה: 31:22 על אוסטריה (7.8.26)'],
+   videos: [
+     { label: 'סיכום הניצחון על פולין · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=555625' },
+     { label: 'הניצחון על אוסטריה · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=555722' },
+   ],
+   sources: [
+     { label: 'דו״ח המשחק באתר EHF', url: 'https://history.eurohandball.com/ech/18/men/2026/match/1/067/Poland+-+Israel' },
+     { label: 'אתר האיגוד', url: 'https://handballisr.co.il/news.asp?id=34382' },
+   ] },
+ { team: 'נבחרת העתודה · עד 21', title: 'בפעם הראשונה מאז 2005: כרטיס לאליפות העולם 2027',
+   lines: ['36:31 על קרואטיה (19.7.26) הבטיח את הכרטיס לאליפות העולם במקדוניה הצפונית', 'דרך לשם ניצחון 39:31 על פולין (14.7.26)'],
+   videos: [
+     { label: 'סיכום הניצחון על קרואטיה · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=552688' },
+     { label: 'הניצחון על פולין · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=552170' },
+   ],
+   sources: [
+     { label: 'אתר האיגוד', url: 'https://handballisr.co.il/news.asp?id=34370' },
+     { label: 'ynet', url: 'https://www.ynet.co.il/sport/article/hygo3qcvge' },
+   ] },
 ];
 
 /* ---------- איתור מועדון ("בוא לשחק"): עיר לפי שם המועדון הרשום באתר האיגוד ---------- */
