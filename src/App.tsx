@@ -585,10 +585,10 @@ function V1() {
           <span className="cd-u"><b>{pad(cd.s)}</b><small>שניות</small></span>
         </div>}
         <div className="v1-vs"><div><Crest name={NEXT.h} size={140} /><strong>{teams[NEXT.h].full}</strong></div><div className="v1-t"><b>{NEXT.t}</b><small>{NEXT.hall}</small></div><div><Crest name={NEXT.a} size={140} /><strong>{teams[NEXT.a].full}</strong></div></div>
-        <div className="v1-act"><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a><Link className="btn ghost" to="/matches">כל המשחקים</Link>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
+        <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a><Link className="btn ghost" to="/matches">כל המשחקים</Link>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
       </> : <>
         <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{teams[finalRes.h].full}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{teams[finalRes.a].full}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
-        <div className="v1-act"><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
+        <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
       </>}
       <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}>
         <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <><i className="dot" /><em className="ch-tv">📺 {g.tv}</em></>}</span>
@@ -690,6 +690,7 @@ function WomenCorner() {
   </section>;
 }
 function EuropeCorner() {
+  const euRef = React.useRef<HTMLDivElement>(null);
   return <section className="sec eu">
     <SecHead t="ישראל בזירה הבינלאומית" to="/news" l="לכתבה" />
     <div className="eu-nt">
@@ -703,7 +704,7 @@ function EuropeCorner() {
     </div>
     <h3 className="eu-nt-t">גביע אירופה (EHF) · המועדונים</h3>
     <p className="note">שתי קבוצות הנשים כבר בסיבוב 3; רמת השרון וחולון מחזיקות יתרון חוץ לפני הגומלין; מכבי ראשל״צ הודחה בסיבוב 2 אחרי ניצחון והפסד צמוד. מקור: eurohandball.com ו-handballisr.co.il, נבדק 25/10/2026.</p>
-    <div className="eu-grid">
+    <div className="eu-grid" ref={euRef}>
       {europe.map((e, i) => <div className="eu-card" key={i}>
         <span className="kick">גביע אירופה · {e.gender}</span>
         <div className="eu-m"><Crest name={e.club} size={56} /><div><b>{e.club}</b><small>נגד {e.opp} ({e.oppCountry})</small></div></div>
@@ -711,6 +712,7 @@ function EuropeCorner() {
         <div className="eu-meta"><span className="pill">{e.next}</span></div>
       </div>)}
     </div>
+    <button type="button" className="eu-cue" onClick={() => euRef.current?.scrollBy({ left: -260, behavior: 'smooth' })}><i>‹</i> גלול לעוד</button>
   </section>;
 }
 function GoalOfWeek() {

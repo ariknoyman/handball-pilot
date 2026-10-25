@@ -671,5 +671,13 @@ a.skip:focus-visible { top: 10px; }
 .play-strip { display: flex; align-items: center; justify-content: center; gap: 12px; width: calc(100% - 32px); max-width: 1168px; margin: 26px auto 0; background: linear-gradient(120deg, var(--lime), #a8e02e); color: #0a1000; border-radius: 18px; padding: 18px 22px; font-size: 17px; box-shadow: 0 10px 30px rgba(198,255,61,.18); transition: transform .2s; }
 .play-strip:hover { transform: translateY(-2px); }
 .play-strip b { font-size: 19px; font-weight: 900; }
+.play-strip span, .play-strip .ps-arrow { color: #0a1000; font-weight: 800; }
 .play-strip .ps-arrow { font-size: 22px; font-weight: 900; font-style: normal; }
 @media (min-width: 960px) { .play-strip { max-width: 1144px; } }
+
+.eu-cue { display: none; }
+@media (max-width: 719px) {
+  .eu-grid { mask-image: linear-gradient(to left, transparent 0, #000 30px); -webkit-mask-image: linear-gradient(to left, transparent 0, #000 30px); }
+  .eu-cue { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 7px 16px; border-radius: 99px; border: 1px solid var(--line); background: var(--s2); color: var(--lime); font-weight: 800; font-size: 13px; }
+  .eu-cue i { font-style: normal; font-size: 16px; }
+}
