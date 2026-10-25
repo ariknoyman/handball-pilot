@@ -456,10 +456,10 @@ function Matches() {
   </div>;
 }
 
-function Scorers() {
+function Scorers({ n }: { n?: number }) {
   return <div className="lt-wrap"><div className="lt sc" role="table" aria-label="מלך השערים - ליגת WINNER">
     <div className="lt-r head" role="row"><span className="pos">#</span><span className="tm">שחקן</span><span className="pts">שערים</span></div>
-    {scorers.map((p, i) => <div key={p.name} className={'lt-r' + (i === 0 ? ' lead' : '')} role="row">
+    {scorers.slice(0, n).map((p, i) => <div key={p.name} className={'lt-r' + (i === 0 ? ' lead' : '')} role="row">
       <span className="pos">{i + 1}</span>
       <span className="tm"><Crest name={p.team} size={30} /><span className="pl"><b>{p.name}</b><small>{sn(p.team)}</small></span></span>
       <span className="pts"><CountUp to={p.goals} /></span>
@@ -580,11 +580,13 @@ function V1() {
     <Ticker />
     <p className="note" style={{padding: '12px 20px'}}>תוצאות וטבלאות כפי שמופיעים באתר האיגוד, נבדקו מחדש ב-25/10/2026.</p>
     <section className="sec"><SecHead t="הערב ובימים הקרובים" to="/matches" /><div className="mc-grid">{MEN.slice(1, 7).map((g, i) => <FxCard key={i} g={g} />)}</div></section>
+    <Broadcast />
     <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={8} label="טבלת ליגת WINNER" compact /></section>
+    <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} /><p className="legend">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6</p></section>
     <WomenCorner />
     <EuropeCorner />
     <GoalOfWeek />
-    <Broadcast /><ClubStrip />
+    <ClubStrip />
   </div>;
 }
 /* ---------- הצהרת נגישות ---------- */
@@ -638,7 +640,7 @@ export function App() {
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
     </Routes></main>
-    <footer className="foot"><img src={logo} alt="" /><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><Socials label /><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>אבטיפוס עיצוב, לא האתר הרשמי. התוכן והתמונות מתוך handballisr.co.il. סמלי הקבוצות והשותפים מוצגים לצורך זיהוי בלבד. הלוח, התוצאות והטבלאות נבדקים מחדש מול אתר האיגוד מדי יום; עודכנו לאחרונה ב-25/10/2026.</small></div></footer>
+    <footer className="foot"><img src={logo} alt="" /><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>אבטיפוס עיצוב, לא האתר הרשמי. התוכן והתמונות מתוך handballisr.co.il. סמלי הקבוצות והשותפים מוצגים לצורך זיהוי בלבד. הלוח, התוצאות והטבלאות נבדקים מחדש מול אתר האיגוד מדי יום; עודכנו לאחרונה ב-25/10/2026.</small></div></footer>
     <Tabs />
   </div>;
 }
