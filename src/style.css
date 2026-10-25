@@ -89,6 +89,12 @@ main { width: 100%; }
 .mc-grid.one-row { display: flex; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
 .duo { display: grid; gap: 12px; }
 @media (min-width: 900px) { .duo { grid-template-columns: 1.15fr 1fr; align-items: stretch; } .duo .sec { display: flex; flex-direction: column; } }
+.duo .lt-wrap { flex: 1; display: flex; flex-direction: column; }
+.duo .lt { flex: 1; display: flex; flex-direction: column; }
+.duo .lt .lt-r { flex: 1 1 0; }
+.duo .lt .lt-r.head { flex: 0 0 auto; }
+.duo .lt .lt-r.foot { font-weight: 400; }
+.duo .lt .lt-r.foot .tm { font-weight: 400; }
 .mc-grid.one-row > * { flex: 1 1 0; min-width: 0; }
 @media (max-width: 719px) { .mc-grid.one-row > * { flex: 0 0 235px; } }
 .mc { background: linear-gradient(160deg, var(--s2), var(--s1)); border: 1px solid var(--line); border-radius: 22px; padding: 14px 16px 12px; display: grid; gap: 14px; transition: transform .25s, border-color .25s; }

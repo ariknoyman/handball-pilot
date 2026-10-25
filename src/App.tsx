@@ -469,7 +469,7 @@ function Matches() {
   </div>;
 }
 
-function Scorers({ n }: { n?: number }) {
+function Scorers({ n, foot }: { n?: number; foot?: string }) {
   return <div className="lt-wrap"><div className="lt sc" role="table" aria-label="מלך השערים - ליגת WINNER">
     <div className="lt-r head" role="row"><span className="pos">#</span><span className="tm">שחקן</span><span className="pts">שערים</span></div>
     {scorers.slice(0, n).map((p, i) => <div key={p.name} className={'lt-r' + (i === 0 ? ' lead' : '')} role="row">
@@ -477,6 +477,7 @@ function Scorers({ n }: { n?: number }) {
       <span className="tm"><Crest name={p.team} size={30} /><span className="pl"><b>{p.name}</b><small>{sn(p.team)}</small></span></span>
       <span className="pts"><CountUp to={p.goals} /></span>
     </div>)}
+    {foot && <div className="lt-r head foot"><span className="tm">{foot}</span></div>}
   </div></div>;
 }
 function Tables() {
@@ -597,7 +598,7 @@ function V1() {
     <Broadcast />
     <div className="duo">
       <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
-      <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} /><p className="legend">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6</p></section>
+      <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} foot="הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6" /></section>
     </div>
     <WomenCorner />
     <EuropeCorner />
