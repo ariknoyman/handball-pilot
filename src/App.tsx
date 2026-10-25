@@ -418,7 +418,7 @@ function Broadcast() {
   return <section className="sec bcast"><SecHead t="איפה צופים" />
     <div className="bc-grid">
       <div className="bc-main"><span className="pill live"><i className="dot" />ערוץ הספורט</span><h3>שידורים ישירים בערוץ הספורט</h3>
-        {b.length === 0 && <div className="bc-row"><b>שיבוץ השידורים למחזור הקרוב טרם פורסם</b><small>הלוח המעודכן באתר ערוץ הספורט</small></div>}{b.map((x, i) => <div className="bc-row" key={i}><Crest name={x.h} size={30} /><b>{sn(x.h)} - {sn(x.a)}</b><small>{x.day} {x.d} · {x.t}</small></div>)}
+        {b.length === 0 && <div className="bc-row"><b>שיבוץ השידורים למחזור הקרוב טרם פורסם</b><small>הלוח המעודכן באתר ערוץ הספורט</small></div>}{b.map((x, i) => <div className="bc-row" key={i}><Crest name={x.h} size={30} /><b>{sn(x.h)} - {sn(x.a)}</b><small>{x.day} {x.d} · {x.t} · {x.tv}</small></div>)}
         <div className="bc-act"><a className="tvbtn" href={S5SHEET} target="_blank" rel="noopener">לוח השידורים</a><a className="act" href={S5} target="_blank" rel="noopener">ספורט 5</a></div>
       </div>
       <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><small className="pixnote">לא אומת איזה משחק קרוב משודר ב-Pixellot. הלוח באתר הערוץ.</small><em className="tvbtn">לערוץ ב-Pixellot</em></a>
