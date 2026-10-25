@@ -1,5 +1,19 @@
 # Handball Association Israel - Pilot Site
 
-Design pilot for the Israel Handball Association website (Vite + React + TypeScript).
+אבטיפוס עיצוב לאתר איגוד הכדוריד בישראל (Vite + React + TypeScript).
 
-Content and photos: handballisr.co.il (pilot review only). Map base: Wikimedia Commons, CC BY-SA 3.0.
+## Run
+
+```
+npm install
+npm run dev
+```
+
+## Build
+
+```
+npm run build
+```
+
+Content and photos: handballisr.co.il (for pilot review only).
+Map base: Wikimedia Commons, CC BY-SA 3.0.
