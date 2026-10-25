@@ -595,7 +595,7 @@ function V1() {
       <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${imgs[lead.img]})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
       <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={imgs[n.img]} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
     <Ticker />
-    <p className="note" style={{padding: '12px 16px'}}>תוצאות וטבלאות כפי שמופיעים באתר האיגוד, נבדקו מחדש ב-25/10/2026.</p>
+    <p className="note">תוצאות וטבלאות כפי שמופיעים באתר האיגוד, נבדקו מחדש ב-25/10/2026.</p>
     <GoalOfWeek />
     <Broadcast />
     <div className="duo">

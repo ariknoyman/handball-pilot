@@ -89,7 +89,8 @@ main { width: 100%; }
 .mc-grid.one-row { display: flex; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
 .duo { display: grid; gap: 12px; max-width: 1200px; margin-inline: auto; width: 100%; }
 @media (min-width: 900px) { .duo { grid-template-columns: 1.15fr 1fr; align-items: stretch; } .duo .sec { display: flex; flex-direction: column; } }
-.vx > .note { max-width: 1200px; margin-inline: auto; width: 100%; }
+.vx > .note { max-width: 1200px; margin-inline: auto; width: 100%; padding: 12px 16px; box-sizing: border-box; }
+@media (min-width: 960px) { .vx > .note { padding-inline: 28px; } }
 .duo .lt-wrap { flex: 1; display: flex; flex-direction: column; }
 .duo .lt { flex: 1; display: flex; flex-direction: column; }
 .duo .lt .lt-r { flex: 1 1 0; }
@@ -306,7 +307,8 @@ a.soc-card:hover { transform: translateY(-3px); border-color: rgba(198,255,61,.5
 
 /* ===== tournament variants ===== */
 .vx { min-height: 60vh; }
-.tk { overflow: hidden; border-block: 1px solid var(--line); background: var(--s1); } .tk-in { display: flex; gap: 40px; width: max-content; padding: 10px 0; animation: tk 40s linear infinite; font-size: 14px; color: var(--mut); } .tk-in b { color: var(--ink); } @keyframes tk { to { transform: translateX(50%); } }
+.tk { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); max-width: 1168px; margin-inline: auto; width: calc(100% - 32px); box-sizing: border-box; }
+@media (min-width: 960px) { .tk { max-width: 1144px; } } .tk-in { display: flex; gap: 40px; width: max-content; padding: 10px 0; animation: tk 40s linear infinite; font-size: 14px; color: var(--mut); } .tk-in b { color: var(--ink); } @keyframes tk { to { transform: translateX(50%); } }
 .mf { display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; gap: 10px; padding: 8px 0; } .mf b { font-size: 15px; } .mf b:nth-of-type(2) { text-align: start; } .mf time { font-weight: 900; font-size: 20px; text-align: center; display: grid; } .mf time small { font-size: 11px; color: var(--mut); font-weight: 500; } .mf.big { gap: 16px; } .mf.big b { font-size: 24px; font-weight: 800; } .mf.big time { font-size: 44px; }
 .vsoc { display: inline-flex; gap: 6px; } .vsoc a { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.14); } .vsoc svg { width: 15px; height: 15px; } .vsoc em { font-size: 11px; font-style: normal; opacity: .7; }
 /* v1 */
@@ -336,7 +338,7 @@ a.soc-card:hover { transform: translateY(-3px); border-color: rgba(198,255,61,.5
 .vnav { display: flex; gap: 8px; align-items: center; padding: 6px 14px; background: #000; font-size: 12px; overflow-x: auto; } .vnav span { color: var(--mut); } .vnav a { padding: 3px 10px; border: 1px solid var(--line); border-radius: 99px; color: var(--lime); }
 .mf .crest { flex: none; } .v6-card .mf { width: 100%; } .v6-card .mf.big b { font-size: 20px; }
 
-.v1-rail { display: flex; gap: 10px; overflow-x: auto; max-width: 1100px; width: 100%; padding: 6px 2px 10px; scrollbar-width: thin; }
+.v1-rail { display: flex; gap: 10px; overflow-x: auto; max-width: 1100px; width: 100%; padding: 6px 2px 10px; scrollbar-width: none; } .v1-rail::-webkit-scrollbar { display: none; }
 .v1-ch { flex: none; min-width: 158px; display: grid; gap: 8px; text-align: start; padding: 12px 14px; border-radius: 16px; background: rgba(13,20,40,.72); border: 1px solid var(--line); backdrop-filter: blur(8px); position: relative; transition: transform .2s, border-color .2s, box-shadow .2s; }
 .v1-ch:hover { transform: translateY(-2px); border-color: rgba(198,255,61,.4); }
 .v1-ch.on { border-color: var(--lime); box-shadow: 0 8px 22px rgba(198,255,61,.14); }
