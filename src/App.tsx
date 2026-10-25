@@ -14,6 +14,8 @@ const TT = 'https://www.tiktok.com/@israelhandballfederation';
 const gLabel = { m: 'גברים', w: 'נשים', y: 'נוער' } as const;
 
 /* ---------- small pieces ---------- */
+function useTitle(t: string) { useEffect(() => { document.title = t ? t + ' | איגוד הכדוריד' : 'איגוד הכדוריד בישראל'; }, [t]); }
+
 const TEAM_ALIAS: Record<string, string> = { 'מכבי ראשון-לציון': 'מכבי ראשל"צ', 'הפועל ראשון-לציון': 'הפועל ראשל"צ' };
 function Crest({ name, size = 44 }: { name: string; size?: number }) {
   const t = teams[name] || wteams[name] || teams[TEAM_ALIAS[name]] || wteams[TEAM_ALIAS[name]];
@@ -74,10 +76,10 @@ function Social() {
   return <section className="sec social">
     <SecHead t="האיגוד ברשתות" />
     <div className="soc-grid">
-      <a className="soc-card fb" href={FB} target="_blank" rel="noopener"><span className="soc-ic">{IFb}</span><b>פייסבוק</b><small>איגוד הכדוריד Israel Handball Federation</small><em>לעמוד הרשמי ←</em></a>
-      <a className="soc-card yt" href={YT} target="_blank" rel="noopener"><span className="soc-ic">{IYt}</span><b>יוטיוב</b><small>הערוץ של האיגוד</small><em>לערוץ ←</em></a>
-      <a className="soc-card ig" href={IG} target="_blank" rel="noopener"><span className="soc-ic">{IIg}</span><b>אינסטגרם</b><small>העמוד הרשמי של האיגוד</small><em>לעמוד הרשמי ←</em></a>
-      <a className="soc-card tt" href={TT} target="_blank" rel="noopener"><span className="soc-ic">{ITt}</span><b>טיקטוק</b><small>הערוץ הרשמי של האיגוד</small><em>לערוץ ←</em></a>
+      <a className="soc-card fb" href={FB} target="_blank" rel="noopener"><span className="soc-ic">{IFb}</span><b>פייסבוק</b><small>איגוד הכדוריד Israel Handball Federation</small><em>לעמוד הרשמי ‹</em></a>
+      <a className="soc-card yt" href={YT} target="_blank" rel="noopener"><span className="soc-ic">{IYt}</span><b>יוטיוב</b><small>הערוץ של האיגוד</small><em>לערוץ ‹</em></a>
+      <a className="soc-card ig" href={IG} target="_blank" rel="noopener"><span className="soc-ic">{IIg}</span><b>אינסטגרם</b><small>העמוד הרשמי של האיגוד</small><em>לעמוד הרשמי ‹</em></a>
+      <a className="soc-card tt" href={TT} target="_blank" rel="noopener"><span className="soc-ic">{ITt}</span><b>טיקטוק</b><small>הערוץ הרשמי של האיגוד</small><em>לערוץ ‹</em></a>
     </div>
   </section>;
 }
@@ -213,7 +215,7 @@ async function drawStory(kind: 'fx' | 'res', g?: Fx, r?: Res) {
   return cv;
 }
 function ShareBtn({ kind, g, r }: { kind: 'fx' | 'res'; g?: Fx; r?: Res }) {
-  const pageUrl = 'https://spectacular-starship-27f41b.netlify.app/';
+  const pageUrl = 'https://files.instinct.com/c5ccechapcle/';
   const text = kind === 'fx' && g
     ? `כדוריד: ${sn(g.h)} - ${sn(g.a)} · ${g.day} ${g.d} · ${g.t}`
     : r ? `תוצאה: ${sn(r.h)} ${r.hs}:${r.as} ${sn(r.a)}` : 'כדוריד ישראל';
@@ -302,8 +304,11 @@ function Hero() {
   </section>;
 }
 
-function SecHead({ t, to, l }: { t: string; to?: string; l?: string }) {
-  return <div className="sh"><h2>{t}</h2>{to && <Link to={to}>{l || 'הכל'} ‹</Link>}</div>;
+function SrcI({ url, label }: { url: string; label?: string }) {
+  return <a className="srci" href={url} target="_blank" rel="noopener" aria-label={label || 'מקור הנתונים'} title={label || 'מקור הנתונים'}><Ico d={I.info} /></a>;
+}
+function SecHead({ t, to, l, src }: { t: string; to?: string; l?: string; src?: string }) {
+  return <div className="sh"><h2>{t}{src && <SrcI url={src} />}</h2>{to && <Link to={to}>{l || 'הכל'} ‹</Link>}</div>;
 }
 
 function NewsCard({ n, big }: { n: News; big?: boolean }) {
@@ -381,6 +386,7 @@ function ClubTile({ k }: { k: string }) {
   </article>;
 }
 function ClubPage({ k }: { k: string }) {
+  useTitle(teams[k].full);
   const t = teams[k]; const s = clubSocial[k];
   const pos = table.findIndex(r => r[0] === k) + 1; const row = table.find(r => r[0] === k);
   const last = results.filter(r => r.h === k || r.a === k).sort((x, y) => y.r - x.r).slice(0, 3);
@@ -402,12 +408,13 @@ function ClubPage({ k }: { k: string }) {
   </div>;
 }
 function SocialWall() {
+  useTitle('קירות חברתיים');
   const [f, setF] = useState('');
   const list = teamKeys.filter(k => !f || k === f).sort((x, y) => Number(!!(clubSocial[y]||found[y])) - Number(!!(clubSocial[x]||found[x])));
   return <div className="page"><h1 className="pt">קירות חברתיים</h1>
     <p className="note">קישורים לחשבונות הרשמיים של האיגוד והמועדונים. חשבון מופיע רק אם הוא מקושר מאתר האיגוד או מאתר המועדון/האגודה עצמם.</p>
     <div className="chips cscroll"><button className={f ? '' : 'on'} onClick={() => setF('')}>הכל</button>{teamKeys.map(k => <button key={k} className={f === k ? 'on' : ''} onClick={() => setF(k)}>{sn(k)}</button>)}</div>
-    {!f && <div className="soc-grid wallhead"><a className="soc-card fb" href={FB} target="_blank" rel="noopener"><span className="soc-ic">{IFb}</span><b>האיגוד · פייסבוק</b><em>לעמוד ←</em></a><a className="soc-card yt" href={YT} target="_blank" rel="noopener"><span className="soc-ic">{IYt}</span><b>האיגוד · יוטיוב</b><em>לערוץ ←</em></a></div>}
+    {!f && <div className="soc-grid wallhead"><a className="soc-card fb" href={FB} target="_blank" rel="noopener"><span className="soc-ic">{IFb}</span><b>האיגוד · פייסבוק</b><em>לעמוד ‹</em></a><a className="soc-card yt" href={YT} target="_blank" rel="noopener"><span className="soc-ic">{IYt}</span><b>האיגוד · יוטיוב</b><em>לערוץ ‹</em></a></div>}
     <div className="ctg">{list.map(k => <ClubTile key={k} k={k} />)}</div>
     <p className="note">קישורי הרשתות נאספו מחיפוש פומבי וייתכן שלא כולם רשמיים; הקישורים המסומנים לקוחים מאתרי המועדונים. ללא חשבון שנמצא: {teamKeys.filter(k => !clubSocial[k] && !found[k]).map(sn).join(', ') || 'אין'}. פיד חי מכל החשבונות דורש חיבור נפרד לכל רשת.</p>
   </div>;
@@ -416,13 +423,13 @@ const S5 = 'https://www.sport5.co.il/';
 const S5SHEET = 'https://www.sport5.co.il/html/pages/broadcastsheet.html';
 function Broadcast() {
   const b = fixtures.filter(f => f.tv);
-  return <section className="sec bcast"><SecHead t="איפה צופים" />
+  return <section className="sec bcast"><SecHead t="איפה צופים" src={S5SHEET} />
     <div className="bc-grid">
       <div className="bc-main"><span className="pill live"><i className="dot" />ערוץ הספורט</span><h3>שידורים ישירים בערוץ הספורט</h3>
         {b.length === 0 && <div className="bc-row"><b>שיבוץ השידורים למחזור הקרוב טרם פורסם</b><small>הלוח המעודכן באתר ערוץ הספורט</small></div>}{b.map((x, i) => <div className="bc-row" key={i}><Crest name={x.h} size={30} /><b>{sn(x.h)} - {sn(x.a)}</b><small>{x.day} {x.d} · {x.t} · {x.tv}</small></div>)}
-        <div className="bc-act"><a className="tvbtn" href={S5SHEET} target="_blank" rel="noopener">לוח השידורים</a><a className="act" href={S5} target="_blank" rel="noopener">ספורט 5</a></div>
+        <div className="bc-act"><a className="btn ghost sm" href={S5SHEET} target="_blank" rel="noopener">לוח השידורים</a><a className="btn ghost sm" href={S5} target="_blank" rel="noopener">ספורט 5</a></div>
       </div>
-      <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><small className="pixnote">לא אומת איזה משחק קרוב משודר ב-Pixellot. הלוח באתר הערוץ.</small><em className="tvbtn">לערוץ ב-Pixellot</em></a>
+      <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><small className="pixnote">לא אומת איזה משחק קרוב משודר ב-Pixellot. הלוח באתר הערוץ.</small><em className="btn ghost sm">לערוץ ב-Pixellot</em></a>
     </div>
     <p className="note">זכויות השידור של ערוץ הספורט שמורות לו, לכן הכפתורים מובילים לאתר שלו ואין הטמעת וידאו. שיבוץ המשחק לשידור מופיע באתר האיגוד.</p>
   </section>;
@@ -440,7 +447,7 @@ function Home() {
     <Hero />
     <section className="sec"><SecHead t="המחזור הקרוב" to="/matches" l="כל המשחקים" />
       <div className="mc-grid">{week.map((g, i) => <FxCard key={i} g={g} />)}</div></section>
-    <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
+    <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" src={SITE} /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
     <TvBand />
     <Broadcast />
     <section className="sec"><SecHead t="חדשות" to="/news" />
@@ -453,12 +460,13 @@ function Home() {
 
 /* ---------- matches ---------- */
 function Matches() {
+  useTitle('משחקים');
   const [tab, setTab] = useState<'up' | 'res'>('up');
   const [f, setF] = useState<'all' | 'm' | 'w'>('all');
   const list = fixtures.filter(g => f === 'all' || g.g === f);
   const days = [...new Set(list.map(g => g.day + ' ' + g.d))];
   const rds = [6, 5, 4];
-  return <div className="page"><h1 className="pt">מרכז משחקים</h1><p className="note">הלוח כפי שמופיע באתר האיגוד, נבדק ב-25/10/2026.<span className="tip" tabIndex={0}><Ico d={I.info} /><span className="tip-p">במשחקים שמועד הפתיחה שלהם עבר, התוצאה עדיין לא עודכנה במקור. 0:0 במקור אינו מוצג כתוצאה מאומתת.</span></span></p>
+  return <div className="page"><h1 className="pt">מרכז משחקים<SrcI url={SITE} /><span className="tip" tabIndex={0}><Ico d={I.info} /><span className="tip-p">הלוח כפי שמופיע באתר האיגוד. במשחקים שמועד הפתיחה שלהם עבר, התוצאה עדיין לא עודכנה במקור. 0:0 במקור אינו מוצג כתוצאה מאומתת.</span></span></h1>
     <div className="seg2" role="tablist"><button role="tab" aria-selected={tab === 'up'} className={tab === 'up' ? 'on' : ''} onClick={() => setTab('up')}>לוח משחקים</button><button role="tab" aria-selected={tab === 'res'} className={tab === 'res' ? 'on' : ''} onClick={() => setTab('res')}>תוצאות</button></div>
     {tab === 'up' ? <>
       <div className="chips">{([['all', 'הכל'], ['m', 'ליגת WINNER'], ['w', 'ליגת אתנה']] as const).map(([k, l]) => <button key={k} className={f === k ? 'on' : ''} onClick={() => setF(k)}>{l}</button>)}</div>
@@ -482,18 +490,19 @@ function Scorers({ n, foot }: { n?: number; foot?: string }) {
   </div></div>;
 }
 function Tables() {
+  useTitle('טבלאות');
   const [lg, setLg] = useState<'m' | 'w'>('m');
-  return <div className="page"><h1 className="pt">טבלאות וסטטיסטיקה</h1>
+  return <div className="page"><h1 className="pt">טבלאות וסטטיסטיקה<SrcI url={SITE} /></h1>
     <div className="chips"><button className={lg === 'm' ? 'on' : ''} onClick={() => setLg('m')}>ליגת WINNER גברים</button><button className={lg === 'w' ? 'on' : ''} onClick={() => setLg('w')}>ליגת אתנה נשים</button></div>
     {lg === 'm' ? <>
-      <p className="note">בסיום מחזור 6. שתי הראשונות מודגשות. הטבלה כפי שמופיעה באתר האיגוד, נבדק ב-25/10/2026.</p>
+      <p className="note">בסיום מחזור 6 · שתי הראשונות מודגשות</p>
       <Table label="טבלת ליגת WINNER גברים" />
       <p className="legend">נ = ניצחון · ת = תיקו · ה = הפסד (3 המשחקים האחרונים) · הפרש = שערי זכות פחות חובה</p>
-      <SecHead t="מלך השערים" />
-      <p className="note">הדירוג הרשמי של איגוד הכדוריד, בסיום מחזור {scorersRound} בליגת WINNER. מקור: אתר האיגוד, נבדק ב-25/10/2026.</p>
+      <SecHead t="מלך השערים" src={SITE + '/stats.asp'} />
+      <p className="note">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור {scorersRound} בליגת WINNER</p>
       <Scorers />
     </> : <>
-      <p className="note">בסיום מחזור 3, כפי שמופיע באתר האיגוד, נבדק ב-25/10/2026.</p>
+      <p className="note">בסיום מחזור 3</p>
       <Table label="טבלת ליגת אתנה נשים" rows={tableW} />
       <p className="legend">הפרש = שערי זכות פחות חובה. הכושר (נ/ת/ה) מחושב משלושת המשחקים האחרונים של כל קבוצה, בשתי הליגות.</p>
       <SecHead t="המחזור הקרוב · ליגת אתנה" to="/matches" l="לוח מלא" />
@@ -503,12 +512,14 @@ function Tables() {
 }
 
 function NewsList() {
-  return <div className="page"><h1 className="pt">חדשות</h1><div className="ng"><NewsCard n={news[0]} big />{news.slice(1).map(n => <NewsCard key={n.id} n={n} />)}</div>
+  useTitle('חדשות');
+  return <div className="page"><h1 className="pt">חדשות<SrcI url={SITE + '/news.asp'} /></h1><div className="ng"><NewsCard n={news[0]} big />{news.slice(1).map(n => <NewsCard key={n.id} n={n} />)}</div>
     <a className="btn ghost wide" href={SITE + '/archive.asp'}>ארכיון החדשות באתר האיגוד</a></div>;
 }
 
 function Article() {
   const n = news.find(n => n.id === '36458')!;
+  useTitle(n.title);
   return <article className="art">
     <div className="art-hero"><img src={imgs[n.img]} alt="" /><div><span className="kick">{n.tag}</span><h1>{n.title}</h1><small>{n.date}</small></div></div>
     <div className="art-body">
@@ -520,13 +531,15 @@ function Article() {
 }
 
 function Clubs() {
-  return <div className="page"><h1 className="pt">מועדונים</h1><p className="note">{clubs.length} מועדונים רשומים באתר האיגוד.</p>
+  useTitle('מועדונים');
+  return <div className="page"><h1 className="pt">מועדונים<SrcI url={SITE} /></h1><p className="note">{clubs.length} מועדונים רשומים באתר האיגוד.</p>
     <SecHead t="קבוצות ליגת WINNER" to="/social" l="קירות חברתיים" /><div className="ctg">{teamKeys.map(k => <ClubTile key={k} k={k} />)}</div>
     <SecHead t="כל המועדונים" />
     <div className="cg">{clubs.map(([name, id, lg]) => <a key={id} className="cl" href={`${SITE}/teams.asp?AId=${id}`}><span className="cl-c">{lg ? <img src={logos[lg]} alt="" /> : <b>{name.replace(/[^\u0590-\u05FF ]/g, '').trim().split(' ').map(w => w[0]).join('').slice(0, 2)}</b>}</span><strong>{name}</strong></a>)}</div></div>;
 }
 
 function Tv() {
+  useTitle('כדוריד TV');
   const live = fixtures.find(f => f.tv) || fixtures.find(f => f.g === 'm')!;
   return <div className="tvp">
     <section className="tvp-hero">
@@ -565,6 +578,7 @@ function PlayStrip() {
   return <Link to="/play" className="play-strip"><Ico d={I.ball} /><b>רוצים לשחק כדוריד?</b><span>מצאו מועדון קרוב</span><i className="ps-arrow">‹</i></Link>;
 }
 function V1() {
+  useTitle('');
   const cd = useCountdownSec(NEXT.iso);
   const lead = news[0];
   const finalRes = results.find(r =>
@@ -595,16 +609,15 @@ function V1() {
         <span className="v1-ch-m"><Crest name={g.h} size={26} /><b>{sn(g.h)}</b><em>־</em><Crest name={g.a} size={26} /><b>{sn(g.a)}</b></span>
       </div>)}</div>
     </section>
-    <section className="sec v1-news"><SecHead t="חדשות" to="/news" />
+    <section className="sec v1-news"><SecHead t="חדשות" to="/news" src={SITE + '/news.asp'} />
       <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${imgs[lead.img]})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
       <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={imgs[n.img]} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
     <Ticker />
-    <p className="note">תוצאות וטבלאות כפי שמופיעים באתר האיגוד, נבדקו מחדש ב-25/10/2026.</p>
     <GoalOfWeek />
     <Broadcast />
     <div className="duo">
-      <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
-      <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" /><Scorers n={5} foot="הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6" /></section>
+      <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" src={SITE} /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
+      <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" src={SITE + '/stats.asp'} /><Scorers n={5} foot="הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6" /></section>
     </div>
     <WomenCorner /><PlayStrip />
     <EuropeCorner />
@@ -614,6 +627,7 @@ function V1() {
 }
 /* ---------- הצהרת נגישות ---------- */
 function Access() {
+  useTitle('הצהרת נגישות');
   return <div className="page"><h1 className="pt">הצהרת נגישות</h1>
     <div className="prose">
       <p>אתר זה הוא אבטיפוס עיצוב (פיילוט) ואינו האתר הרשמי של איגוד הכדוריד בישראל. ההצהרה מתייחסת לאתר הפיילוט בלבד.</p>
@@ -663,7 +677,7 @@ export function App() {
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
     </Routes></main>
-    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>אבטיפוס עיצוב, לא האתר הרשמי. התוכן והתמונות מתוך handballisr.co.il. סמלי הקבוצות והשותפים מוצגים לצורך זיהוי בלבד. הלוח, התוצאות והטבלאות נבדקים מחדש מול אתר האיגוד מדי יום; עודכנו לאחרונה ב-25/10/2026.</small></div></footer>
+    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה 25/10</small></div></footer>
     <Tabs />
   </div>;
 }
@@ -674,7 +688,7 @@ function WomenCorner() {
   const wf = fixtures.filter(f => f.g === 'w').slice(0, 3);
   const wr = [...resultsW].sort((a, b) => b.r - a.r).slice(0, 3);
   return <section className="sec">
-    <SecHead t="ליגת אתנה נשים" to="/tables" l="טבלה מלאה" />
+    <SecHead t="ליגת אתנה נשים" to="/tables" l="טבלה מלאה" src={SITE} />
     <div className="wc-grid">
       <div className="wc-lead" style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.25),rgba(6,10,22,.94)),url(${imgs.athena})` }}>
         <span className="kick">ליגת העל לנשים</span>
@@ -692,18 +706,17 @@ function WomenCorner() {
 function EuropeCorner() {
   const euRef = React.useRef<HTMLDivElement>(null);
   return <section className="sec eu">
-    <SecHead t="ישראל בזירה הבינלאומית" to="/news" l="לכתבה" />
+    <SecHead t="ישראל בזירה הבינלאומית" to="/news" l="לכתבה" src="https://www.eurohandball.com/" />
     <div className="eu-nt">
       {nationalPride.map((n, i) => <div className="eu-card nt" key={i}>
         <span className="kick">{n.team}</span>
         <b className="eu-nt-title">{n.title}</b>
         {n.lines.map((l, k) => <small key={k} className="eu-nt-line">{l}</small>)}
-        <div className="eu-nt-videos">{n.videos.map((v, k) => <a key={k} className="tvbtn" href={v.url} target="_blank" rel="noopener"><Ico d={I.play} />{v.label}</a>)}</div>
+        <div className="eu-nt-videos">{n.videos.map((v, k) => <a key={k} className="btn ghost sm" href={v.url} target="_blank" rel="noopener"><Ico d={I.play} />{v.label}</a>)}</div>
         <small className="eu-nt-credit">הסרטונים באתר ספורט 5 · {n.sources.map((x, k) => <span key={k}><a href={x.url} target="_blank" rel="noopener">{x.label}</a>{k < n.sources.length - 1 ? ' · ' : ''}</span>)}</small>
       </div>)}
     </div>
     <h3 className="eu-nt-t">גביע אירופה (EHF) · המועדונים</h3>
-    <p className="note">שתי קבוצות הנשים כבר בסיבוב 3; רמת השרון השלימה ניצחון כפול על יוניקוס ועלתה לסיבוב 3; חולון איבדה יתרון מהמשחק הראשון והודחה; מכבי ראשל״צ הודחה אחרי ניצחון והפסד צמוד. מקור: eurohandball.com ו-handballisr.co.il, נבדק 25/10/2026.</p>
     <div className="eu-grid" ref={euRef}>
       {europe.map((e, i) => <div className="eu-card" key={i}>
         <span className="kick">גביע אירופה · {e.gender}</span>
@@ -717,14 +730,13 @@ function EuropeCorner() {
 }
 function GoalOfWeek() {
   return <section className="sec gow">
-    <SecHead t="מהערוץ הרשמי" />
+    <SecHead t="מהערוץ הרשמי" src={YT} />
     <div className="gow-in">
       <div className="gow-cards">{ytVideos.slice(0, 3).map((v, i) => <a className="gow-c real" key={v.id} href={'https://www.youtube.com/watch?v=' + v.id} target="_blank" rel="noopener"><span className="gow-num">{i + 1}</span><img src={ytThumbs[v.id]} alt="" loading="lazy" /><span className="gow-ph">{v.title}</span></a>)}</div>
       <div className="gow-txt">
         <h3>שידורים מלאים מהערוץ הרשמי</h3>
-        <p>שלושת השידורים האחרונים בערוץ היוטיוב הרשמי של האיגוד - משחקים מלאים, נבדקו מול הערוץ ב-25/10/2026.</p>
+        <p>משחקים מלאים ושידורים אחרונים בערוץ היוטיוב הרשמי של האיגוד.</p>
         {VOTE_URL && <a className="btn" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע"</a>}
-        <p className="note">הצעה: הגרלה שבועית בין מציעי המשחקים</p>
       </div>
     </div>
   </section>;
@@ -758,6 +770,7 @@ function ClubMap({ clubs, active }: { clubs: { name: string; city: string; lat: 
 /* ---------- בוא לשחק: איתור מועדון ---------- */
 const ages = ['ילדים 8-12', 'נוער 13-18', 'בוגרים 18+'];
 function Play() {
+  useTitle('בוא לשחק');
   const cities = [...new Set(finderClubs.map(c => c.city))].sort((a, b) => a.localeCompare(b, 'he'));
   const [city, setCity] = useState('');
   const [age, setAge] = useState(ages[0]);
@@ -772,8 +785,8 @@ function Play() {
   const valid = name.trim().length >= 2 && /^0\d{8,9}$/.test(phone.replace(/[-\s]/g, ''));
   return <div className="page playpage">
     <span className="kick"><Ico d={I.ball} />הצטרפות לכדוריד</span>
-    <h1 className="pt">בוא לשחק</h1>
-    <p className="note">מצאו מועדון קרוב, וצרו קשר עם האיגוד בטלפון עם הפרטים המוכנים. רשימת המועדונים מאתר האיגוד.</p>
+    <h1 className="pt">בוא לשחק<SrcI url={SITE} /></h1>
+    <p className="note">מצאו מועדון קרוב, הכינו את הפרטים - וחייגו לאיגוד להשלמת ההצטרפות.</p>
     <div className="steps"><span className="on">1 · עיר וגיל</span><span className={step >= 1 ? 'on' : ''}>2 · מועדון</span><span className={step >= 2 ? 'on' : ''}>3 · פרטים</span></div>
     {step === 0 && <div className="pstep">
       <label>עיר<select value={city} onChange={e => setCity(e.target.value)}><option value="">בחרו עיר…</option>{cities.map(c => <option key={c} value={c}>{c}</option>)}</select></label>
@@ -785,22 +798,22 @@ function Play() {
       <h3>מועדונים קרובים ל{city}</h3>
       <p className="note">{nearby[0] && nearby[0].km >= 1 ? `אין מועדון רשום ב${city}; אלו המועדונים הקרובים ביותר. ` : ''}המרחק מחושב בקו ישר בין ערי המועדונים. יצירת קשר עם האיגוד: 03-6495552 (מפורסם באתר האיגוד).</p>
       <ClubMap clubs={finderClubs} active={city} />
-      <div className="pf-list">{nearby.map(c => <div key={c.siteId} className="pf-cw"><button className="pf-c" onClick={() => { setClub(c.name); setClubCity(c.city); setStep(2); }}><b>{c.name}</b><small>{age} · {gen}</small><span className="pf-km">{c.km < 1 ? 'בעיר' : `כ-${Math.round(c.km)} ק"מ`}</span><span className="act">בחרו מועדון זה</span></button><div className="pf-links"><a className="pf-site" href={`https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lon}`} target="_blank" rel="noopener">ניווט למועדון ←</a>{c.tid && <a className="pf-site" href={'https://handballisr.co.il/team.asp?TId=' + c.tid + '&cYear=2027'} target="_blank" rel="noopener">עמוד המועדון באתר האיגוד ←</a>}</div></div>)}</div>
+      <div className="pf-list">{nearby.map(c => <div key={c.siteId} className="pf-cw"><button className="pf-c" onClick={() => { setClub(c.name); setClubCity(c.city); setStep(2); }}><b>{c.name}</b><small>{age} · {gen}</small><span className="pf-km">{c.km < 1 ? 'בעיר' : `כ-${Math.round(c.km)} ק"מ`}</span><span className="act">בחרו מועדון זה</span></button><div className="pf-links"><a className="pf-site" href={`https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lon}`} target="_blank" rel="noopener">ניווט למועדון ‹</a>{c.tid && <a className="pf-site" href={'https://handballisr.co.il/team.asp?TId=' + c.tid + '&cYear=2027'} target="_blank" rel="noopener">עמוד המועדון באתר האיגוד ‹</a>}</div></div>)}</div>
       <button className="btn ghost" onClick={() => setStep(0)}>חזרה</button>
     </div>}
     {step === 2 && !done && <div className="pstep">
-      <h3>משאירים פרטים - ושולחים לאיגוד</h3>
+      <h3>משאירים פרטים - וחייגים לאיגוד</h3>
       <label>שם מלא<input value={name} onChange={e => setName(e.target.value)} placeholder="השם שלכם" /></label>
       <label>טלפון<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="05X-XXXXXXX" inputMode="tel" /></label>
-      <p className="note">הפרטים לא נשמרים ולא נשלחים מהאתר. בשלב הבא יוצג נוסח מוכן לפנייה - אתם יוצרים קשר עם האיגוד בטלפון 03-6495552 (מפורסם באתר האיגוד) ומוסרים אותו. האתר אינו קשור רשמית לאיגוד ואינו מבטיח מענה.</p>
-      <div className="hero-cta"><button className="btn" disabled={!valid} onClick={() => setDone(true)}>שליחת פנייה</button><button className="btn ghost" onClick={() => setStep(1)}>חזרה</button></div>
+      <p className="note">הפרטים נשארים במכשיר שלכם בלבד ולא נשלחים מהאתר. בשלב הבא יוצג נוסח מוכן לשיחה עם האיגוד (03-6495552).</p>
+      <div className="hero-cta"><button className="btn" disabled={!valid} onClick={() => setDone(true)}>הכינו את נוסח הפנייה</button><button className="btn ghost" onClick={() => setStep(1)}>חזרה</button></div>
     </div>}
     {done && (() => {
       const msg = `שמי ${name.trim()}, טלפון ${phone}. אשמח לקבל פרטים על הצטרפות ל${club || 'מועדון כדוריד'} ב${clubCity || city} (${age}, ${gen}).`;
       return <div className="pstep done-p">
         <span className="done-ic">✓</span>
-        <h3>הפרטים מוכנים ליצירת קשר</h3>
-        <p>האתר אינו שולח דבר בשמכם. צרו קשר עם האיגוד בטלפון 03-6495552 (מספר שמפורסם באתר האיגוד) ומסרו את הפרטים, או העתיקו את הנוסח המוכן:</p>
+        <h3>הפנייה מוכנה - נשאר רק לחייג</h3>
+        <p>האתר לא שולח את הפרטים בשמכם. חייגו עכשיו לאיגוד הכדוריד ב-03-6495552, מסרו את הנוסח המוכן ובקשו לחבר אתכם ל{club || 'מועדון כדוריד'}.</p>
         <div className="msgview">{msg}</div>
         <div className="sendreal">
           <a className="btn" href="tel:036495552">חיוג לאיגוד · 03-6495552</a>
