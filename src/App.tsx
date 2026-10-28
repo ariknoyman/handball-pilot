@@ -679,7 +679,7 @@ export function App() {
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
     </Routes></main>
-    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה 25/10</small></div></footer>
+    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה 28/10</small></div></footer>
     <Tabs />
   </div>;
 }
