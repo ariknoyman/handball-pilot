@@ -466,7 +466,8 @@ function Matches() {
   const [f, setF] = useState<'all' | 'm' | 'w'>('all');
   const list = fixtures.filter(g => f === 'all' || g.g === f);
   const days = [...new Set(list.map(g => g.day + ' ' + g.d))];
-  const rds = [6, 5, 4];
+  const rds = [...new Set(results.map(r => r.r))].sort((a, b) => b - a).slice(0, 3);
+  const wrds = [...new Set(resultsW.map(r => r.r))].sort((a, b) => b - a).slice(0, 3);
   return <div className="page"><h1 className="pt">מרכז משחקים<SrcI url={SITE} /></h1>
     <p className="note">הלוח כפי שמופיע באתר האיגוד. במשחקים שמועד הפתיחה שלהם עבר, התוצאה עדיין לא עודכנה במקור - 0:0 במקור אינו מוצג כתוצאה מאומתת.</p>
     <div className="seg2" role="tablist"><button role="tab" aria-selected={tab === 'up'} className={tab === 'up' ? 'on' : ''} onClick={() => setTab('up')}>לוח משחקים</button><button role="tab" aria-selected={tab === 'res'} className={tab === 'res' ? 'on' : ''} onClick={() => setTab('res')}>תוצאות</button></div>
@@ -475,7 +476,7 @@ function Matches() {
       {days.map(d => <div key={d} className="day"><h2><b>{d.split(' ')[0]}</b> {d.split(' ')[1]}</h2><div className="mc-grid">{list.filter(g => g.day + ' ' + g.d === d).map((g, i) => <FxCard key={i} g={g} />)}</div></div>)}
     </> : <>
       {rds.map(r => <div key={r} className="day"><h2>מחזור <b>{r}</b> · ליגת WINNER</h2><div className="mc-grid">{results.filter(x => x.r === r).map((x, i) => <ResCard key={i} r={x} />)}</div></div>)}
-      {[3, 2, 1].map(r => <div key={'w' + r} className="day"><h2>מחזור <b>{r}</b> · ליגת אתנה נשים</h2><div className="mc-grid">{resultsW.filter(x => x.r === r).map((x, i) => <ResCard key={i} r={x} w />)}</div></div>)}
+      {wrds.map(r => <div key={'w' + r} className="day"><h2>מחזור <b>{r}</b> · ליגת אתנה נשים</h2><div className="mc-grid">{resultsW.filter(x => x.r === r).map((x, i) => <ResCard key={i} r={x} w />)}</div></div>)}
     </>}
   </div>;
 }
@@ -497,14 +498,14 @@ function Tables() {
   return <div className="page"><h1 className="pt">טבלאות וסטטיסטיקה<SrcI url={SITE} /></h1>
     <div className="chips"><button className={lg === 'm' ? 'on' : ''} onClick={() => setLg('m')}>ליגת WINNER גברים</button><button className={lg === 'w' ? 'on' : ''} onClick={() => setLg('w')}>ליגת אתנה נשים</button></div>
     {lg === 'm' ? <>
-      <p className="note">בסיום מחזור 6 · שתי הראשונות מודגשות</p>
+      <p className="note">כולל מחזור 7 · מעודכן 30/10 · שתי הראשונות מודגשות</p>
       <Table label="טבלת ליגת WINNER גברים" />
       <p className="legend">נ = ניצחון · ת = תיקו · ה = הפסד (3 המשחקים האחרונים) · הפרש = שערי זכות פחות חובה</p>
       <SecHead t="מלך השערים" src={SITE + '/stats.asp'} />
       <p className="note">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור {scorersRound} בליגת WINNER</p>
       <Scorers />
     </> : <>
-      <p className="note">בסיום מחזור 3</p>
+      <p className="note">כולל מחזור 4 · מעודכן 30/10</p>
       <Table label="טבלת ליגת אתנה נשים" rows={tableW} />
       <p className="legend">הפרש = שערי זכות פחות חובה. הכושר (נ/ת/ה) מחושב משלושת המשחקים האחרונים של כל קבוצה, בשתי הליגות.</p>
       <SecHead t="המחזור הקרוב · ליגת אתנה" to="/matches" l="לוח מלא" />
@@ -527,7 +528,7 @@ function Article() {
     <div className="art-body">
       <div className="prose">{article.map((p, i) => <p key={i} className={i === 0 ? 'lead' : ''}>{p}</p>)}
         <a className="btn ghost" href={n.url}>הכתבה המלאה באתר האיגוד</a></div>
-      <aside><h3>משחקי המחזור הקרוב</h3>{fixtures.filter(f => f.round === '7' && f.g === 'm').map((g, i) => <div key={i} className="mini"><Crest name={g.h} size={26} /><span>{sn(g.h)} - {sn(g.a)}</span><b>{g.day} {g.t}</b></div>)}</aside>
+      <aside><h3>משחקי המחזור הקרוב</h3>{fixtures.filter(f => f.round === '8' && f.g === 'm').map((g, i) => <div key={i} className="mini"><Crest name={g.h} size={26} /><span>{sn(g.h)} - {sn(g.a)}</span><b>{g.day} {g.t}</b></div>)}</aside>
     </div>
   </article>;
 }
@@ -573,7 +574,7 @@ function Tv() {
 /* ================= TOURNAMENT VARIANTS (home-page concepts) ================= */
 const MEN = fixtures.filter(f => f.g === 'm' && Date.parse(f.iso) > Date.now());
 const NEXT = MEN[0];
-const rd3 = results.filter(r => r.r === 6);
+const rd3 = results.slice(-6);
 const Ticker = () => <div className="tk"><div className="tk-in">{[...rd3, ...rd3].map((r, i) => <span key={i}><b>{sn(r.h)}</b> {r.hs}:{r.as} <b>{sn(r.a)}</b></span>)}</div></div>;
 /* V1 - ערב משחק: broadcast-style, one giant fixture */
 function PlayStrip() {
@@ -679,7 +680,7 @@ export function App() {
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
     </Routes></main>
-    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה 28/10</small></div></footer>
+    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה 30/10</small></div></footer>
     <Tabs />
   </div>;
 }
