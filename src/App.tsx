@@ -3,7 +3,7 @@ import { Link, NavLink, Route, Routes } from '@instinct/files';
 import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, ytThumbs, israelMap } from './assets';
-import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, nationalPride, finderClubs, VOTE_URL, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, nationalPride, finderClubs, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
@@ -521,14 +521,14 @@ function Tables() {
   return <div className="page"><h1 className="pt">טבלאות וסטטיסטיקה<SrcI url={SITE} /></h1>
     <div className="chips"><button className={lg === 'm' ? 'on' : ''} onClick={() => setLg('m')}>ליגת WINNER גברים</button><button className={lg === 'w' ? 'on' : ''} onClick={() => setLg('w')}>ליגת אתנה נשים</button></div>
     {lg === 'm' ? <>
-      <p className="note">כולל מחזור 7 · מעודכן 31/10 · שתי הראשונות מודגשות</p>
+      <p className="note">כולל מחזור {Math.max(...results.map(r => r.r))} · מעודכן {syncMeta.lastSync} · שתי הראשונות מודגשות</p>
       <Table label="טבלת ליגת WINNER גברים" />
       <p className="legend">נ = ניצחון · ת = תיקו · ה = הפסד (3 המשחקים האחרונים) · הפרש = שערי זכות פחות חובה</p>
       <SecHead t="מלך השערים" src={SITE + '/stats.asp'} />
       <p className="note">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור {scorersRound} בליגת WINNER</p>
       <Scorers />
     </> : <>
-      <p className="note">כולל מחזור 4 · מעודכן 31/10 · שתי הראשונות מודגשות</p>
+      <p className="note">כולל מחזור {Math.max(...resultsW.map(r => r.r))} · מעודכן {syncMeta.lastSync} · שתי הראשונות מודגשות</p>
       <Table label="טבלת ליגת אתנה נשים" rows={tableW} />
       <p className="legend">הפרש = שערי זכות פחות חובה. הכושר (נ/ת/ה) מחושב משלושת המשחקים האחרונים של כל קבוצה, בשתי הליגות.</p>
       <SecHead t="המחזור הקרוב · ליגת אתנה" to="/matches" l="לוח מלא" />
@@ -708,7 +708,7 @@ export function App() {
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
     </Routes></main>
-    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה 31/10</small></div></footer>
+    <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה {syncMeta.lastSync}</small></div></footer>
     <Tabs />
   </div>;
 }
