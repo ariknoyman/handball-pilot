@@ -3,7 +3,7 @@ import { Link, NavLink, Route, Routes } from '@instinct/files';
 import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, ytThumbs, israelMap } from './assets';
-import { results, resultsW, fixtures, table, tableW, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, nationalPride, finderClubs, VOTE_URL, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, nationalPride, finderClubs, VOTE_URL, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
@@ -336,7 +336,7 @@ const SP_LINKS = [
   'http://www.givova.it/',
 ];
 function Sponsors() {
-  return <section className="sp"><small>שותפים ונותני חסות</small><div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img src={s} alt="" /></a>)}</div></section>;
+  return <section className="sp"><small>שותפים ונותני חסות</small><div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img src={s} alt="" /></a>)}{[1, 2].map(i => <a key={'ph' + i} className="sp-ph" href={SITE + '/contact.asp'} target="_blank" rel="noopener"><b>הלוגו שלך כאן</b><em>הצטרפו כשותפים של האיגוד</em></a>)}</div></section>;
 }
 
 /* ---------- club social (verified from each club's / umbrella org's own site) ---------- */
@@ -478,6 +478,10 @@ function Matches() {
       {rds.map(r => <div key={r} className="day"><h2>מחזור <b>{r}</b> · ליגת WINNER</h2><div className="mc-grid">{results.filter(x => x.r === r).map((x, i) => <ResCard key={i} r={x} />)}</div></div>)}
       {wrds.map(r => <div key={'w' + r} className="day"><h2>מחזור <b>{r}</b> · ליגת אתנה נשים</h2><div className="mc-grid">{resultsW.filter(x => x.r === r).map((x, i) => <ResCard key={i} r={x} w />)}</div></div>)}
     </>}
+    <section className="lg-more"><SecHead t="ליגות ומסגרות נוספות באתר האיגוד" src={SITE + '/boards.asp?cYear=2027'} />
+      <p className="note">טבלאות ולוחות המשחקים של שאר הליגות מתעדכנים באתר האיגוד - כל קישור פותח את עמוד הליגה הרשמי.</p>
+      {['בוגרים', 'נוער', 'נערים ונערות', 'ילדים וילדות', 'גביעים'].map(g => <div key={g} className="lg-g"><h3>{g}</h3><div className="lg-grid">{moreLeagues.filter(l => l.group === g).map(l => <a key={l.id} className="lg-card" href={SITE + '/league.asp?LeagueId=' + l.id + '&cYear=2027'} target="_blank" rel="noopener"><b>{l.name}</b><em>לעמוד הליגה ‹</em></a>)}</div></div>)}
+    </section>
   </div>;
 }
 
@@ -505,7 +509,7 @@ function Tables() {
       <p className="note">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור {scorersRound} בליגת WINNER</p>
       <Scorers />
     </> : <>
-      <p className="note">כולל מחזור 4 · מעודכן 30/10</p>
+      <p className="note">כולל מחזור 4 · מעודכן 30/10 · שתי הראשונות מודגשות</p>
       <Table label="טבלת ליגת אתנה נשים" rows={tableW} />
       <p className="legend">הפרש = שערי זכות פחות חובה. הכושר (נ/ת/ה) מחושב משלושת המשחקים האחרונים של כל קבוצה, בשתי הליגות.</p>
       <SecHead t="המחזור הקרוב · ליגת אתנה" to="/matches" l="לוח מלא" />
@@ -688,23 +692,32 @@ export function App() {
 
 /* ---------- ליגת אתנה + אירופה + שער השבוע (עמוד הבית) ---------- */
 function WomenCorner() {
-  const wf = fixtures.filter(f => f.g === 'w').slice(0, 3);
-  const wr = [...resultsW].sort((a, b) => b.r - a.r).slice(0, 3);
-  return <section className="sec">
-    <SecHead t="ליגת אתנה נשים" to="/tables" l="טבלה מלאה" src={SITE} />
-    <div className="wc-grid">
-      <div className="wc-lead" style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.25),rgba(6,10,22,.94)),url(${imgs.athena})` }}>
-        <span className="kick">ליגת העל לנשים</span>
-        <h3>הפועל "דלתות פנדור" ראשל"צ מובילה עם מאזן מושלם</h3>
-        <p>3 ניצחונות מתוך 3 ו-100:60. ארבע קבוצות עם 4 נקודות רודפות אחריה, מחזור 4 ב-29/10.</p>
-        <Link className="btn ghost" to="/tables">לטבלת אתנה</Link>
+  const wf = fixtures.filter(f => f.g === 'w');
+  const next = wf[0];
+  const lastR = Math.max(...resultsW.map(r => r.r));
+  const wr = resultsW.filter(r => r.r === lastR);
+  const ld = tableW[0];
+  const perfect = ld[3] === 0 && ld[4] === 0;
+  return <>
+    <section className="sec">
+      <SecHead t="ליגת אתנה נשים" to="/tables" l="טבלה מלאה" src={SITE} />
+      <div className="wc-grid">
+        <div className="wc-lead" style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.25),rgba(6,10,22,.94)),url(${imgs.athena})` }}>
+          <span className="kick">ליגת העל לנשים · אחרי מחזור {lastR}</span>
+          <h3>{ld[0]} {perfect ? 'מובילה עם מאזן מושלם' : 'בפסגת הטבלה'}</h3>
+          <p>{ld[2]} ניצחונות מתוך {ld[1]} ויחס שערים {ld[5]}:{ld[6]}.{next ? ` הבא: ${sn(next.h)} - ${sn(next.a)}, ${next.day} ${next.d} ב-${next.t}.` : ''}</p>
+          <Link className="btn ghost" to="/tables">לטבלת אתנה</Link>
+        </div>
+        <div className="wc-side">
+          <Table n={5} rows={tableW} label="טבלת ליגת אתנה נשים" compact />
+        </div>
       </div>
-      <div className="wc-side">
-        <Table n={5} rows={tableW} label="טבלת ליגת אתנה נשים" compact />
-      </div>
+    </section>
+    <div className="duo">
+      <section className="sec"><SecHead t={'תוצאות מחזור ' + lastR + ' · ליגת אתנה'} to="/matches" l="כל התוצאות" src={SITE} /><div className="mc-grid">{wr.map((r, i) => <ResCard key={i} r={r} w />)}</div></section>
+      <section className="sec"><SecHead t="המשחקים הבאים · ליגת אתנה" to="/matches" l="לוח מלא" />{wf.length ? <div className="mc-grid">{wf.slice(0, 3).map((g, i) => <FxCard key={i} g={g} />)}</div> : <p className="note">הלוח הבא טרם פורסם באתר האיגוד.</p>}</section>
     </div>
-    <div className="wc-fx wc-line">{wr.map((r, i) => <div className="mini" key={'r' + i}><Crest name={r.h} size={26} /><span>{sn(r.h)} <b className="sc-l">{r.hs}:{r.as}</b> {sn(r.a)}</span><b>מחזור {r.r}</b></div>)}{wf.map((g, i) => <div className="mini up" key={i}><Crest name={g.h} size={26} /><span>{sn(g.h)} - {sn(g.a)}</span><b>{g.day} {g.t}</b></div>)}</div>
-  </section>;
+  </>;
 }
 function EuropeCorner() {
   const euRef = React.useRef<HTMLDivElement>(null);

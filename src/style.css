@@ -739,7 +739,7 @@ a.skip:focus-visible { top: 10px; }
 @media (max-width: 640px) { .gow-c.real { width: 168px; flex: none; } }
 
 /* sponsors: 3 smaller logos per row on mobile */
-@media (max-width: 640px) { .sp-row { gap: 8px; } .sp-row span, .sp-row a { width: 30%; max-width: 110px; height: 64px; border-radius: 12px; padding: 6px; } }
+@media (max-width: 640px) { .sp-row { gap: 8px; } .sp-row span, .sp-row a { width: 30%; max-width: 110px; height: 64px; border-radius: 12px; padding: 6px; } .sp-row a.sp-ph { width: 46%; max-width: 172px; height: 84px; gap: 4px; } .sp-row a.sp-ph b { font-size: 13px; } .sp-row a.sp-ph em { font-size: 10.5px; } }
 
 /* mobile home tables: name vertically centered with the crest */
 .lt.compact .lt-r .tm { align-items: center; }
@@ -751,3 +751,28 @@ a.skip:focus-visible { top: 10px; }
   .lt.compact .lt-r .tm { flex-wrap: nowrap; }
   .lt.compact .lt-r .tm .tmf { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 0; }
 }
+
+/* gen79: bigger, prominent header social icons */
+.top .soc a { min-width: 46px; height: 46px; padding: 0 12px; border: 1px solid var(--line); background: #141c38; }
+.top .soc a svg { width: 24px; height: 24px; }
+.top .soc a.fb:hover { background: #1877f2; border-color: #1877f2; color: #fff; }
+.top .soc a.yt:hover { background: #ff0033; border-color: #ff0033; color: #fff; }
+.top .soc a.ig:hover { background: #c13584; border-color: #c13584; color: #fff; }
+.top .soc a.tt:hover { background: #000; border-color: #555; color: #fff; }
+@media (max-width: 900px) { .top .soc a { min-width: 42px; height: 42px; } .top .soc a svg { width: 22px; height: 22px; } }
+
+/* gen79: sponsor placeholder slots */
+.sp-row a.sp-ph { background: transparent; border: 2px dashed var(--line); display: grid; place-content: center; gap: 6px; text-align: center; color: var(--mut); }
+.sp-row a.sp-ph b { font-size: 16px; color: var(--ink); }
+.sp-row a.sp-ph em { font-style: normal; font-size: 12.5px; }
+.sp-row a.sp-ph:hover { border-color: rgba(198,255,61,.55); box-shadow: 0 6px 18px rgba(198,255,61,.12); }
+
+/* gen79: more leagues link cards */
+.lg-more { display: grid; gap: 14px; margin-top: 8px; }
+.lg-g { display: grid; gap: 10px; }
+.lg-g h3 { font-size: 16px; font-weight: 900; color: var(--mut); margin: 10px 0 0; }
+.lg-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.lg-card { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(160deg, var(--s2), var(--s1)); border: 1px solid var(--line); transition: .2s; }
+.lg-card b { font-size: 15px; }
+.lg-card em { font-style: normal; color: var(--lime); font-weight: 800; font-size: 12.5px; white-space: nowrap; }
+.lg-card:hover { transform: translateY(-2px); border-color: rgba(198,255,61,.5); }
