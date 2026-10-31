@@ -3,7 +3,7 @@ import { Link, NavLink, Route, Routes } from '@instinct/files';
 import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, ytThumbs, israelMap } from './assets';
-import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, nationalPride, finderClubs, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, finderClubs, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
@@ -742,17 +742,7 @@ function WomenCorner() {
 function EuropeCorner() {
   const euRef = React.useRef<HTMLDivElement>(null);
   return <section className="sec eu">
-    <SecHead t="ישראל בזירה הבינלאומית" to="/news" l="לכתבה" src="https://www.eurohandball.com/" />
-    <div className="eu-nt">
-      {nationalPride.map((n, i) => <div className="eu-card nt" key={i}>
-        <span className="kick">{n.team}</span>
-        <b className="eu-nt-title">{n.title}</b>
-        {n.lines.map((l, k) => <small key={k} className="eu-nt-line">{l}</small>)}
-        <div className="eu-nt-videos">{n.videos.map((v, k) => <a key={k} className="btn ghost sm" href={v.url} target="_blank" rel="noopener"><Ico d={I.play} />{v.label}</a>)}</div>
-        <small className="eu-nt-credit">הסרטונים באתר ספורט 5 · {n.sources.map((x, k) => <span key={k}><a href={x.url} target="_blank" rel="noopener">{x.label}</a>{k < n.sources.length - 1 ? ' · ' : ''}</span>)}</small>
-      </div>)}
-    </div>
-    <h3 className="eu-nt-t">גביע אירופה (EHF) · המועדונים</h3>
+    <SecHead t="גביע אירופה (EHF) · המועדונים" src="https://www.eurohandball.com/" />
     <div className="eu-grid" ref={euRef}>
       {europe.map((e, i) => <div className="eu-card" key={i}>
         <span className="kick">גביע אירופה · {e.gender}</span>

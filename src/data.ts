@@ -85,30 +85,7 @@ export const europe: EuTie[] = [
  { club: 'מכבי ראשל"צ', gender: 'גברים', opp: 'וייבודינה', oppCountry: 'סרביה', result: '64:67 בסיכום', note: '32:31 בחוץ (17/10) ו-32:36 בגומלין (18/10) · סיבוב 2 · הודחה', next: 'סיימה את דרכה בסיבוב 2', },
 ];
 
-export type NatAch = { team: string; title: string; lines: string[]; videos: { label: string; url: string }[]; sources: { label: string; url: string }[] };
 /* Verified 25/10/2026: sport5 articles (highlights played), eurohandball history, handballisr news, ynet */
-export const nationalPride: NatAch[] = [
- { team: 'נבחרת הנוער · עד 19', title: 'בפעם הראשונה בהיסטוריה: כרטיס לאליפות העולם 2027',
-   lines: ['35:34 דרמטי על פולין באליפות אירופה עד 18 בבלגרד (6.8.26) הבטיח את ההעפלה ההיסטורית', 'יום למחרת הושלמה עוד הצגה: 31:22 על אוסטריה (7.8.26)'],
-   videos: [
-     { label: 'סיכום הניצחון על פולין · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=555625' },
-     { label: 'הניצחון על אוסטריה · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=555722' },
-   ],
-   sources: [
-     { label: 'דו״ח המשחק באתר EHF', url: 'https://history.eurohandball.com/ech/18/men/2026/match/1/067/Poland+-+Israel' },
-     { label: 'אתר האיגוד', url: 'https://handballisr.co.il/news.asp?id=34382' },
-   ] },
- { team: 'נבחרת העתודה · עד 21', title: 'בפעם הראשונה מאז 2005: כרטיס לאליפות העולם 2027',
-   lines: ['36:31 על קרואטיה (19.7.26) הבטיח את הכרטיס לאליפות העולם במקדוניה הצפונית', 'דרך לשם ניצחון 39:31 על פולין (14.7.26)'],
-   videos: [
-     { label: 'סיכום הניצחון על קרואטיה · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=552688' },
-     { label: 'הניצחון על פולין · ספורט 5', url: 'https://www.sport5.co.il/articles.aspx?FolderID=616&docID=552170' },
-   ],
-   sources: [
-     { label: 'אתר האיגוד', url: 'https://handballisr.co.il/news.asp?id=34370' },
-     { label: 'ynet', url: 'https://www.ynet.co.il/sport/article/hygo3qcvge' },
-   ] },
-];
 
 /* ---------- איתור מועדון ("בוא לשחק"): עיר לפי שם המועדון הרשום באתר האיגוד ---------- */
 export type FinderClub = { name: string; city: string; siteId: string; lat: number; lon: number; tid?: number };
