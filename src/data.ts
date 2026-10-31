@@ -80,9 +80,7 @@ export type EuTie = { club: string; logoKey?: string; gender: 'נשים' | 'גב
 export const europe: EuTie[] = [
  { club: 'בנות "עיקו" הרצליה', gender: 'נשים', opp: 'KHF Shqiponja', oppCountry: 'קוסובו', result: '69:51 בסיכום', note: '40:24 ו-29:27 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול IUVENTA מיכאלובצה (סלובקיה), 14-15/11', },
  { club: 'מכבי ארזים אהל שם ר"ג', gender: 'נשים', opp: 'ADAA São Pedro do Sul', oppCountry: 'פורטוגל', result: '52:44 בסיכום', note: '28:22 ו-24:22 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול Westfriesland (הולנד), 14-15/11', },
- { club: 'רמת השרון', gender: 'גברים', opp: 'יוניקוס', oppCountry: 'יוון', result: '59:51 בסיכום', note: '25:31 ביוון ו-26:28 בגומלין · ניצחון כפול · עלתה לסיבוב 3', next: 'עלתה לסיבוב 3 בגביע אירופה', },
- { club: 'חולון', gender: 'גברים', opp: 'פולבה סרביטי', oppCountry: 'אסטוניה', result: '54:58 בסיכום', note: '26:30 באסטוניה, הפסד 32:24 בגומלין · איבדה יתרון 4 והודחה', next: 'סיימה את דרכה בסיבוב 2', },
- { club: 'מכבי ראשל"צ', gender: 'גברים', opp: 'וייבודינה', oppCountry: 'סרביה', result: '64:67 בסיכום', note: '32:31 בחוץ (17/10) ו-32:36 בגומלין (18/10) · סיבוב 2 · הודחה', next: 'סיימה את דרכה בסיבוב 2', },
+ { club: 'רמת השרון', gender: 'גברים', opp: 'יוניקוס', oppCountry: 'יוון', result: '59:51 בסיכום', note: '25:31 ביוון ו-26:28 בגומלין · ניצחון כפול · עלתה לסיבוב 3', next: 'סיבוב 3: מול PAOK (יוון), משחק ראשון בבית 21-22/11, גומלין בחוץ 28-29/11', },
 ];
 
 /* Verified 25/10/2026: sport5 articles (highlights played), eurohandball history, handballisr news, ynet */
