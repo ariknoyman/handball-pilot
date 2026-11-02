@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes } from '@instinct/files';
 import './fonts.css';
 import './style.css';
-import { logos, logo, tv, sponsors, imgs, ytThumbs, israelMap } from './assets';
+import { logos, logo, tv, sponsors, imgs, newsImgs, ytThumbs, israelMap } from './assets';
+const nimg = (n: any): string => newsImgs[n.id] || imgs[n.img];
 import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, finderClubs, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
@@ -313,7 +314,7 @@ function SecHead({ t, to, l, src }: { t: string; to?: string; l?: string; src?: 
 
 function NewsCard({ n, big, wide }: { n: News; big?: boolean; wide?: boolean }) {
   const cls = 'nc' + (big ? ' big' : '') + (wide ? ' wide' : '');
-  const inner = <><div className="nc-img"><img src={imgs[n.img]} alt="" /></div><div className="nc-t"><span className="tag">{n.tag}</span><h3>{n.title}</h3>{big && n.teaser && <p>{n.teaser}</p>}{n.date && <small>{n.date}</small>}</div></>;
+  const inner = <><div className="nc-img"><img src={nimg(n)} alt="" /></div><div className="nc-t"><span className="tag">{n.tag}</span><h3>{n.title}</h3>{big && n.teaser && <p>{n.teaser}</p>}{n.date && <small>{n.date}</small>}</div></>;
   return n.id === '36458' ? <Link to="/news/36458" className={cls}>{inner}</Link> : <a className={cls} href={n.url}>{inner}</a>;
 }
 
@@ -547,7 +548,7 @@ function Article() {
   const n = news.find(n => n.id === '36458')!;
   useTitle(n.title);
   return <article className="art">
-    <div className="art-hero"><img src={imgs[n.img]} alt="" /><div><span className="kick">{n.tag}</span><h1>{n.title}</h1><small>{n.date}</small></div></div>
+    <div className="art-hero"><img src={nimg(n)} alt="" /><div><span className="kick">{n.tag}</span><h1>{n.title}</h1><small>{n.date}</small></div></div>
     <div className="art-body">
       <div className="prose">{article.map((p, i) => <p key={i} className={i === 0 ? 'lead' : ''}>{p}</p>)}
         <a className="btn ghost" href={n.url}>הכתבה המלאה באתר האיגוד</a></div>
@@ -637,8 +638,8 @@ function V1() {
       </div>)}</div>
     </section>
     <section className="sec v1-news"><SecHead t="חדשות" to="/news" src={SITE + '/news.asp'} />
-      <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${imgs[lead.img]})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
-      <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={imgs[n.img]} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
+      <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${nimg(lead)})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
+      <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={nimg(n)} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
     <Ticker items={rd3} label="ליגת WINNER" />
     <Ticker items={rdW} label="ליגת אתנה" />
     <GoalOfWeek />

@@ -60,6 +60,14 @@ import yt5 from './img/yt/dyGOsZ3y4EU.jpg';
 import yt6 from './img/yt/zqPkfu7sRNY.jpg';
 export const ytThumbs: Record<string,string> = { fnN33h7bEzU: yt1, _mhHP2hEFtQ: yt2, hOM9kCWt6ew: yt3, 'YUqY-F3-1q0': yt4, dyGOsZ3y4EU: yt5, zqPkfu7sRNY: yt6 };
 export const imgs: Record<string,string> = { arazim: i_arazim, round4: i_round4, herz: i_herz, hall: i_hall, ash: i_ash, holon: i_holon, athena: i_athena, athena2: i_athena2, gabriel: i_gabriel, podcast: i_podcast, r6lead: i_r6lead, motola: i_motola, papa: i_papa, reports: i_reports, kaiu: i_kaiu, todo: i_todo, europe: i_europe, rshionikos: i_rshionikos, nasha: i_nasha, derby: i_derby, ashdodwin: i_ashdodwin, r7preview: i_r7preview, matityahu: i_matityahu, mrlwin: i_mrlwin, atround4: i_atround4, mtawin: i_mtawin };
+
+// Per-article news images, keyed by official article id. Files land here via
+// scripts/sync.py (downloads each article's own mainImage from the official
+// site), so a new article needs no code change: the glob picks it up at build.
+const newsFiles = import.meta.glob('./img/news/*', { eager: true, import: 'default' }) as Record<string, string>;
+export const newsImgs: Record<string,string> = {};
+for (const [path, url] of Object.entries(newsFiles)) { const m = path.match(/(\d+)\.\w+$/); if (m) newsImgs[m[1]] = url; }
+
 import logo from './img/logo.png';
 import tv from './img/tv.png';
 import winner from './img/winner.png';
@@ -86,6 +94,7 @@ export function preloadAssets(): void {
   const swap = (u: string, set: (b: string) => void) => { blobify(u).then(set).catch(() => {}); };
   for (const k of Object.keys(logos)) { const u = logos[k]; swap(u, b => { logos[k] = b; }); }
   for (const k of Object.keys(imgs)) { const u = imgs[k]; swap(u, b => { imgs[k] = b; }); }
+  for (const k of Object.keys(newsImgs)) { const u = newsImgs[k]; swap(u, b => { newsImgs[k] = b; }); }
   for (const k of Object.keys(ytThumbs)) { const u = ytThumbs[k]; swap(u, b => { ytThumbs[k] = b; }); }
   swap(logo, b => { logoMut = b; });
   swap(tv, b => { tvMut = b; });

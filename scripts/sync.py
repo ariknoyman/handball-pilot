@@ -22,6 +22,7 @@ import html as htmlmod
 import json
 import os
 import re
+import subprocess
 import sys
 import urllib.request
 from datetime import datetime
@@ -65,6 +66,7 @@ NAME_W = {
     'מכבי תל אביב': 'מכבי תל אביב',
     'הפועל קרית אונו': 'הפועל קרית אונו',
 }
+NEWS_IMG_DIR = os.path.join(os.path.dirname(DATA_PATH), 'img', 'news')
 NEWS_IMG_BY_TAG = {'ליגת אתנה': 'athena', 'אירופה': 'europe', 'נבחרות': 'hall', 'ליגת WINNER': 'hall', 'האיגוד': 'reports'}
 
 
@@ -72,6 +74,32 @@ def fetch(path, encoding):
     req = urllib.request.Request(BASE + path, headers={'User-Agent': 'Mozilla/5.0 (handball-pilot sync)'})
     with urllib.request.urlopen(req, timeout=30) as r:
         return r.read().decode(encoding, errors='replace')
+
+
+def fetch_news_image(article_html, nid):
+    """Download the article's own mainImage into src/img/news/<id>.<ext>.
+
+    Returns True when a fresh file was written. The <img id="mainImage"> tag is
+    the article's official hero image; using it keeps every news card's picture
+    matched to its article (Arik, 02/11: curated img keys drifted from content).
+    """
+    m = re.search(r'<img id="mainImage" src="([^"]+)"', article_html)
+    if not m:
+        return False
+    src = m.group(1)
+    url = src if src.startswith('http') else BASE + src
+    ext = os.path.splitext(src.split('?')[0])[1].lower()
+    if ext not in ('.jpg', '.jpeg', '.png', '.webp'):
+        ext = '.jpg'
+    os.makedirs(NEWS_IMG_DIR, exist_ok=True)
+    path = os.path.join(NEWS_IMG_DIR, f'{nid}{ext}')
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (handball-pilot sync)'})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r, open(path, 'wb') as f:
+            f.write(r.read())
+    except Exception:
+        return False
+    return True
 
 
 def norm_name(s):
@@ -242,6 +270,8 @@ def sync_news(data, summary):
         if teaser:
             item['teaser'] = teaser
         data['news'].insert(0, item)
+        if fetch_news_image(art, nid):
+            summary['newsImages'] = summary.get('newsImages', 0) + 1
         summary['newNews'].append(f'{nid}: {title}')
         data['meta']['latestNewsId'] = nid
     data['news'].sort(key=lambda n: int(n['id']), reverse=True)
@@ -331,6 +361,10 @@ def main():
     summary['changed'] = changed
     summary['lastSync'] = data['meta']['lastSync']
     print(json.dumps(summary, ensure_ascii=False, indent=1))
+    if ci and changed:
+        # The workflow's commit step stages only src/sync-data.json; stage any
+        # freshly downloaded article images here so they ride the same commit.
+        subprocess.run(['git', 'add', NEWS_IMG_DIR], check=False)
     if ci and 'GITHUB_OUTPUT' in os.environ:
         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
             f.write(f"changed={'true' if changed else 'false'}\n")
