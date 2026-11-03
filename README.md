@@ -16,4 +16,3 @@ npm run build
 ```
 
 Content and photos: handballisr.co.il (for pilot review only).
-Map base: Wikimedia Commons, CC BY-SA 3.0.

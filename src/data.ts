@@ -85,24 +85,6 @@ export const europe: EuTie[] = [
 
 /* Verified 25/10/2026: sport5 articles (highlights played), eurohandball history, handballisr news, ynet */
 
-/* ---------- איתור מועדון ("בוא לשחק"): עיר לפי שם המועדון הרשום באתר האיגוד ---------- */
-export type FinderClub = { name: string; city: string; siteId: string; lat: number; lon: number; tid?: number };
-export const finderClubs: FinderClub[] = [
- { name: 'הפועל אלטשולר שחם ראשון לציון', city: 'ראשון לציון', siteId: '11', lat: 31.97, lon: 34.79, tid: 3 }, { name: 'מכבי ראשון לציון', city: 'ראשון לציון', siteId: '18', lat: 31.96, lon: 34.80, tid: 4 },
- { name: 'מ.כ. יובלים חולון', city: 'חולון', siteId: '20', lat: 32.01, lon: 34.77, tid: 28 }, { name: 'מכבי תל אביב', city: 'תל אביב', siteId: '21', lat: 32.08, lon: 34.78, tid: 5 },
- { name: 'בני הרצליה', city: 'הרצליה', siteId: '28', lat: 32.16, lon: 34.84, tid: 13 }, { name: 'א.כ. נס ציונה', city: 'נס ציונה', siteId: '29', lat: 31.93, lon: 34.80, tid: 26 },
- { name: 'א.ס. רמת השרון', city: 'רמת השרון', siteId: '33', lat: 32.14, lon: 34.84, tid: 27 }, { name: 'הפועל קרית אונו', city: 'קרית אונו', siteId: '10', lat: 32.06, lon: 34.86, tid: 36 },
- { name: 'הפועל "דור" ערד', city: 'ערד', siteId: '8', lat: 31.26, lon: 35.21, tid: 35 }, { name: 'מ.כ. באר שבע', city: 'באר שבע', siteId: '44', lat: 31.25, lon: 34.79, tid: 254 },
- { name: 'הפועל אשדוד', city: 'אשדוד', siteId: '4', lat: 31.80, lon: 34.65, tid: 51 }, { name: 'מכבי אבישי קרית מוצקין', city: 'קרית מוצקין', siteId: '15', lat: 32.83, lon: 35.08, tid: 29 },
- { name: 'מכבי עירוני רחובות', city: 'רחובות', siteId: '16', lat: 31.89, lon: 34.81, tid: 8 }, { name: 'אסא טכניון חיפה', city: 'חיפה', siteId: '27', lat: 32.78, lon: 34.99 },
- { name: 'מכבי פתח תקוה', city: 'פתח תקוה', siteId: '30', lat: 32.09, lon: 34.89 }, { name: 'הפועל ירושלים', city: 'ירושלים', siteId: '6', lat: 31.77, lon: 35.22 },
- { name: 'מכבי דימונה', city: 'דימונה', siteId: '39', lat: 31.07, lon: 35.03 }, { name: 'הפועל נתניה', city: 'נתניה', siteId: '42', lat: 32.33, lon: 34.86 },
- { name: 'הפועל חבל אילות', city: 'אילת והארבה', siteId: '53', lat: 29.56, lon: 34.95 }, { name: 'מכבי רעננה', city: 'רעננה', siteId: '19', lat: 32.18, lon: 34.87 },
- { name: 'מכבי עירוני חורה', city: 'חורה', siteId: '61', lat: 31.30, lon: 34.94 }, { name: 'הפועל פתח תקוה', city: 'פתח תקוה', siteId: '46', lat: 32.10, lon: 34.88 },
- { name: 'הפועל רמת-גן', city: 'רמת גן', siteId: '12', lat: 32.07, lon: 34.82 }, { name: 'מכבי ארזים אהל שם ר"ג', city: 'רמת גן', siteId: '17', lat: 32.06, lon: 34.83 },
- { name: 'מ.כ. באר יעקב', city: 'באר יעקב', siteId: '58', lat: 31.94, lon: 34.83 }, { name: 'הקרייתים', city: 'קרית חיים', siteId: '25', lat: 32.82, lon: 35.07 },
-];
-
 /* ---------- ליגות ומסגרות נוספות באתר האיגוד (boards.asp?cYear=2027) - כל קישור נפתח ואומת מול עמוד הליגה הרשמי 31/10/2026 ---------- */
 export type LeagueLink = { name: string; id: number; group: string };
 export const moreLeagues: LeagueLink[] = [
