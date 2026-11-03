@@ -131,7 +131,7 @@ export const sponsorship: {
   stats: [
     { value: 'כ-200', label: 'צופים באולם בכל משחק בוגרים' },
     { value: 'ערוץ הספורט', label: 'חשיפה בשידורי המשחקים' },
-    { value: 'כ-10,000', label: 'צופים דרך כדוריד TV (Pixellot)' },
+    { value: 'כ-11,500', label: 'צופים בכדוריד TV (Pixellot) במשחק מרכזי' },
   ],
   packages: [
     { name: 'נבחרת ישראל', items: ['פרסום בפעילות נבחרת ישראל'] },
