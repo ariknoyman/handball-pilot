@@ -4,7 +4,7 @@ import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, newsImgs, ytThumbs } from './assets';
 const nimg = (n: any): string => newsImgs[n.id] || imgs[n.img];
-import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, clubs, teams, wteams, ytVideos, liveGames, europe, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
@@ -283,7 +283,7 @@ function Hero() {
         <h1>{slides[i].title}</h1>
         {slides[i].teaser && <p>{slides[i].teaser}</p>}
         <div className="hero-cta">
-          {slides[i].id === '36458' ? <Link to="/news/36458" className="btn">לכתבה המלאה</Link> : <a className="btn" href={slides[i].url}>לכתבה באתר האיגוד</a>}
+          <a className="btn" href={slides[i].url}>לכתבה באתר האיגוד</a>
           <Link to="/matches" className="btn ghost">לוח המשחקים</Link>
         </div>
       </div>
@@ -308,7 +308,7 @@ function SecHead({ t, to, l, src }: { t: string; to?: string; l?: string; src?: 
 function NewsCard({ n, big, wide }: { n: News; big?: boolean; wide?: boolean }) {
   const cls = 'nc' + (big ? ' big' : '') + (wide ? ' wide' : '');
   const inner = <><div className="nc-img"><img loading="lazy" src={nimg(n)} alt="" /></div><div className="nc-t"><span className="tag">{n.tag}</span><h3>{n.title}</h3>{big && n.teaser && <p>{n.teaser}</p>}{n.date && <small>{n.date}</small>}</div></>;
-  return n.id === '36458' ? <Link to="/news/36458" className={cls}>{inner}</Link> : <a className={cls} href={n.url}>{inner}</a>;
+  return <a className={cls} href={n.url}>{inner}</a>;
 }
 
 function TvBand() {
@@ -537,18 +537,6 @@ function NewsList() {
     <a className="btn ghost wide" href={SITE + '/archive.asp'}>ארכיון החדשות באתר האיגוד</a></div>;
 }
 
-function Article() {
-  const n = news.find(n => n.id === '36458')!;
-  useTitle(n.title);
-  return <article className="art">
-    <div className="art-hero"><img src={nimg(n)} alt="" /><div><span className="kick">{n.tag}</span><h1>{n.title}</h1><small>{n.date}</small></div></div>
-    <div className="art-body">
-      <div className="prose">{article.map((p, i) => <p key={i} className={i === 0 ? 'lead' : ''}>{p}</p>)}
-        <a className="btn ghost" href={n.url}>הכתבה המלאה באתר האיגוד</a></div>
-      <aside><h3>משחקי המחזור הקרוב</h3>{fixtures.filter(f => f.round === '8' && f.g === 'm').map((g, i) => <div key={i} className="mini"><Crest name={g.h} size={26} /><span>{sn(g.h)} - {sn(g.a)}</span><b>{g.day} {g.t}</b></div>)}</aside>
-    </div>
-  </article>;
-}
 
 function Clubs() {
   useTitle('מועדונים');
@@ -716,7 +704,6 @@ export function App() {
       <Route path="/matches" element={<Matches />} />
       <Route path="/tables" element={<Tables />} />
       <Route path="/news" element={<NewsList />} />
-      <Route path="/news/36458" element={<Article />} />
       <Route path="/clubs" element={<Clubs />} />
       <Route path="/leagues" element={<Leagues />} />
       <Route path="/social" element={<SocialWall />} />
@@ -734,10 +721,13 @@ export function App() {
 /* ---------- אירופה (עמוד הבית) ---------- */
 function EuropeCorner() {
   const euRef = React.useRef<HTMLDivElement>(null);
+  // each tie hides after the last date its "next" line mentions, so stale fixtures never show
+  const list = europe.filter(e => Date.now() < Date.parse(e.until + 'T23:59:59+02:00'));
+  if (!list.length) return null;
   return <section className="sec eu">
     <SecHead t="גביע אירופה (EHF) · המועדונים" src="https://www.eurohandball.com/" />
     <div className="eu-grid" ref={euRef}>
-      {europe.map((e, i) => <div className="eu-card" key={i}>
+      {list.map((e, i) => <div className="eu-card" key={i}>
         <span className="kick">גביע אירופה · {e.gender}</span>
         <div className="eu-m"><Crest name={e.club} size={56} /><div><b>{e.club}</b><small>נגד {e.opp} ({e.oppCountry})</small></div></div>
         <div className="eu-res"><b>{e.result}</b><small>{e.note}</small></div>

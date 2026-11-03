@@ -5,7 +5,9 @@ Auto-sync for the handball pilot site data layer (src/sync-data.json).
 Fetches the official Israel Handball Association pages (handballisr.co.il),
 parses the men's (LeagueId 11554) and women's (11558) league scoreboards and
 standings plus the news index, verifies everything against table arithmetic,
-and rewrites src/sync-data.json when verified new data exists.
+and rewrites src/sync-data.json when verified new data exists. Also refreshes
+the men's top scorers (stats.asp) and the latest videos from the association's
+YouTube feed; those two are best effort and never block the results sync.
 
 Safety rules:
   - Never store a 0-0 "result" (the board prints 0-0 for unplayed games).
@@ -66,6 +68,22 @@ NAME_W = {
     'מכבי ראשון לציון': 'מכבי ראשון לציון',
     'מכבי תל אביב': 'מכבי תל אביב',
     'הפועל קרית אונו': 'הפועל קרית אונו',
+}
+# stats.asp writes men's team names in its own short forms.
+NAME_STATS = {
+    'בני הרצליה': 'הרצליה',
+    'מ.כ חולון': 'חולון',
+    'הפועל ראשל"צ': 'הפועל ראשל"צ',
+    'מכבי קריית מוצקין': 'קרית מוצקין',
+    'הפועל ערד': 'ערד',
+    'מכבי ראשל"צ': 'מכבי ראשל"צ',
+    'הפועל אשדוד': 'אשדוד',
+    'הפועל קריית אונו': 'קרית אונו',
+    'א.כ נס ציונה': 'נס ציונה',
+    'א.ס רמת השרון': 'רמת השרון',
+    'מ.כ באר שבע': 'באר שבע',
+    'עירוני רחובות': 'רחובות',
+    'מכבי ת"א': 'מכבי ת"א',
 }
 NEWS_IMG_DIR = os.path.join(os.path.dirname(DATA_PATH), 'img', 'news')
 NEWS_IMG_BY_TAG = {'ליגת אתנה': 'athena', 'אירופה': 'europe', 'נבחרות': 'hall', 'ליגת WINNER': 'hall', 'האיגוד': 'reports'}
@@ -370,15 +388,90 @@ def sync_league(data, gender, summary):
         data[key_tbl] = official_table
 
 
+def sync_scorers(data, summary):
+    """Men's WINNER top scorers from the official stats page (stats.asp).
+
+    Best effort: any fetch/parse problem or unmapped team keeps the stored list
+    and is reported as a warning, so it never blocks the results sync.
+    """
+    try:
+        page = fetch('/stats.asp', 'utf-8')
+        rnd = re.search(r'המחזור ה-(\d+)', htmlmod.unescape(page))
+        tbl = re.search(r'<table>.*?</table>', page, re.S)  # first table = מלך השערים (the second is goalkeepers)
+        if not (rnd and tbl):
+            raise ValueError('round or scorers table not found')
+        rows = []
+        for row in re.findall(r'<tr[^>]*>(.*?)</tr>', tbl.group(0), re.S):
+            cells = [norm_name(c) for c in re.findall(r'<td[^>]*>(.*?)</td>', row, re.S)]
+            if len(cells) < 4:
+                continue
+            team = NAME_STATS.get(cells[2]) or NAME_M.get(cells[2])
+            if team is None:
+                raise ValueError(f'unmapped team {cells[2]!r}')
+            rows.append({'name': cells[1], 'team': team, 'goals': int(cells[3])})
+            if len(rows) == 10:
+                break
+        if not rows:
+            raise ValueError('no scorer rows')
+    except Exception as e:  # noqa: BLE001 - reported, previous list kept
+        summary['warnings'].append(f'scorers not updated: {e}')
+        return
+    new = {'round': int(rnd.group(1)), 'list': rows}
+    if new != data.get('scorers'):
+        data['scorers'] = new
+        summary['scorersRound'] = new['round']
+
+
+YT_CHANNEL = 'UC_W0XW-HGewdgzjuudDvQww'
+YT_IMG_DIR = os.path.join(os.path.dirname(DATA_PATH), 'img', 'yt')
+
+
+def sync_videos(data, summary, keep=6):
+    """Latest uploads from the association's YouTube channel feed, plus their thumbnails.
+
+    Titles are copied from the feed; only the ' | ' separators are turned into ' · '.
+    Best effort like sync_scorers.
+    """
+    try:
+        req = urllib.request.Request(f'https://www.youtube.com/feeds/videos.xml?channel_id={YT_CHANNEL}',
+                                     headers={'User-Agent': 'Mozilla/5.0 (handball-pilot sync)'})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            feed = r.read().decode('utf-8', errors='replace')
+        videos = []
+        for entry in re.findall(r'<entry>(.*?)</entry>', feed, re.S)[:keep]:
+            vid = re.search(r'<yt:videoId>([\w-]+)</yt:videoId>', entry).group(1)
+            title = norm_name(re.search(r'<title>(.*?)</title>', entry, re.S).group(1))
+            title = re.sub(r'\s*\|\s*', ' · ', title).strip(' ·')
+            pub = re.search(r'<published>(\d{4})-(\d{2})-(\d{2})', entry)
+            videos.append({'id': vid, 'title': title, 'date': f'{pub.group(3)}/{pub.group(2)}/{pub.group(1)}'})
+        if not videos:
+            raise ValueError('empty feed')
+        os.makedirs(YT_IMG_DIR, exist_ok=True)
+        for v in videos:
+            path = os.path.join(YT_IMG_DIR, v['id'] + '.jpg')
+            if not os.path.exists(path):
+                with urllib.request.urlopen(f"https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg", timeout=30) as r, open(path, 'wb') as f:
+                    f.write(r.read())
+    except Exception as e:  # noqa: BLE001
+        summary['warnings'].append(f'videos not updated: {e}')
+        return
+    if videos != data.get('videos'):
+        old_ids = {x['id'] for x in data.get('videos', [])}
+        data['videos'] = videos
+        summary['newVideos'] = [v['id'] for v in videos if v['id'] not in old_ids]
+
+
 def main():
     ci = '--ci' in sys.argv
     with open(DATA_PATH, encoding='utf-8') as f:
         data = json.load(f)
     before = json.dumps(data, ensure_ascii=False, sort_keys=True)
-    summary = {'newResults': [], 'newFixtures': [], 'droppedFixtures': [], 'newNews': [], 'tableChanged': []}
+    summary = {'newResults': [], 'newFixtures': [], 'droppedFixtures': [], 'newNews': [], 'tableChanged': [], 'warnings': []}
     sync_league(data, 'm', summary)
     sync_league(data, 'w', summary)
     sync_news(data, summary)
+    sync_scorers(data, summary)
+    sync_videos(data, summary)
     changed = json.dumps(data, ensure_ascii=False, sort_keys=True) != before
     if changed:
         now = datetime.now(TZ)
@@ -391,14 +484,17 @@ def main():
     print(json.dumps(summary, ensure_ascii=False, indent=1))
     if ci and changed:
         # The workflow's commit step stages only src/sync-data.json; stage any
-        # freshly downloaded article images here so they ride the same commit.
-        subprocess.run(['git', 'add', NEWS_IMG_DIR], check=False)
+        # freshly downloaded article images and video thumbnails here so they
+        # ride the same commit.
+        subprocess.run(['git', 'add', NEWS_IMG_DIR, YT_IMG_DIR], check=False)
     if ci and 'GITHUB_OUTPUT' in os.environ:
         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
             f.write(f"changed={'true' if changed else 'false'}\n")
             flat = '; '.join(summary['newResults'] + summary['newFixtures'] +
                             [f'news {x}' for x in summary['newNews']] +
-                            [f'table {x}' for x in summary['tableChanged']])
+                            [f'table {x}' for x in summary['tableChanged']] +
+                            ([f"scorers r{summary['scorersRound']}"] if 'scorersRound' in summary else []) +
+                            [f'video {x}' for x in summary.get('newVideos', [])])
             f.write(f"summary={flat[:900]}\n")
 
 
