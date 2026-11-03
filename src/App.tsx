@@ -349,6 +349,16 @@ function ContactBtn({ label = 'לשיחה על שיתוף פעולה' }: { label
     ? <a className="btn" href={`mailto:${c.email}?subject=${encodeURIComponent('שיתוף פעולה עם איגוד הכדוריד')}`}>{label}</a>
     : <a className="btn" href={SITE + '/contact.asp'} target="_blank" rel="noopener">{label}</a>;
 }
+// Reasons to sponsor. Each line rests on facts shown elsewhere on the page (the association's
+// numbers, packages and current partners); keep it that way when editing.
+const WHY_PARTNER: [string, string][] = [
+  ['קהל אמיתי ומחובר', 'קהל באולם בכל משחק בוגרים, ואלפים נוספים מול המסך בשידורים.'],
+  ['חשיפה בטלוויזיה ובסטרימינג', 'משחקים בשידור בערוץ הספורט, ומשחקים מרכזיים עם יותר מ-11,000 צופים בכדוריד TV.'],
+  ['לייצג את ישראל', 'חבילת נבחרת ישראל מחברת את המותג שלכם לנבחרת הלאומית ולגאווה שסביבה.'],
+  ['משפחות וקהילה', 'מליגות הילדים והנוער ועד ליגת העל: שחקנים, הורים ואוהדים לאורך כל העונה.'],
+  ['בחברה טובה', 'Winner, Molten, שיבא ושותפים נוספים כבר עם האיגוד.'],
+  ['חבילה לפי המידה שלכם', 'מאזור אחד באתר ועד חסות על ליגה, אירוע או נבחרת: בונים יחד את מה שמתאים לכם.'],
+];
 // In-page jump: a "#id" link would be read by the hash router as a route. Instant rather than
 // smooth, which some embedded browsers never animate; then nudged down only if the header
 // actually overlaps the section (it is styled sticky, but may scroll away with the page).
@@ -370,6 +380,8 @@ function Partners() {
       <p>חשיפה שבועית במגרשים בכל הארץ, מליגת WINNER וליגת אתנה ועד ליגות הנוער, הנערים והילדים, מול קהל מחובר של שחקנים, משפחות ואוהדים שחיים את האיגוד לאורך העונה כולה.</p>
       <div className="hero-cta"><ContactBtn /><button type="button" className="btn ghost" onClick={scrollToWhere}>איפה המותג מופיע</button></div>
     </section>
+    <section className="sec"><SecHead t="למה להיות שותפים של הכדוריד" />
+      <div className="pa-why">{WHY_PARTNER.map(([t, d], i) => <div key={t}><span className="pa-why-n">{i + 1}</span><h3>{t}</h3><p>{d}</p></div>)}</div></section>
     {sponsorship.stats.length > 0 && <section className="sec"><SecHead t="הכדוריד במספרים" />
       <div className="pa-stats">{sponsorship.stats.map(s => <div key={s.label}><b>{s.value}</b><span>{s.label}</span></div>)}</div></section>}
     <section className="sec" id="pa-where"><SecHead t="איפה המותג שלכם מופיע" />

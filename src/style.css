@@ -773,3 +773,12 @@ a.skip:focus-visible { top: 10px; }
 .pa-contact { color: var(--ink) !important; font-size: 16px; }
 .pa-contact a { color: var(--lime); }
 @media (min-width: 900px) { .pa-grid.pk { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+
+/* partners page: reasons to sponsor */
+.pa-why { display: grid; gap: 12px; }
+@media (min-width: 720px) { .pa-why { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .pa-why { grid-template-columns: repeat(3, 1fr); } }
+.pa-why > div { background: linear-gradient(160deg, var(--s2), var(--s1)); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: grid; gap: 6px; align-content: start; }
+.pa-why-n { width: 30px; height: 30px; border-radius: 50%; background: var(--lime); color: #0a1000; font-weight: 900; display: grid; place-items: center; font-size: 15px; }
+.pa-why h3 { font-size: 18px; font-weight: 800; }
+.pa-why p { color: var(--mut); font-size: 15px; }
