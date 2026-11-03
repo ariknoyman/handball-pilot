@@ -767,7 +767,7 @@ export function App() {
       <Route path="/partners" element={<Partners />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes></PageBoundary></main>
-    {pathname !== '/' && <div className="foot-sp"><small>השותפים שלנו</small><div className="foot-sp-row">{sponsors.map((s, i) => <a key={i} href={partners[i].url} target="_blank" rel="noopener" title={partners[i].name}><img loading="lazy" src={s} alt={partners[i].name} /></a>)}</div><Link to="/partners">להצטרף כשותף ‹</Link></div>}
+    {pathname !== '/' && pathname !== '/partners' && <div className="foot-sp"><small>השותפים שלנו</small><div className="foot-sp-row">{sponsors.map((s, i) => <a key={i} href={partners[i].url} target="_blank" rel="noopener" title={partners[i].name}><img loading="lazy" src={s} alt={partners[i].name} /></a>)}</div><Link to="/partners">להצטרף כשותף ‹</Link></div>}
     <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/partners">שותפים וחסויות</Link> · <Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה {syncMeta.lastSync}</small></div></footer>
     <Tabs />
   </div>;
