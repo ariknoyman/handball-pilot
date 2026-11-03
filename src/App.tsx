@@ -4,7 +4,7 @@ import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, newsImgs, ytThumbs } from './assets';
 const nimg = (n: any): string => newsImgs[n.id] || imgs[n.img];
-import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, clubs, teams, wteams, ytVideos, liveGames, europe, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, clubs, teams, wteams, ytVideos, liveGames, europe, VOTE_URL, syncMeta, sponsorship, partners, type SponsorSlotKey, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
@@ -341,6 +341,47 @@ function Sponsors() {
       <a className="btn play-main" href={SITE + '/contact.asp'} target="_blank" rel="noopener">לשיחה על שיתוף פעולה עם האיגוד</a>
     </div></div>
     <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img loading="lazy" src={s} alt="" /></a>)}<a className="sp-ph" href={SITE + '/contact.asp'} target="_blank" rel="noopener"><b>הלוגו שלך כאן</b><em>הצטרפו כשותפים של האיגוד</em></a></div></section>;
+}
+
+/* ---------- שותפים: עמוד למשיכת ספונסרים ---------- */
+const SLOT_LABEL: Record<SponsorSlotKey, string> = { results: 'תוצאות המחזור (דף הבית)', nextGame: 'המשחק הבא (דף הבית)', scorers: 'מלך השערים (עמוד הטבלאות)', videos: 'קליפים ומשחקים מלאים (עמוד ה-TV)' };
+function ContactBtn({ label = 'לשיחה על שיתוף פעולה' }: { label?: string }) {
+  const c = sponsorship.contact;
+  return c?.email
+    ? <a className="btn" href={`mailto:${c.email}?subject=${encodeURIComponent('שיתוף פעולה עם איגוד הכדוריד')}`}>{label}</a>
+    : <a className="btn" href={SITE + '/contact.asp'} target="_blank" rel="noopener">{label}</a>;
+}
+function Partners() {
+  useTitle('שותפים וחסויות');
+  const c = sponsorship.contact;
+  return <div className="page partners">
+    <section className="pa-hero">
+      <span className="kick">שותפים וחסויות</span>
+      <h1 className="pt">המותג שלכם על פרק הכדוריד הישראלי</h1>
+      <p>חשיפה שבועית במגרשים בכל הארץ, מליגת WINNER וליגת אתנה ועד ליגות הנוער, הנערים והילדים, מול קהל מחובר של שחקנים, משפחות ואוהדים שחיים את האיגוד לאורך העונה כולה.</p>
+      <div className="hero-cta"><ContactBtn /><button type="button" className="btn ghost" onClick={() => document.getElementById('pa-where')?.scrollIntoView({ behavior: 'smooth' })}>איפה המותג מופיע</button></div>
+    </section>
+    {sponsorship.stats.length > 0 && <section className="sec"><SecHead t="הכדוריד במספרים" />
+      <div className="pa-stats">{sponsorship.stats.map(s => <div key={s.label}><b>{s.value}</b><span>{s.label}</span></div>)}</div></section>}
+    <section className="sec" id="pa-where"><SecHead t="איפה המותג שלכם מופיע" />
+      <div className="pa-grid">
+        <div className="pa-card"><h3>באתר האיגוד</h3><ul>
+          {(Object.keys(SLOT_LABEL) as SponsorSlotKey[]).map(k => <li key={k}><span>{SLOT_LABEL[k]}</span>{sponsorship.slots[k] ? <em className="taken">בחסות {sponsorship.slots[k]!.name}</em> : <em>פנוי</em>}</li>)}
+          <li><span>רצועת השותפים בתחתית כל עמוד</span></li>
+        </ul></div>
+        <div className="pa-card"><h3>במגרשים ובאירועים</h3><p>חשיפה במשחקי הליגות בכל הארץ ובאירועי האיגוד.</p></div>
+        <div className="pa-card"><h3>שיתופי פעולה ייעודיים</h3><p>חסות על ליגות הנוער, הנערים והילדים, על מועדונים ועל אירועים, לפי מה שמתאים למותג שלכם.</p></div>
+      </div></section>
+    {sponsorship.packages.length > 0 && <section className="sec"><SecHead t="חבילות חסות" />
+      <div className="pa-grid">{sponsorship.packages.map(p => <div key={p.name} className="pa-card"><h3>{p.name}</h3><ul>{p.items.map(x => <li key={x}><span>{x}</span></li>)}</ul>{p.price && <b className="pa-price">{p.price}</b>}</div>)}</div></section>}
+    <section className="sec"><SecHead t="השותפים שלנו" />
+      <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={partners[i].url} target="_blank" rel="noopener" title={partners[i].name}><img loading="lazy" src={s} alt={partners[i].name} /></a>)}</div></section>
+    <section className="sec"><div className="pa-cta">
+      <h2>בואו נדבר</h2>
+      {c && (c.name || c.phone || c.email) ? <p>{[c.name, c.phone, c.email].filter(Boolean).join(' · ')}</p> : <p>נשמח לבנות יחד חבילה שמתאימה לכם.</p>}
+      <ContactBtn label="ליצירת קשר" />
+    </div></section>
+  </div>;
 }
 
 /* ---------- club social (verified from each club's / umbrella org's own site) ---------- */
@@ -710,6 +751,7 @@ export function App() {
       {teamKeys.map((k, i) => <Route key={k} path={'/club/' + i} element={<ClubPage k={k} />} />)}
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
+      <Route path="/partners" element={<Partners />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes></PageBoundary></main>
     <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה {syncMeta.lastSync}</small></div></footer>
