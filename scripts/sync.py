@@ -463,6 +463,11 @@ def sync_videos(data, summary, keep=6):
     except Exception as e:  # noqa: BLE001
         summary['warnings'].append(f'videos not updated: {e}')
         return
+    # thumbnails of videos that dropped out of the list would otherwise pile up (and get bundled)
+    keep_files = {v['id'] + '.jpg' for v in videos}
+    for f in os.listdir(YT_IMG_DIR):
+        if f.endswith('.jpg') and f not in keep_files:
+            os.remove(os.path.join(YT_IMG_DIR, f))
     if videos != data.get('videos'):
         old_ids = {x['id'] for x in data.get('videos', [])}
         data['videos'] = videos
