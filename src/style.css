@@ -772,3 +772,4 @@ a.skip:focus-visible { top: 10px; }
 .foot-sp > a { color: var(--lime); font-weight: 800; font-size: 14px; }
 .pa-contact { color: var(--ink) !important; font-size: 16px; }
 .pa-contact a { color: var(--lime); }
+@media (min-width: 900px) { .pa-grid.pk { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }

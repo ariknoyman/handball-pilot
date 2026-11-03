@@ -382,7 +382,7 @@ function Partners() {
         <div className="pa-card"><h3>שיתופי פעולה ייעודיים</h3><p>חסות על ליגות הנוער, הנערים והילדים, על מועדונים ועל אירועים, לפי מה שמתאים למותג שלכם.</p></div>
       </div></section>
     {sponsorship.packages.length > 0 && <section className="sec"><SecHead t="חבילות חסות" />
-      <div className="pa-grid">{sponsorship.packages.map(p => <div key={p.name} className="pa-card"><h3>{p.name}</h3><ul>{p.items.map(x => <li key={x}><span>{x}</span></li>)}</ul>{p.price && <b className="pa-price">{p.price}</b>}</div>)}</div></section>}
+      <div className="pa-grid pk">{sponsorship.packages.map(p => <div key={p.name} className="pa-card"><h3>{p.name}</h3><ul>{p.items.map(x => <li key={x}><span>{x}</span></li>)}</ul>{p.price && <b className="pa-price">{p.price}</b>}</div>)}</div></section>}
     <section className="sec"><SecHead t="השותפים שלנו" />
       <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={partners[i].url} target="_blank" rel="noopener" title={partners[i].name}><img loading="lazy" src={s} alt={partners[i].name} /></a>)}</div></section>
     <section className="sec"><div className="pa-cta">
