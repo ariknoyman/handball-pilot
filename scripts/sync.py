@@ -19,6 +19,7 @@ Safety rules:
 Exit codes: 0 ok (writes only if changed) | 1 fetch/parse error | 2 verification failed.
 """
 import html as htmlmod
+import io
 import json
 import os
 import re
@@ -99,7 +100,34 @@ def fetch_news_image(article_html, nid):
             f.write(r.read())
     except Exception:
         return False
+    shrink_image(path)
     return True
+
+
+def shrink_image(path, max_w=1280):
+    """Cap width at max_w and recompress, keeping the original if that is smaller.
+
+    Needs Pillow (installed by the sync workflow); without it the file is kept as downloaded.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    try:
+        im = Image.open(path)
+        im.load()
+        if im.width > max_w:
+            im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
+        buf = io.BytesIO()
+        if path.lower().endswith('.png'):
+            im.save(buf, 'PNG', optimize=True)
+        else:
+            im.convert('RGB').save(buf, 'JPEG' if not path.lower().endswith('.webp') else 'WEBP', quality=80, optimize=True, progressive=True)
+        if buf.tell() < os.path.getsize(path):
+            with open(path, 'wb') as f:
+                f.write(buf.getvalue())
+    except Exception:
+        pass  # a shrink failure never blocks the sync; the original stays
 
 
 def norm_name(s):

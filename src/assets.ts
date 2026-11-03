@@ -77,28 +77,9 @@ import sHorizon from './img/s_horizon.png';
 import sShiba from './img/s_shiba.png';
 import sRoz from './img/s_roz.png';
 import sGivova from './img/s_givova.jpg';
-let logoMut = logo, tvMut = tv, winnerMut = winner, israelMapMut = i_israelmap;
-export { logoMut as logo, tvMut as tv, winnerMut as winner, israelMapMut as israelMap };
+export { logo, tv, winner, i_israelmap as israelMap };
 export const sponsors = [sSheba, sMolten, winner, sHorizon, sRoz, sGivova];
 
-// The hosting layer signs asset URLs with a short-lived lease token (about 60s)
-// and serves them no-store, so any image first requested after expiry fails.
-// Fetch every asset once while the token is fresh and swap to blob: URLs,
-// which need no server and stay valid for the whole session.
-async function blobify(url: string): Promise<string> {
-  const r = await fetch(url, { credentials: 'include' });
-  if (!r.ok) throw new Error('asset ' + r.status);
-  return URL.createObjectURL(await r.blob());
-}
-export function preloadAssets(): void {
-  const swap = (u: string, set: (b: string) => void) => { blobify(u).then(set).catch(() => {}); };
-  for (const k of Object.keys(logos)) { const u = logos[k]; swap(u, b => { logos[k] = b; }); }
-  for (const k of Object.keys(imgs)) { const u = imgs[k]; swap(u, b => { imgs[k] = b; }); }
-  for (const k of Object.keys(newsImgs)) { const u = newsImgs[k]; swap(u, b => { newsImgs[k] = b; }); }
-  for (const k of Object.keys(ytThumbs)) { const u = ytThumbs[k]; swap(u, b => { ytThumbs[k] = b; }); }
-  swap(logo, b => { logoMut = b; });
-  swap(tv, b => { tvMut = b; });
-  swap(winner, b => { winnerMut = b; });
-  swap(i_israelmap, b => { israelMapMut = b; });
-  sponsors.forEach((u, i) => swap(u, b => { sponsors[i] = b; }));
-}
+// Images load on demand from Cloudflare's hashed, cacheable /assets URLs. (The
+// previous host expired asset URLs after ~60s, so every image used to be
+// downloaded up front at startup; that is no longer needed.)
