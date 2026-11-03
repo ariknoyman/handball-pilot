@@ -127,9 +127,17 @@ export const sponsorship: {
   contact: { name?: string; email?: string; phone?: string } | null;
   slots: Record<SponsorSlotKey, SlotSponsor | null>;
 } = {
-  stats: [],
-  packages: [],
-  contact: null,
+  // provided by the association, 03/11/2026
+  stats: [
+    { value: 'כ-200', label: 'צופים באולם בכל משחק בוגרים' },
+    { value: 'ערוץ הספורט', label: 'חשיפה בשידורי המשחקים' },
+    { value: 'כ-10,000', label: 'צופים דרך כדוריד TV (Pixellot)' },
+  ],
+  packages: [
+    { name: 'נבחרת ישראל', items: ['פרסום בפעילות נבחרת ישראל'] },
+    { name: 'אירועי האיגוד', items: ['פרסום באירועים של איגוד הכדוריד'] },
+  ],
+  contact: { name: 'עידן מזרחי, יו"ר האיגוד' },
   slots: { results: null, nextGame: null, scorers: null, videos: null },
 };
 
