@@ -23,9 +23,9 @@ There is no lint or test setup. `npm run build` is the only check, and CI runs i
 - **`src/App.tsx`**: all pages and components live in this one file (header, home, matches, tables, news, clubs, TV, accessibility statement), plus the route table in `App()`. The `/` route renders `V1`, the current home page design. `/v/0` is the older `Home`.
 - **Routing**: `@instinct/files` is a stand-in for the original hosting platform's router helpers. `vite.config.ts` aliases it to `src/files-shim.tsx`, which re-exports react-router's `HashRouter` as `FileRouter`. Routes are hash-based (`#/matches`) so the built site also works from `file://`. `main.tsx` decodes a URL-encoded hash before the router mounts.
 - **Data layer** has two sources:
-  - `src/sync-data.json` is machine-maintained by `scripts/sync.py`. It holds `meta`, men's `results`/`table`, women's `resultsW`/`tableW`, `fixtures` and `news`. Edit it by hand only when doing a manual data update, and keep the same shape.
-  - `src/data.ts` loads that JSON and adds the hand-curated data: team metadata (`teams`/`wteams`: short name → full name, logo key, hue), clubs, scorers, Europe ties, YouTube videos, other leagues and the article text. Team names in the JSON must match the keys of `teams`/`wteams`.
-- **Assets** (`src/assets.ts`): logos and images are imported explicitly and exposed as key → URL maps (`logos`, `imgs`, `ytThumbs`). News images use `import.meta.glob('./img/news/*')`, keyed by the article id in the filename. `App.tsx`'s `nimg()` prefers an article's own image (`newsImgs[id]`) and falls back to the curated `imgs[n.img]`. `preloadAssets()` swaps every asset URL for a `blob:` URL at startup because the original hosting layer's signed asset URLs expire after about 60s. Keep new assets registered there.
+  - `src/sync-data.json` is machine-maintained by `scripts/sync.py`. It holds `meta`, men's `results`/`table`, women's `resultsW`/`tableW`, `fixtures`, `news`, men's top `scorers` (`{round, list}`) and the latest YouTube `videos`. Edit it by hand only when doing a manual data update, and keep the same shape.
+  - `src/data.ts` loads that JSON and adds the hand-curated data: team metadata (`teams`/`wteams`: short name → full name, logo key, hue), clubs, Europe ties and other leagues. Team names in the JSON must match the keys of `teams`/`wteams`. Each Europe tie has an `until` date (the last date its "next" text mentions) and hides itself after it; updating Europe results is still manual.
+- **Assets** (`src/assets.ts`): logos and images are imported explicitly and exposed as key → URL maps (`logos`, `imgs`, `ytThumbs`). News images and video thumbnails use `import.meta.glob` (`./img/news/*`, `./img/yt/*.jpg`), keyed by the article or video id in the filename. `App.tsx`'s `nimg()` prefers an article's own image (`newsImgs[id]`) and falls back to the curated `imgs[n.img]`. Images load on demand (`loading="lazy"` below the fold); photos are kept at most 1280px wide and logos 320px.
 
 ## Sync from the official site
 
@@ -35,7 +35,9 @@ The rules `sync.py` follows, which any change to it must keep:
 - It parses the men's league (LeagueId 11554) and women's league (11558), `cYear=2027`, by fetching every round in the selector. The board prints scores away-first, and a `0-0` means the game hasn't been played, so it is never stored as a result.
 - Before writing, it recomputes the standings from all stored and new results and compares them to the official table. Any mismatch aborts with exit 2 and writes nothing.
 - Official team names map through `NAME_M`/`NAME_W`. An unmapped name aborts with exit 1, and names are never guessed. A renamed or new team needs a mapping entry there plus a `teams`/`wteams` entry in `data.ts`.
-- News titles and teasers are copied verbatim from the article page. Each new article's `mainImage` is downloaded to `src/img/news/<id>.<ext>`. With `--ci`, the script `git add`s that folder itself, because the workflow stages only `sync-data.json`.
+- News titles and teasers are copied verbatim from the article page. Each new article's `mainImage` is downloaded to `src/img/news/<id>.<ext>` and shrunk to max 1280px wide (Pillow, installed by the workflow).
+- Top scorers (`stats.asp`, team names mapped through `NAME_STATS`) and YouTube videos (channel feed; thumbnails saved to `src/img/yt/<id>.jpg`) are best effort: on any problem they keep the stored data and add a `warnings` entry instead of aborting.
+- With `--ci`, the script `git add`s `src/img/news` and `src/img/yt` itself, because the workflow stages only `sync-data.json`.
 
 ## Pilot-only safeguards
 

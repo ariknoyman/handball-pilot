@@ -28,12 +28,6 @@ export const table: [string, number, number, number, number, number, number, num
 
 export type News = { id: string; title: string; tag: string; img: string; date?: string; teaser?: string; url: string };
 export const news: News[] = syncData.news as News[];
-export const article = [
- 'המחזור השישי בליגת ווינר בכדוריד שוחק על פני ארבעה ימים, עם משחקים שהשפיעו על תמונת הצמרת ועל המאבקים בתחתית. מכבי ראשל"צ היא היחידה שנותרה מושלמת אחרי חמישה משחקים, עם ניצחון 26:38 על עירוני רחובות. הפועל ראשל"צ נצמדה אליה (עם משחק יתר) אחרי 31:36 על הפועל אשדוד. בדרמה של המחזור נפרדו בני הרצליה ומכבי ת"א ב-29:29, ובקרב התחתית גברה נס ציונה 29:37 על מ.כ. באר שבע. באמצע השבוע גברה מ.כ. חולון 24:41 על קריית מוצקין, והפועל קריית אונו ניצחה 30:31 את הפועל ערד.',
- 'הפועל ראשל"צ אירחה את הפועל אשדוד למשחק ששודר בערוץ הספורט. אחרי מחצית צמודה (17:18), שמרה המארחת על יתרון קטן גם בחלק השני ורשמה ניצחון רביעי ברציפות, 31:36. נריה עובד כבשה 10 שערים, איתי סורקיס 7; לאשדוד כבש אדיר כהן 13.',
- 'מכבי ראשל"צ אירחה בבית מכבי את עירוני רחובות. הצהובים נתנו פייט ענק באירופה אבל הודחו על ידי וויבודינה, ובליגה המשיכו ברצף: 26:38 וניצחון חמישי ברציפות. ירמי סידי ולידור פסו כבשו 7 כ"א.',
- 'בני הרצליה ומכבי ת"א נפרדו ב-29:29 בתום דרמה גדולה: ויקטור פלצ\'נקו השווה דקה לסיום, ובן ליברטי החטיא פנדל בשניית הסיום. בקרב התחתית בצימרמן רשמה נס ציונה ניצחון שני העונה, 29:37 על באר שבע, שהשארה אותה במקום האחרון.',
-];
 export const clubs: [string, string, string | undefined][] = [
  ['הפועל אלטשולר שחם ראשון לציון', '11', 'hrl'], ['מכבי ראשון לציון', '18', 'mrl'], ['מ.כ. יובלים חולון', '20', 'holon'], ['מכבי תל אביב', '21', 'mta'], ['בני הרצליה', '28', 'herz'], ['א.כ. נס ציונה', '29', 'nz'],
  ['א.ס. רמת השרון', '33', 'rsh'], ['הפועל קרית אונו', '10', 'ko'], ['הפועל "דור" ערד', '8', 'arad'], ['מ.כ. באר שבע', '44', 'bsh'], ['הפועל אשדוד', '4', 'ashdod'], ['מכבי אבישי קרית מוצקין', '15', 'motzkin'],
@@ -60,27 +54,20 @@ export const wteams: Record<string, Team> = {
  'א.כ. נס ציונה': { short: 'נס ציונה', full: 'א.כ. נס ציונה', logo: 'nz', hue: 275 },
 };
 
-/* ---------- כדוריד TV: סרטונים אמיתיים מערוץ היוטיוב הרשמי של האיגוד (נבדק 25/10/2026) ---------- */
-export type Ytv = { id: string; title: string; date: string; dur?: string };
-export const ytVideos: Ytv[] = [
- { id: 'fnN33h7bEzU', title: 'משחק 3 בגמר פליאוף האליפות בליגת אתנה לנשים', date: '27/09/2026' },
- { id: '_mhHP2hEFtQ', title: 'חולון נגד הפועל אשדוד · גביע אתנה ע"ש רונית שטייגר · נשים', date: '26/09/2026' },
- { id: 'hOM9kCWt6ew', title: 'רמת השרון נגד מכבי תל אביב · גביע ווינר ע"ש מויזס רש · גברים', date: '25/09/2026' },
- { id: 'YUqY-F3-1q0', title: 'חולון נגד מכבי ראשון לציון · גביע ווינר ע"ש מויזס רש · גברים', date: '25/09/2026' },
- { id: 'dyGOsZ3y4EU', title: 'מכבי הארזים ר"ג נגד בנות עיקו הרצליה · גביע אתנה · נשים', date: '25/09/2026' },
- { id: 'zqPkfu7sRNY', title: 'גמר גביע ווינר שופטים ע"ש מויזס רש 2025 · המשחק המלא', date: '26/09/2025' },
-];
+/* ---------- כדוריד TV: latest uploads of the association's YouTube channel (scripts/sync.py, from the channel feed) ---------- */
+export type Ytv = { id: string; title: string; date: string };
+export const ytVideos: Ytv[] = syncData.videos as Ytv[];
 
 /* ---------- שידור חי: מתמלא רק כשיש משחק חי בפועל ממקור נתונים. כרגע ריק, אין משחק חי ---------- */
 export type LiveGame = { h: string; a: string; hs: number; as: number; minute: string; league: string };
 export const liveGames: LiveGame[] = [];
 
 /* ---------- ישראל באירופה: גביע אירופה (EHF), מאתר EHF ואתר האיגוד, נבדק 25/10/2026 ---------- */
-export type EuTie = { club: string; logoKey?: string; gender: 'נשים' | 'גברים'; opp: string; oppCountry: string; result: string; note: string; next: string };
+export type EuTie = { club: string; logoKey?: string; gender: 'נשים' | 'גברים'; opp: string; oppCountry: string; result: string; note: string; next: string; until: string };
 export const europe: EuTie[] = [
- { club: 'בנות "עיקו" הרצליה', gender: 'נשים', opp: 'KHF Shqiponja', oppCountry: 'קוסובו', result: '69:51 בסיכום', note: '40:24 ו-29:27 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול IUVENTA מיכאלובצה (סלובקיה), 14-15/11', },
- { club: 'מכבי ארזים אהל שם ר"ג', gender: 'נשים', opp: 'ADAA São Pedro do Sul', oppCountry: 'פורטוגל', result: '52:44 בסיכום', note: '28:22 ו-24:22 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול Westfriesland (הולנד), 14-15/11', },
- { club: 'רמת השרון', gender: 'גברים', opp: 'יוניקוס', oppCountry: 'יוון', result: '59:51 בסיכום', note: '25:31 ביוון ו-26:28 בגומלין · ניצחון כפול · עלתה לסיבוב 3', next: 'סיבוב 3: מול PAOK (יוון), משחק ראשון בבית 21-22/11, גומלין בחוץ 28-29/11', },
+ { club: 'בנות "עיקו" הרצליה', gender: 'נשים', opp: 'KHF Shqiponja', oppCountry: 'קוסובו', result: '69:51 בסיכום', note: '40:24 ו-29:27 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול IUVENTA מיכאלובצה (סלובקיה), 14-15/11', until: '2026-11-15' },
+ { club: 'מכבי ארזים אהל שם ר"ג', gender: 'נשים', opp: 'ADAA São Pedro do Sul', oppCountry: 'פורטוגל', result: '52:44 בסיכום', note: '28:22 ו-24:22 בסיבוב 2 · עלתה לסיבוב 3', next: 'סיבוב 3: מול Westfriesland (הולנד), 14-15/11', until: '2026-11-15' },
+ { club: 'רמת השרון', gender: 'גברים', opp: 'יוניקוס', oppCountry: 'יוון', result: '59:51 בסיכום', note: '25:31 ביוון ו-26:28 בגומלין · ניצחון כפול · עלתה לסיבוב 3', next: 'סיבוב 3: מול PAOK (יוון), משחק ראשון בבית 21-22/11, גומלין בחוץ 28-29/11', until: '2026-11-29' },
 ];
 
 /* Verified 25/10/2026: sport5 articles (highlights played), eurohandball history, handballisr news, ynet */
@@ -122,17 +109,6 @@ export const moreLeagues: LeagueLink[] = [
 export const VOTE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScQDLX41KG782IjPccbehrKTf-egY2hx0arWvNS7JP1h7CI4A/viewform';
 
 export type Scorer = { name: string; team: string; goals: number };
-/* Official association ranking (handballisr.co.il/stats.asp), men's WINNER league, after round 6, checked 25/10/2026 */
-export const scorersRound = 6;
-export const scorers: Scorer[] = [
- { name: 'ניב צורף', team: 'הרצליה', goals: 57 },
- { name: 'פיליפ לאובץ', team: 'קרית מוצקין', goals: 48 },
- { name: 'אור לוי', team: 'חולון', goals: 47 },
- { name: 'יונתן פלח', team: 'הפועל ראשל"צ', goals: 47 },
- { name: 'נבו מדינה', team: 'קרית אונו', goals: 40 },
- { name: 'לידור פסו', team: 'מכבי ראשל"צ', goals: 39 },
- { name: 'אקאסיו מוריירה', team: 'ערד', goals: 38 },
- { name: "פיליפ וויוביץ'", team: 'באר שבע', goals: 38 },
- { name: "אורוש טודורוביץ'", team: 'אשדוד', goals: 37 },
- { name: 'אסף שרון', team: 'נס ציונה', goals: 37 },
-];
+/* Official association ranking (handballisr.co.il/stats.asp), men's WINNER league; kept current by scripts/sync.py */
+export const scorersRound: number = syncData.scorers.round;
+export const scorers: Scorer[] = syncData.scorers.list as Scorer[];
