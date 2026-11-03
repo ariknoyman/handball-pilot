@@ -43,19 +43,11 @@ const I = {
   whistle: 'M14 3v3M4 15h9a4 4 0 014 4v0a2 2 0 01-2 2H9a5 5 0 01-5-5v-1zM13 15l4-4h3v4',
 };
 
-function useCountdownSec(iso: string) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, [iso]);
-  const ms = new Date(iso).getTime() - now;
-  if (!(ms > 0)) return null;
-  const sec = Math.floor(ms / 1000);
-  return { d: Math.floor(sec / 86400), h: Math.floor((sec % 86400) / 3600), m: Math.floor((sec % 3600) / 60), s: sec % 60 };
-}
 function useCountdown(iso: string) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(t); }, []);
   const ms = new Date(iso).getTime() - now;
-  if (ms <= 0) return null;
+  if (!(ms > 0)) return null;
   const m = Math.floor(ms / 60000);
   return { d: Math.floor(m / 1440), h: Math.floor((m % 1440) / 60), m: m % 60 };
 }
@@ -590,71 +582,79 @@ function Tv() {
       <div className="rail reels">{ytVideos.map(v => <a key={v.id} className="vcard reel" href={'https://www.youtube.com/watch?v=' + v.id} target="_blank" rel="noopener">
         <div className="vc-img"><img loading="lazy" src={ytThumbs[v.id]} alt="" /><span className="play s"><Ico d={I.play} /></span></div>
         <b>{v.title}</b><small>{v.date}</small></a>)}</div>
-      <div className="hero-cta" style={{ marginTop: 14 }}><a className="btn ghost" href={YT} target="_blank" rel="noopener">לכל הסרטונים בערוץ האיגוד</a><a className="btn ghost" href={TV_URL} target="_blank" rel="noopener">שידורים מלאים ב-Pixellot</a></div>
+      <div className="hero-cta" style={{ marginTop: 14 }}><a className="btn ghost" href={YT} target="_blank" rel="noopener">לכל הסרטונים בערוץ האיגוד</a><a className="btn ghost" href={TV_URL} target="_blank" rel="noopener">שידורים מלאים ב-Pixellot</a>{VOTE_URL && <a className="btn ghost" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע"</a>}</div>
     </div>
   </div>;
 }
 
 
-/* ================= TOURNAMENT VARIANTS (home-page concepts) ================= */
-const rd3 = results.slice(-6);
-const rdW = resultsW.filter(r => r.r === Math.max(...resultsW.map(x => x.r)));
-const Ticker = ({ items, label }: { items: Res[]; label: string }) => <div className="tk-wrap"><span className="tk-tag">{label}</span><div className="tk"><div className="tk-in">{[...items, ...items].map((r, i) => <span key={i}><b>{sn(r.h)}</b> {r.hs}:{r.as} <b>{sn(r.a)}</b></span>)}</div></div></div>;
-/* V1 - ערב משחק: broadcast-style, one giant fixture */
+/* ================= HOME ================= */
+// Order of importance: lead story + next game, latest results, upcoming games, news, tables, where to watch, Europe, sponsors.
+const plural = (n: number, one: string, many: string) => n === 1 ? one : `${n} ${many}`;
+function NextGame({ g }: { g?: Fx }) {
+  const cd = useCountdown(g?.iso ?? '');
+  if (!g) return <div className="hm-next empty"><span className="kick">המשחק הבא</span><p>לוח המחזור הבא טרם פורסם באתר האיגוד.</p><div className="hm-act"><Link className="btn" to="/matches">לוח המשחקים</Link></div></div>;
+  const th = (teams[g.h] || wteams[g.h])?.hue ?? 220, ta = (teams[g.a] || wteams[g.a])?.hue ?? 0;
+  return <div className="hm-next" style={{ ['--th' as string]: th, ['--ta' as string]: ta }}>
+    <div className="hm-next-top"><span className="kick">המשחק הבא</span><span className={'pill p-' + g.g}>{g.league}</span></div>
+    <div className="hm-vs">
+      <div><Crest name={g.h} size={64} /><strong>{sn(g.h)}</strong></div>
+      <div className="hm-when"><b>{g.t}</b><small>{g.day} {g.d}</small></div>
+      <div><Crest name={g.a} size={64} /><strong>{sn(g.a)}</strong></div>
+    </div>
+    <p className="hm-meta">מחזור {g.round} · {g.hall}</p>
+    {cd && <p className="hm-cd">פתיחה בעוד <b>{cd.d > 0 ? `${plural(cd.d, 'יום', 'ימים')} ו-${plural(cd.h, 'שעה', 'שעות')}` : `${plural(cd.h, 'שעה', 'שעות')} ו-${plural(cd.m, 'דקה', 'דקות')}`}</b></p>}
+    {g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}
+    <div className="hm-act"><Link className="btn" to="/matches">כל המשחקים</Link><a className="btn ghost" href={icsUrl(g)} download="game.ics">+ יומן</a></div>
+  </div>;
+}
+function ResRow({ r }: { r: Res }) {
+  const hw = r.hs > r.as, aw = r.as > r.hs;
+  return <div className="hm-row">
+    <span className={'hm-tm' + (hw ? ' w' : '')}><Crest name={r.h} size={30} /><b>{sn(r.h)}</b></span>
+    <span className="hm-sc"><b className={hw ? 'w' : ''}>{r.hs}</b><i>:</i><b className={aw ? 'w' : ''}>{r.as}</b></span>
+    <span className={'hm-tm away' + (aw ? ' w' : '')}><b>{sn(r.a)}</b><Crest name={r.a} size={30} /></span>
+  </div>;
+}
+function FxRow({ g }: { g: Fx }) {
+  return <div className="hm-row fx">
+    <span className="hm-tm"><Crest name={g.h} size={30} /><b>{sn(g.h)}</b></span>
+    <span className="hm-sc t"><b>{g.t}</b><small>{g.day} {g.d}</small></span>
+    <span className="hm-tm away"><b>{sn(g.a)}</b><Crest name={g.a} size={30} /></span>
+    <span className="hm-tags"><span className={'pill p-' + g.g}>{g.g === 'w' ? 'ליגת אתנה' : 'ליגת WINNER'} · מחזור {g.round}</span>{g.pp && <span className="pill pp">משחק נדחה</span>}{g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}</span>
+  </div>;
+}
 function V1() {
   useTitle('');
-  // Computed per render, not at module load: once the last men's game of a round
-  // kicks off there is no upcoming one until the sync stores its results, so fall
-  // back to the most recent men's fixture (shown as final, or without countdown).
-  const menFx = fixtures.filter(f => f.g === 'm');
-  const MEN = menFx.filter(f => Date.parse(f.iso) > Date.now());
-  const NEXT: Fx | undefined = MEN[0] || menFx[menFx.length - 1];
-  const cd = useCountdownSec(NEXT?.iso ?? '');
+  const [lg, setLg] = useState<'m' | 'w'>('m');
+  const upcoming = fixtures.filter(f => Date.parse(f.iso) > Date.now());
   const lead = news[0];
-  const finalRes = NEXT && results.find(r => r.r === Number(NEXT.round) &&
-    ((r.h === NEXT.h && r.a === NEXT.a) || (r.h === NEXT.a && r.a === NEXT.h)));
-  const past = !!NEXT && Date.parse(NEXT.iso) <= Date.now();
-  const th = (NEXT && teams[NEXT.h]?.hue) ?? 220, ta = (NEXT && teams[NEXT.a]?.hue) ?? 0;
-  const heroBg = { backgroundImage: `linear-gradient(115deg, hsl(${th} 64% 26%) 0%, hsl(${th} 55% 16%) 38%, #060a16 50%, hsl(${ta} 55% 16%) 62%, hsl(${ta} 64% 26%) 100%)` };
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return <div className="vx v1">
-    <a className="v1-flash" href={lead.url}><span>חדשות</span><b>{lead.title}</b><i>‹</i></a>
-    {NEXT && <section className="v1-hero" style={heroBg}>
-      <span className="kick">מחזור {NEXT.round} · ליגת WINNER · {NEXT.day} {NEXT.d}</span>
-      {!(past && finalRes) ? <>
-        {cd && <div className="v1-count live-cd" role="timer" aria-label="ספירה לאחור לפתיחה">
-          <span className="cd-u"><b>{pad(cd.d)}</b><small>ימים</small></span><i>:</i>
-          <span className="cd-u"><b>{pad(cd.h)}</b><small>שעות</small></span><i>:</i>
-          <span className="cd-u"><b>{pad(cd.m)}</b><small>דקות</small></span><i>:</i>
-          <span className="cd-u"><b>{pad(cd.s)}</b><small>שניות</small></span>
-        </div>}
-        <div className="v1-vs"><div><Crest name={NEXT.h} size={140} /><strong>{sn(NEXT.h)}</strong></div><div className="v1-t"><b>{NEXT.t}</b><small>{NEXT.hall}</small></div><div><Crest name={NEXT.a} size={140} /><strong>{sn(NEXT.a)}</strong></div></div>
-        <div className="v1-act"><Link className="btn" to="/matches">כל המשחקים</Link><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
-      </> : <>
-        <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{sn(finalRes.h)}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{sn(finalRes.a)}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
-        <div className="v1-act"><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
-      </>}
-      <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}>
-        <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <><i className="dot" /><em className="ch-tv">📺 {g.tv}</em></>}</span>
-        <span className="v1-ch-m"><Crest name={g.h} size={26} /><b>{sn(g.h)}</b><em>־</em><Crest name={g.a} size={26} /><b>{sn(g.a)}</b></span>
-      </div>)}</div>
-    </section>}
-    <section className="sec v1-news"><SecHead t="חדשות" to="/news" src={SITE + '/news.asp'} />
-      <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${nimg(lead)})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
-      <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img loading="lazy" src={nimg(n)} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
-    <Ticker items={rd3} label="ליגת WINNER" />
-    <Ticker items={rdW} label="ליגת אתנה" />
-    <GoalOfWeek />
-    <Broadcast />
+  const lastM = Math.max(...results.map(r => r.r)), lastW = Math.max(...resultsW.map(r => r.r));
+  const res = lg === 'm' ? results.filter(r => r.r === lastM) : resultsW.filter(r => r.r === lastW);
+  return <div className="vx hm">
+    <h1 className="sr-only">איגוד הכדוריד בישראל</h1>
+    <section className="sec hm-top">
+      <a className="hm-lead" href={lead.url}>
+        <img src={nimg(lead)} alt="" />
+        <div className="hm-lead-t"><span className="kick">{lead.tag}{lead.date && ' · ' + lead.date}</span><h2>{lead.title}</h2>{lead.teaser && <p>{lead.teaser}</p>}<span className="hm-more">לכתבה המלאה ‹</span></div>
+      </a>
+      <NextGame g={upcoming[0]} />
+    </section>
+    <section className="sec"><SecHead t={`תוצאות · מחזור ${lg === 'm' ? lastM : lastW}`} to="/matches" l="כל התוצאות" src={SITE} />
+      <div className="chips" role="group" aria-label="ליגה">{([['m', 'ליגת WINNER'], ['w', 'ליגת אתנה']] as const).map(([k, l]) => <button key={k} aria-pressed={lg === k} className={lg === k ? 'on' : ''} onClick={() => setLg(k)}>{l}</button>)}</div>
+      <div className="hm-list">{res.map((r, i) => <ResRow key={i} r={r} />)}</div>
+    </section>
+    <section className="sec"><SecHead t="המשחקים הקרובים" to="/matches" l="לוח המשחקים" />
+      {upcoming.length ? <div className="hm-list">{upcoming.slice(0, 8).map((g, i) => <FxRow key={i} g={g} />)}</div> : <p className="note">לוח המחזור הבא טרם פורסם באתר האיגוד.</p>}
+    </section>
+    <section className="sec"><SecHead t="חדשות" to="/news" l="כל החדשות" src={SITE + '/news.asp'} />
+      <div className="ng">{news.slice(1, 4).map(n => <NewsCard key={n.id} n={n} />)}</div></section>
     <div className="duo">
-      <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" src={SITE} /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
-      <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" src={SITE + '/stats.asp'} /><Scorers n={5} foot="הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6" /></section>
+      <section className="sec"><SecHead t="ליגת WINNER" to="/tables" l="הטבלה המלאה" src={SITE} /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
+      <section className="sec"><SecHead t="ליגת אתנה" to="/tables" l="הטבלה המלאה" /><Table n={6} rows={tableW} label="טבלת ליגת אתנה נשים" compact /></section>
     </div>
-    <WomenCorner />
+    <Broadcast />
     <EuropeCorner />
-    <ClubStrip />
-    <section className="sec"><SecHead t="ליגות נוער, נערים וילדים" to="/leagues" l="כל הליגות" src={SITE + '/boards.asp?cYear=2027'} />
-      <div className="lg-home">{['נוער', 'נערים ונערות', 'ילדים וילדות', 'גביעים'].map(g => <Link key={g} to="/leagues" className="lg-hcard"><b>{g}</b><small>{moreLeagues.filter(l => l.group === g).length} ליגות ומסגרות</small><em>לעמוד הליגות ‹</em></Link>)}</div></section>
     <Sponsors />
   </div>;
 }
@@ -731,31 +731,7 @@ export function App() {
 }
 
 
-/* ---------- ליגת אתנה + אירופה + שער השבוע (עמוד הבית) ---------- */
-function WomenCorner() {
-  const wf = fixtures.filter(f => f.g === 'w');
-  const next = wf[0];
-  const lastR = Math.max(...resultsW.map(r => r.r));
-  const wr = resultsW.filter(r => r.r === lastR);
-  const ld = tableW[0];
-  const perfect = ld[3] === 0 && ld[4] === 0;
-  return <>
-    <section className="sec">
-      <SecHead t="ליגת אתנה נשים" to="/tables" l="טבלה מלאה" src={SITE} />
-      <div className="wc-grid">
-        <div className="wc-lead" style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.25),rgba(6,10,22,.94)),url(${imgs.athena})` }}>
-          <span className="kick">ליגת העל לנשים · אחרי מחזור {lastR}</span>
-          <h3>{ld[0]} {perfect ? 'מובילה עם מאזן מושלם' : 'בפסגת הטבלה'}</h3>
-          <p>{ld[2]} ניצחונות מתוך {ld[1]} ויחס שערים {ld[5]}:{ld[6]}.{next ? ` הבא: ${sn(next.h)} - ${sn(next.a)}, ${next.day} ${next.d} ב-${next.t}.` : ''}</p>
-          <Link className="btn ghost" to="/tables">לטבלת אתנה</Link>
-        </div>
-        <div className="wc-side">
-          <Table n={5} rows={tableW} label="טבלת ליגת אתנה נשים" compact />
-        </div>
-      </div>
-    </section>
-  </>;
-}
+/* ---------- אירופה (עמוד הבית) ---------- */
 function EuropeCorner() {
   const euRef = React.useRef<HTMLDivElement>(null);
   return <section className="sec eu">
@@ -769,18 +745,5 @@ function EuropeCorner() {
       </div>)}
     </div>
     <button type="button" className="eu-cue" onClick={() => euRef.current?.scrollBy({ left: -260, behavior: 'smooth' })}><i>‹</i> גלול לעוד</button>
-  </section>;
-}
-function GoalOfWeek() {
-  return <section className="sec gow">
-    <SecHead t="מהערוץ הרשמי" src={YT} />
-    <div className="gow-in">
-      <div className="gow-cards">{ytVideos.slice(0, 3).map((v, i) => <a className="gow-c real" key={v.id} href={'https://www.youtube.com/watch?v=' + v.id} target="_blank" rel="noopener"><span className="gow-num">{i + 1}</span><img src={ytThumbs[v.id]} alt="" loading="lazy" /><span className="gow-ph">{v.title}</span></a>)}</div>
-      <div className="gow-txt">
-        <h3>שידורים מלאים מהערוץ הרשמי</h3>
-        <p>משחקים מלאים ושידורים אחרונים בערוץ היוטיוב הרשמי של האיגוד.</p>
-        {VOTE_URL && <a className="btn" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע"</a>}
-      </div>
-    </div>
   </section>;
 }
