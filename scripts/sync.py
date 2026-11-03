@@ -447,8 +447,9 @@ def sync_videos(data, summary, keep=6):
             title = re.sub(r'(\s*·)?\s*\d{1,2}[./]\d{1,2}[./]\d{2,4}$', '', title).strip(' ·') or title
             if any(v['title'] == title for v in videos):
                 continue  # re-uploads share a title; the feed is newest first, so keep the newest
-            pub = re.search(r'<published>(\d{4})-(\d{2})-(\d{2})', entry)
-            videos.append({'id': vid, 'title': title, 'date': f'{pub.group(3)}/{pub.group(2)}/{pub.group(1)}'})
+            # the feed's timestamp is UTC; an upload late in the Israeli evening belongs to that day
+            pub = datetime.fromisoformat(re.search(r'<published>([^<]+)</published>', entry).group(1)).astimezone(TZ)
+            videos.append({'id': vid, 'title': title, 'date': pub.strftime('%d/%m/%Y')})
             if len(videos) == keep:
                 break
         if not videos:
