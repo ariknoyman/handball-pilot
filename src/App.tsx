@@ -349,6 +349,17 @@ function ContactBtn({ label = 'לשיחה על שיתוף פעולה' }: { label
     ? <a className="btn" href={`mailto:${c.email}?subject=${encodeURIComponent('שיתוף פעולה עם איגוד הכדוריד')}`}>{label}</a>
     : <a className="btn" href={SITE + '/contact.asp'} target="_blank" rel="noopener">{label}</a>;
 }
+// In-page jump: a "#id" link would be read by the hash router as a route. Instant rather than
+// smooth, which some embedded browsers never animate; then nudged down only if the header
+// actually overlaps the section (it is styled sticky, but may scroll away with the page).
+function scrollToWhere() {
+  const el = document.getElementById('pa-where');
+  if (!el) return;
+  window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 12);
+  const header = document.querySelector('.top');
+  const overlap = header ? header.getBoundingClientRect().bottom - el.getBoundingClientRect().top + 12 : 0;
+  if (overlap > 0) window.scrollBy(0, -overlap);
+}
 function Partners() {
   useTitle('שותפים וחסויות');
   const c = sponsorship.contact;
@@ -357,7 +368,7 @@ function Partners() {
       <span className="kick">שותפים וחסויות</span>
       <h1 className="pt">המותג שלכם על פרק הכדוריד הישראלי</h1>
       <p>חשיפה שבועית במגרשים בכל הארץ, מליגת WINNER וליגת אתנה ועד ליגות הנוער, הנערים והילדים, מול קהל מחובר של שחקנים, משפחות ואוהדים שחיים את האיגוד לאורך העונה כולה.</p>
-      <div className="hero-cta"><ContactBtn /><button type="button" className="btn ghost" onClick={() => document.getElementById('pa-where')?.scrollIntoView({ behavior: 'smooth' })}>איפה המותג מופיע</button></div>
+      <div className="hero-cta"><ContactBtn /><button type="button" className="btn ghost" onClick={scrollToWhere}>איפה המותג מופיע</button></div>
     </section>
     {sponsorship.stats.length > 0 && <section className="sec"><SecHead t="הכדוריד במספרים" />
       <div className="pa-stats">{sponsorship.stats.map(s => <div key={s.label}><b>{s.value}</b><span>{s.label}</span></div>)}</div></section>}
