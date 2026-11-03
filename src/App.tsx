@@ -321,14 +321,6 @@ function TvBand() {
     </div>
   </section>;
 }
-const SP_LINKS = [
-  'https://www.sheba.co.il/%D7%94%D7%9E%D7%9B%D7%95%D7%9F-%D7%94%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9C%D7%A8%D7%A4%D7%95%D7%90%D7%AA-%D7%A1%D7%A4%D7%95%D7%A8%D7%98-%D7%A9%D7%99%D7%91%D7%90',
-  'https://sports.molten.co.jp/en/',
-  'https://www.winner.co.il/',
-  'https://www.oryzncapital.com/',
-  'https://rozenblatt.co.il/',
-  'http://www.givova.it/',
-];
 function Sponsors() {
   return <section className="sp"><small>שותפים ונותני חסות</small>
     <div className="sp-pitch"><div>
@@ -338,9 +330,9 @@ function Sponsors() {
         <li>קהל מחובר של שחקנים, משפחות ואוהדים שחיים את האיגוד לאורך העונה כולה</li>
         <li>מגוון אפשרויות שילוב: נוכחות באתר האיגוד, חשיפה במשחקים ובאירועים, ושיתופי פעולה ייעודיים</li>
       </ul>
-      <a className="btn play-main" href={SITE + '/contact.asp'} target="_blank" rel="noopener">לשיחה על שיתוף פעולה עם האיגוד</a>
+      <Link className="btn play-main" to="/partners">כל הפרטים לשותפים חדשים</Link>
     </div></div>
-    <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img loading="lazy" src={s} alt="" /></a>)}<a className="sp-ph" href={SITE + '/contact.asp'} target="_blank" rel="noopener"><b>הלוגו שלך כאן</b><em>הצטרפו כשותפים של האיגוד</em></a></div></section>;
+    <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={partners[i].url} target="_blank" rel="noopener" title={partners[i].name}><img loading="lazy" src={s} alt={partners[i].name} /></a>)}<Link className="sp-ph" to="/partners"><b>הלוגו שלך כאן</b><em>הצטרפו כשותפים של האיגוד</em></Link></div></section>;
 }
 
 /* ---------- שותפים: עמוד למשיכת ספונסרים ---------- */
