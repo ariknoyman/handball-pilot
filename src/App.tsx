@@ -345,6 +345,12 @@ function Sponsors() {
 
 /* ---------- שותפים: עמוד למשיכת ספונסרים ---------- */
 const SLOT_LABEL: Record<SponsorSlotKey, string> = { results: 'תוצאות המחזור (דף הבית)', nextGame: 'המשחק הבא (דף הבית)', scorers: 'מלך השערים (עמוד הטבלאות)', videos: 'קליפים ומשחקים מלאים (עמוד ה-TV)' };
+/* "בחסות X" on a section, or a quiet "free for sponsorship" link to /partners while the slot is open */
+function SponsorTag({ slot }: { slot: SponsorSlotKey }) {
+  const s = sponsorship.slots[slot];
+  if (s) return <a className="sp-tag on" href={s.url} target="_blank" rel="noopener">בחסות {s.logo ? <img src={s.logo} alt={s.name} /> : <b>{s.name}</b>}</a>;
+  return <Link className="sp-tag" to="/partners">האזור הזה פנוי לחסות ‹</Link>;
+}
 function ContactBtn({ label = 'לשיחה על שיתוף פעולה' }: { label?: string }) {
   const c = sponsorship.contact;
   return c?.email
@@ -562,6 +568,7 @@ function Tables() {
       <SecHead t="מלך השערים" src={SITE + '/stats.asp'} />
       <p className="note">אחרי מחזור {scorersRound}</p>
       <Scorers />
+      <SponsorTag slot="scorers" />
     </> : <>
       <p className="note">אחרי מחזור {Math.max(...resultsW.map(r => r.r))} · עודכן {syncMeta.lastSync}</p>
       <Table label="טבלת ליגת אתנה נשים" rows={tableW} />
@@ -611,6 +618,7 @@ function Tv() {
       <div className="rail reels">{ytVideos.map(v => <a key={v.id} className="vcard reel" href={'https://www.youtube.com/watch?v=' + v.id} target="_blank" rel="noopener">
         <div className="vc-img"><img loading="lazy" src={ytThumbs[v.id]} alt="" /><span className="play s"><Ico d={I.play} /></span></div>
         <b>{v.title}</b><small>{v.date}</small></a>)}</div>
+      <SponsorTag slot="videos" />
       <div className="hero-cta" style={{ marginTop: 14 }}><a className="btn ghost" href={YT} target="_blank" rel="noopener">לכל הסרטונים בערוץ האיגוד</a><a className="btn ghost" href={TV_URL} target="_blank" rel="noopener">שידורים מלאים ב-Pixellot</a>{VOTE_URL && <a className="btn ghost" href={VOTE_URL} target="_blank" rel="noopener">להצבעת "משחק השבוע"</a>}</div>
     </div>
   </div>;
@@ -635,6 +643,7 @@ function NextGame({ g }: { g?: Fx }) {
     {cd && <p className="hm-cd">פתיחה בעוד <b>{cd.d > 0 ? `${plural(cd.d, 'יום', 'ימים')} ו-${plural(cd.h, 'שעה', 'שעות')}` : `${plural(cd.h, 'שעה', 'שעות')} ו-${plural(cd.m, 'דקה', 'דקות')}`}</b></p>}
     {g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}
     <div className="hm-act"><Link className="btn" to="/matches">כל המשחקים</Link><a className="btn ghost" href={icsUrl(g)} download="game.ics">+ יומן</a></div>
+    <SponsorTag slot="nextGame" />
   </div>;
 }
 function ResRow({ r }: { r: Res }) {
@@ -672,6 +681,7 @@ function V1() {
     <section className="sec"><SecHead t={`תוצאות · מחזור ${lg === 'm' ? lastM : lastW}`} to="/matches" l="כל התוצאות" src={SITE} />
       <div className="chips" role="group" aria-label="ליגה">{([['m', 'ליגת WINNER'], ['w', 'ליגת אתנה']] as const).map(([k, l]) => <button key={k} aria-pressed={lg === k} className={lg === k ? 'on' : ''} onClick={() => setLg(k)}>{l}</button>)}</div>
       <div className="hm-list">{res.map((r, i) => <ResRow key={i} r={r} />)}</div>
+      <SponsorTag slot="results" />
     </section>
     <section className="sec"><SecHead t="המשחקים הקרובים" to="/matches" l="לוח המשחקים" />
       {upcoming.length ? <div className="hm-list">{upcoming.slice(0, 8).map((g, i) => <FxRow key={i} g={g} />)}</div> : <p className="note">לוח המחזור הבא טרם פורסם באתר האיגוד.</p>}

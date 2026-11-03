@@ -755,3 +755,10 @@ a.skip:focus-visible { top: 10px; }
 .pa-cta { border-radius: 22px; padding: 26px 22px; display: grid; gap: 10px; justify-items: center; text-align: center; background: var(--s1); border: 1px dashed rgba(198,255,61,.45); }
 .pa-cta h2 { font-size: 26px; font-weight: 900; }
 .pa-cta p { color: var(--mut); }
+
+/* sponsor slot tag under a section ("בחסות X" / "פנוי לחסות") */
+.sp-tag { justify-self: start; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--mut); padding: 4px 2px; }
+.sp-tag:hover { color: var(--lime); }
+.sp-tag.on { color: var(--ink); }
+.sp-tag.on img { height: 26px; width: auto; background: #fff; border-radius: 6px; padding: 2px 6px; }
+.hm-next .sp-tag { justify-self: center; }
