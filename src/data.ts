@@ -112,3 +112,33 @@ export type Scorer = { name: string; team: string; goals: number };
 /* Official association ranking (handballisr.co.il/stats.asp), men's WINNER league; kept current by scripts/sync.py */
 export const scorersRound: number = syncData.scorers.round;
 export const scorers: Scorer[] = syncData.scorers.list as Scorer[];
+
+/* ---------- שותפים וחסויות ----------
+   Filled in by the association. Every part renders only when it has real content:
+   empty stats/packages are not shown, contact null falls back to the association's
+   contact page, and a null slot shows a small "פנוי לחסות" link to /partners. */
+export type SponsorStat = { value: string; label: string };
+export type SponsorPackage = { name: string; items: string[]; price?: string };
+export type SponsorSlotKey = 'results' | 'nextGame' | 'scorers' | 'videos';
+export type SlotSponsor = { name: string; url?: string; logo?: string };
+export const sponsorship: {
+  stats: SponsorStat[];
+  packages: SponsorPackage[];
+  contact: { name?: string; email?: string; phone?: string } | null;
+  slots: Record<SponsorSlotKey, SlotSponsor | null>;
+} = {
+  stats: [],
+  packages: [],
+  contact: null,
+  slots: { results: null, nextGame: null, scorers: null, videos: null },
+};
+
+/* Current partners, same order as `sponsors` logos in assets.ts */
+export const partners: { name: string; url: string }[] = [
+  { name: 'שיבא - המרכז הלאומי לרפואת ספורט', url: 'https://www.sheba.co.il/%D7%94%D7%9E%D7%9B%D7%95%D7%9F-%D7%94%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9C%D7%A8%D7%A4%D7%95%D7%90%D7%AA-%D7%A1%D7%A4%D7%95%D7%A8%D7%98-%D7%A9%D7%99%D7%91%D7%90' },
+  { name: 'Molten', url: 'https://sports.molten.co.jp/en/' },
+  { name: 'Winner', url: 'https://www.winner.co.il/' },
+  { name: 'Horizon Capital', url: 'https://www.oryzncapital.com/' },
+  { name: 'Rozenblatt', url: 'https://rozenblatt.co.il/' },
+  { name: 'Givova', url: 'http://www.givova.it/' },
+];
