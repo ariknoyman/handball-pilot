@@ -30,7 +30,7 @@ main > * { animation: rise .45s ease both; }
 .tvbtn { margin-inline-start: 0; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 99px; background: var(--lime); color: #0a1000 !important; font-weight: 800; font-size: 14px; transition: transform .2s; }
 .tvbtn:hover { transform: translateY(-1px); }
 .tvbtn .dot { background: #0a1000; animation: none; }
-.tabs { position: fixed; bottom: 0; inset-inline: 0; z-index: 50; height: 64px; display: grid; grid-template-columns: repeat(7, 1fr); background: rgba(10,16,34,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
+.tabs { position: fixed; bottom: 0; inset-inline: 0; z-index: 50; height: 64px; display: grid; grid-template-columns: repeat(6, 1fr); background: rgba(10,16,34,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
 .tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11.5px; font-weight: 700; color: var(--mut); }
 .tabs a[aria-current="page"] { color: var(--lime); }
 main { width: 100%; }
@@ -402,8 +402,6 @@ a.v1-flash { display: flex; align-items: center; gap: 10px; padding: 10px 16px; 
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
 
 /* play CTA */
-.play-cta { background: var(--lime); color: #0a1000 !important; font-weight: 900; display: inline-flex; align-items: center; gap: 6px; }
-.play-cta svg { width: 17px; height: 17px; }
 .btn.play-main { font-weight: 900; }
 .btn.play-main svg { width: 20px; height: 20px; }
 
@@ -452,25 +450,6 @@ a.v1-flash { display: flex; align-items: center; gap: 10px; padding: 10px 16px; 
 .gow-txt p { color: #d3d9f2; margin: 0 0 12px; max-width: 52ch; }
 
 /* play page */
-.playpage .kick { display: inline-flex; align-items: center; gap: 8px; }
-.playpage .kick svg { width: 18px; height: 18px; }
-.steps { display: flex; gap: 8px; margin: 16px 0 22px; flex-wrap: wrap; }
-.steps span { padding: 7px 14px; border-radius: 99px; background: var(--s1); border: 1px solid var(--line); color: var(--mut); font-size: 13px; font-weight: 700; }
-.steps span.on { background: rgba(190,242,63,.14); border-color: rgba(190,242,63,.5); color: var(--lime); }
-.pstep { max-width: 560px; display: grid; gap: 14px; }
-.pstep label { display: grid; gap: 7px; font-weight: 700; font-size: 15px; }
-.pstep select, .pstep input { background: var(--s1); border: 1px solid var(--line); border-radius: 14px; color: var(--ink); padding: 13px 16px; font-size: 16px; font-family: inherit; }
-.pstep select:focus, .pstep input:focus { outline: 2px solid rgba(190,242,63,.6); }
-.pstep .btn { justify-self: start; }
-.pstep .btn:disabled { opacity: .4; cursor: not-allowed; }
-.pf-list { display: grid; gap: 10px; }
-.pf-c { text-align: start; background: var(--s1); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; display: grid; gap: 3px; cursor: pointer; color: var(--ink); font-family: inherit; transition: transform .2s, border-color .2s; }
-.pf-c:hover { transform: translateY(-2px); border-color: rgba(190,242,63,.5); }
-.pf-c b { font-size: 16px; } .pf-c small { color: var(--mut); }
-.pf-c .act { color: var(--lime); font-weight: 700; font-size: 13px; margin-top: 4px; }
-.pf-c .act:hover { color: #0a1000; }
-.done-p { text-align: center; justify-items: center; padding: 30px 0; }
-.done-ic { width: 64px; height: 64px; border-radius: 50%; background: rgba(190,242,63,.16); color: var(--lime); font-size: 34px; display: grid; place-items: center; border: 2px solid rgba(190,242,63,.5); }
 
 /* reels */
 .rail.reels .vcard.reel { width: 170px; }
@@ -493,13 +472,6 @@ a.v1-flash { display: flex; align-items: center; gap: 10px; padding: 10px 16px; 
 @media (prefers-reduced-motion: reduce) { .mc, .nc, .ct, .eu-card, .vcard { transition: none; } .mc:hover, .nc:hover, .ct:hover, .eu-card:hover, .vcard:hover { transform: none; } }
 
 /* club map (schematic, real coordinates) */
-.cmap { max-width: 460px; border: 1px solid var(--line); border-radius: 22px; background: #dfe9d8; padding: 10px; overflow: hidden; }
-.cmap svg { width: 100%; height: auto; display: block; }
-.cmap-grid { stroke: rgba(255,255,255,.06); stroke-width: 1; }
-.cmap-d circle { fill: rgba(20,60,30,.55); stroke: rgba(255,255,255,.85); stroke-width: 1.5; transition: r .2s; }
-.cmap-d.on circle { fill: #3f7a00; stroke: #fff; stroke-width: 3; }
-.cmap-d text { fill: #10310f; font-size: 22px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.9); stroke-width: 4; }
-.cmap-cap { fill: var(--mut); font-size: 12px; }
 
 /* mobile table: short names, no form tags, no clipping under sticky col */
 .lt-r .tm .tms { display: none; }
@@ -511,7 +483,6 @@ a.v1-flash { display: flex; align-items: center; gap: 10px; padding: 10px 16px; 
   .lt-r .tm .frm { display: none !important; }
   .lt-r { grid-template-columns: 30px minmax(132px,1fr) 64px 40px 40px 40px 40px 66px; gap: 6px; }
   .lt-r .tm b { font-size: 13.5px; }
-  .tab-play { color: var(--lime) !important; font-weight: 900; }
 }
 
 /* countdown: fit small screens, never clip the days unit */
@@ -528,10 +499,8 @@ a.v1-flash { display: flex; align-items: center; gap: 10px; padding: 10px 16px; 
   .live-cd { gap: 4px; }
   .live-cd i { font-size: 20px; }
 }
-.cmap-src { display: block; color: #4a5c48; font-size: 11.5px; margin-top: 8px; }
 
 /* ---- 25/10: accessibility + contrast fixes (post-review) ---- */
-.dnav a.play-cta[aria-current="page"] { background: var(--lime); color: #0a1000 !important; box-shadow: inset 0 0 0 2.5px rgba(10,16,0,.6); }
 :focus-visible { outline: 2.5px solid var(--lime); outline-offset: 2px; border-radius: 6px; }
 a.skip { position: absolute; right: 12px; top: -70px; z-index: 300; background: var(--lime); color: #0a1000; font-weight: 800; padding: 10px 16px; border-radius: 10px; transition: top .15s; text-decoration: none; }
 a.skip:focus-visible { top: 10px; }
@@ -541,9 +510,6 @@ a.skip:focus-visible { top: 10px; }
   .swipe-hint { display: block; text-align: center; color: var(--mut); font-size: 12px; margin: 2px 0 6px; }
   .tabs a { min-height: 48px; }
 }
-.sendreal { display: grid; gap: 10px; margin: 12px 0; }
-.sendreal .btn { text-align: center; justify-content: center; }
-.msgview { background: var(--s2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 14px; line-height: 1.6; }
 .gow-c.real { width: 220px; aspect-ratio: auto; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; overflow: hidden; text-decoration: none; padding: 0; place-items: unset; }
 .gow-c.real img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
 .gow-c.real .gow-num { position: absolute; top: 6px; right: 6px; z-index: 1; background: rgba(10,16,34,.85); border-radius: 8px; padding: 2px 8px; font-size: 12px; }
@@ -572,9 +538,6 @@ a.skip:focus-visible { top: 10px; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 /* wizard club row with official page link */
-.pf-cw { display: grid; gap: 4px; }
-.pf-site { font-size: 13px; color: var(--mut); text-decoration: none; padding-inline-start: 6px; }
-.pf-site:hover, .pf-site:focus-visible { color: var(--lime); }
 
 /* ---- gen 37 fixes ---- */
 /* compact homepage tables: pos, team, played, diff, points - no scroll, no cut names */
@@ -584,8 +547,6 @@ a.skip:focus-visible { top: 10px; }
 /* club tiles hug content */
 .ctg { align-items: start; }
 /* play: distance + nav */
-.pf-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-.pf-km { font-weight: 800; color: var(--lime); font-size: 12.5px; }
 /* hero actions: identical shape AND size */
 .v1-act { flex-wrap: wrap; justify-content: center; }
 .v1-act .btn { flex: 0 0 auto; width: 176px; height: 48px; justify-content: center; white-space: nowrap; padding: 0 8px; }
@@ -625,13 +586,6 @@ a.skip:focus-visible { top: 10px; }
   .mc-foot .hall { flex: 1 1 100%; margin-bottom: 8px; display: block; }
 }
 /* play step 2: club card is one unit; select CTA is a real green button; links inside the card */
-.pf-cw { border: 1px solid var(--line); border-radius: 16px; background: var(--s1); overflow: hidden; }
-.pf-cw .pf-c { background: transparent; border: 0; border-radius: 0; width: 100%; }
-.pf-cw .pf-c:hover { transform: none; border-color: transparent; }
-.pf-cw:hover { border-color: rgba(190,242,63,.5); }
-.pf-c .act { display: inline-block; background: var(--lime); color: #0a1000; padding: 8px 20px; border-radius: 99px; font-weight: 800; font-size: 13.5px; margin-top: 8px; }
-.pf-c .act:hover { background: #d9ff70; color: #0a1000; }
-.pf-cw .pf-links { margin-top: 0; padding: 10px 16px 14px; border-top: 1px solid var(--line); }
 
 /* gen46: usable-size match-card action buttons */
 .mc-foot .act { padding: 9px 16px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
@@ -673,12 +627,6 @@ a.skip:focus-visible { top: 10px; }
 @media (min-width: 720px) { .eu-nt { grid-template-columns: 1fr 1fr; } }
 
 .v1-ch-t .ch-tv { font-style: normal; color: var(--lime); font-size: 11px; font-weight: 800; white-space: nowrap; }
-.play-strip { display: flex; align-items: center; justify-content: center; gap: 12px; width: calc(100% - 32px); max-width: 1168px; margin: 26px auto 0; background: linear-gradient(120deg, var(--lime), #a8e02e); color: #0a1000; border-radius: 18px; padding: 18px 22px; font-size: 17px; box-shadow: 0 10px 30px rgba(198,255,61,.18); transition: transform .2s; }
-.play-strip:hover { transform: translateY(-2px); }
-.play-strip b { font-size: 19px; font-weight: 900; }
-.play-strip span, .play-strip .ps-arrow { color: #0a1000; font-weight: 800; }
-.play-strip .ps-arrow { font-size: 22px; font-weight: 900; font-style: normal; }
-@media (min-width: 960px) { .play-strip { max-width: 1144px; } }
 
 .eu-cue { display: none; }
 @media (max-width: 719px) {
@@ -731,7 +679,6 @@ a.skip:focus-visible { top: 10px; }
 .mc-foot .act svg { width: 14px; height: 14px; }
 
 /* play: keep the column readable on wide screens instead of hugging the right edge */
-.playpage { max-width: 680px; }
 
 /* gow: cards scroll inside the dashed box on small screens instead of pushing the page wide */
 .gow-in { min-width: 0; }

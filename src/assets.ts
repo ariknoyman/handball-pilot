@@ -51,7 +51,6 @@ import i_mrlwin from './img/mrlwin.jpg';
 import i_atround4 from './img/atround4.jpg';
 import i_mtawin from './img/mtawin.jpg';
 import i_arazim from './img/arazim.jpg';
-import i_israelmap from './img/israel-map.svg';
 import yt1 from './img/yt/fnN33h7bEzU.jpg';
 import yt2 from './img/yt/_mhHP2hEFtQ.jpg';
 import yt3 from './img/yt/hOM9kCWt6ew.jpg';
@@ -77,7 +76,7 @@ import sHorizon from './img/s_horizon.png';
 import sShiba from './img/s_shiba.png';
 import sRoz from './img/s_roz.png';
 import sGivova from './img/s_givova.jpg';
-export { logo, tv, winner, i_israelmap as israelMap };
+export { logo, tv, winner };
 export const sponsors = [sSheba, sMolten, winner, sHorizon, sRoz, sGivova];
 
 // Images load on demand from Cloudflare's hashed, cacheable /assets URLs. (The

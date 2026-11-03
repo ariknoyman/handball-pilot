@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, Route, Routes, useLocation } from '@instinct/files';
+import { Link, NavLink, Route, Routes, Navigate, useLocation } from '@instinct/files';
 import './fonts.css';
 import './style.css';
-import { logos, logo, tv, sponsors, imgs, newsImgs, ytThumbs, israelMap } from './assets';
+import { logos, logo, tv, sponsors, imgs, newsImgs, ytThumbs } from './assets';
 const nimg = (n: any): string => newsImgs[n.id] || imgs[n.img];
-import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, finderClubs, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
+import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, scorersRound, news, article, clubs, teams, wteams, ytVideos, liveGames, europe, VOTE_URL, syncMeta, type Fx, type Res, type News } from './data';
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
@@ -38,7 +38,6 @@ const I = {
   news: 'M5 4h12a2 2 0 012 2v14H7a2 2 0 01-2-2zM9 9h6M9 13h6',
   tv: 'M3 7h18v12H3zM8 3l4 4 4-4M10 10.5v5l4.5-2.5z',
   play: 'M8 5v14l11-7z',
-  ball: 'M12 2a10 10 0 100 20 10 10 0 000-20zM12 2v7m0 6v7M2 12h7m6 0h7M5 5l5 4m4 6l5 4M19 5l-5 4m-4 6l-5 4',
   share: 'M12 3v12m0-12L8 7m4-4l4 4M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6',
   info: 'M12 8h.01M12 11v5M12 2a10 10 0 100 20 10 10 0 000-20z',
   whistle: 'M14 3v3M4 15h9a4 4 0 014 4v0a2 2 0 01-2 2H9a5 5 0 01-5-5v-1zM13 15l4-4h3v4',
@@ -92,7 +91,7 @@ function Header() {
     <div className="top-in">
       <Link to="/" className="brand"><img src={logo} alt="" /><span><b>איגוד הכדוריד</b><small>בישראל</small></span></Link>
       <nav className="dnav" aria-label="ראשי">
-        <NavLink to="/" end>בית</NavLink><NavLink to="/matches">משחקים</NavLink><NavLink to="/tables">טבלאות</NavLink><NavLink to="/news">חדשות</NavLink><NavLink to="/clubs">מועדונים</NavLink><NavLink to="/leagues">ליגות</NavLink><NavLink to="/tv">כדוריד TV</NavLink><NavLink to="/play" className="play-cta"><Ico d={I.ball} />בוא לשחק</NavLink>
+        <NavLink to="/" end>בית</NavLink><NavLink to="/matches">משחקים</NavLink><NavLink to="/tables">טבלאות</NavLink><NavLink to="/news">חדשות</NavLink><NavLink to="/clubs">מועדונים</NavLink><NavLink to="/leagues">ליגות</NavLink><NavLink to="/tv">כדוריד TV</NavLink>
       </nav>
       <Socials />
       {liveGames.length > 0 && <Link to="/tv" className="tvbtn on-air"><i className="dot blink" />שידור ישיר · {liveGames[0].h} <b>{liveGames[0].hs}</b>:<b>{liveGames[0].as}</b> {liveGames[0].a}</Link>}
@@ -100,8 +99,8 @@ function Header() {
   </header>;
 }
 function Tabs({ top }: { top?: boolean }) {
-  const it: [string, string, string][] = [['/', I.home, 'בית'], ['/matches', I.cal, 'משחקים'], ['/tables', I.table, 'טבלאות'], ['/leagues', I.whistle, 'ליגות'], ['/news', I.news, 'חדשות'], ['/tv', I.tv, 'TV'], ['/play', I.ball, 'בוא לשחק']];
-  return <nav className={top ? "tabs tabs-top" : "tabs"} aria-label={top ? "תפריט ראשי" : "תפריט תחתון"}>{it.map(([to, d, l]) => <NavLink key={to} to={to} end={to === '/'} className={to === '/play' ? 'tab-play' : ''}><Ico d={d} /><span>{l}</span></NavLink>)}</nav>;
+  const it: [string, string, string][] = [['/', I.home, 'בית'], ['/matches', I.cal, 'משחקים'], ['/tables', I.table, 'טבלאות'], ['/leagues', I.whistle, 'ליגות'], ['/news', I.news, 'חדשות'], ['/tv', I.tv, 'TV']];
+  return <nav className={top ? "tabs tabs-top" : "tabs"} aria-label={top ? "תפריט ראשי" : "תפריט תחתון"}>{it.map(([to, d, l]) => <NavLink key={to} to={to} end={to === '/'}><Ico d={d} /><span>{l}</span></NavLink>)}</nav>;
 }
 
 function Strip() {
@@ -602,9 +601,6 @@ const rd3 = results.slice(-6);
 const rdW = resultsW.filter(r => r.r === Math.max(...resultsW.map(x => x.r)));
 const Ticker = ({ items, label }: { items: Res[]; label: string }) => <div className="tk-wrap"><span className="tk-tag">{label}</span><div className="tk"><div className="tk-in">{[...items, ...items].map((r, i) => <span key={i}><b>{sn(r.h)}</b> {r.hs}:{r.as} <b>{sn(r.a)}</b></span>)}</div></div></div>;
 /* V1 - ערב משחק: broadcast-style, one giant fixture */
-function PlayStrip() {
-  return <Link to="/play" className="play-strip"><Ico d={I.ball} /><b>רוצים לשחק כדוריד?</b><span>מצאו מועדון קרוב</span><i className="ps-arrow">‹</i></Link>;
-}
 function V1() {
   useTitle('');
   // Computed per render, not at module load: once the last men's game of a round
@@ -633,10 +629,10 @@ function V1() {
           <span className="cd-u"><b>{pad(cd.s)}</b><small>שניות</small></span>
         </div>}
         <div className="v1-vs"><div><Crest name={NEXT.h} size={140} /><strong>{sn(NEXT.h)}</strong></div><div className="v1-t"><b>{NEXT.t}</b><small>{NEXT.hall}</small></div><div><Crest name={NEXT.a} size={140} /><strong>{sn(NEXT.a)}</strong></div></div>
-        <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a><Link className="btn ghost" to="/matches">כל המשחקים</Link>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
+        <div className="v1-act"><Link className="btn" to="/matches">כל המשחקים</Link><a className="btn ghost" href={icsUrl(NEXT)} download="game.ics">+ יומן</a>{NEXT.tv && <span className="pill live"><i className="dot" />{NEXT.tv}</span>}</div>
       </> : <>
         <div className="v1-vs"><div><Crest name={finalRes.h} size={140} /><strong>{sn(finalRes.h)}</strong><b className={'v1-sc' + (finalRes.hs >= finalRes.as ? ' w' : '')}>{finalRes.hs}</b></div><div className="v1-t final"><small>שריקת סיום · מחזור {finalRes.r}</small></div><div><Crest name={finalRes.a} size={140} /><strong>{sn(finalRes.a)}</strong><b className={'v1-sc' + (finalRes.as > finalRes.hs ? ' w' : '')}>{finalRes.as}</b></div></div>
-        <div className="v1-act"><Link className="btn play-main" to="/play"><Ico d={I.ball} />בוא לשחק</Link><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
+        <div className="v1-act"><Link className="btn" to="/news/36458">לתקציר המחזור</Link></div>
       </>}
       <div className="v1-rail" aria-label="משחקי המחזור">{MEN.slice(0, 6).map((g, i) => <div key={i} className={'v1-ch' + (i === 0 ? ' on' : '')}>
         <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <><i className="dot" /><em className="ch-tv">📺 {g.tv}</em></>}</span>
@@ -654,7 +650,7 @@ function V1() {
       <section className="sec"><SecHead t="טבלת ליגת WINNER" to="/tables" l="הטבלה המלאה" src={SITE} /><Table n={6} label="טבלת ליגת WINNER" compact /></section>
       <section className="sec"><SecHead t="מלך השערים" to="/tables" l="הדירוג המלא" src={SITE + '/stats.asp'} /><Scorers n={5} foot="הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור 6" /></section>
     </div>
-    <WomenCorner /><PlayStrip />
+    <WomenCorner />
     <EuropeCorner />
     <ClubStrip />
     <section className="sec"><SecHead t="ליגות נוער, נערים וילדים" to="/leagues" l="כל הליגות" src={SITE + '/boards.asp?cYear=2027'} />
@@ -724,10 +720,10 @@ export function App() {
       <Route path="/clubs" element={<Clubs />} />
       <Route path="/leagues" element={<Leagues />} />
       <Route path="/social" element={<SocialWall />} />
-      <Route path="/play" element={<Play />} />
       {teamKeys.map((k, i) => <Route key={k} path={'/club/' + i} element={<ClubPage k={k} />} />)}
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes></PageBoundary></main>
     <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה {syncMeta.lastSync}</small></div></footer>
     <Tabs />
@@ -788,87 +784,3 @@ function GoalOfWeek() {
     </div>
   </section>;
 }
-
-/* schematic map: equirectangular projection of real city coordinates (dots mark club CITIES, not exact venues) */
-function ClubMap({ clubs, active }: { clubs: { name: string; city: string; lat: number; lon: number }[]; active?: string }) {
-  // real geography: Wikimedia Commons "Israel location map current borders" (CC BY-SA 3.0, Vacamiera), bounds top 33.5 / bottom 29.3 / left 33.7 / right 36.3
-  const LAT0 = 29.3, LAT1 = 33.5, LON0 = 33.7, LON1 = 36.3;
-  const W = 461, H = 856;
-  const px = (lon: number) => ((lon - LON0) / (LON1 - LON0)) * W;
-  const py = (lat: number) => ((LAT1 - lat) / (LAT1 - LAT0)) * H;
-  const seen = new Map<string, number>();
-  return <div className="cmap" role="img" aria-label="מפת ישראל עם מיקומי מועדוני הכדוריד לפי ערים">
-    <svg viewBox={`0 0 ${W} ${H}`}>
-      <image href={israelMap} x="0" y="0" width={W} height={H} preserveAspectRatio="none" opacity="0.92" />
-      {clubs.map(c => {
-        const k = c.city; const n = seen.get(k) || 0; seen.set(k, n + 1);
-        const x = px(c.lon) + (n % 3) * 12 - 12, y = py(c.lat) + Math.floor(n / 3) * 12;
-        const on = active === c.city;
-        return <g key={c.name} className={'cmap-d' + (on ? ' on' : '')}>
-          <circle cx={x} cy={y} r={on ? 14 : 8} />
-          {on && <text x={x} y={y - 20}>{c.city}</text>}
-        </g>;
-      })}
-    </svg>
-    <small className="cmap-src">מיקומי נקודות לפי ערי המועדון, לא כתובות אולמות מדויקות · מפה: ויקימדיה קומונס, CC BY-SA 3.0</small>
-  </div>;
-}
-
-/* ---------- בוא לשחק: איתור מועדון ---------- */
-const ages = ['ילדים 8-12', 'נוער 13-18', 'בוגרים 18+'];
-function Play() {
-  useTitle('בוא לשחק');
-  const cities = [...new Set(finderClubs.map(c => c.city))].sort((a, b) => a.localeCompare(b, 'he'));
-  const [city, setCity] = useState('');
-  const [age, setAge] = useState(ages[0]);
-  const [gen, setGen] = useState<'בנים' | 'בנות'>('בנים');
-  const [step, setStep] = useState(0);
-  const [name, setName] = useState(''); const [phone, setPhone] = useState('');
-  const [club, setClub] = useState(''); const [clubCity, setClubCity] = useState('');
-  const [done, setDone] = useState(false);
-  const km = (a: { lat: number; lon: number }, b: { lat: number; lon: number }) => { const R = 6371, dLa = (b.lat - a.lat) * Math.PI / 180, dLo = (b.lon - a.lon) * Math.PI / 180; const s = Math.sin(dLa / 2) ** 2 + Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(s)); };
-  const origin = finderClubs.find(c => c.city === city);
-  const nearby = city && origin ? finderClubs.map(c => ({ ...c, km: km(origin, c) })).sort((a, b) => a.km - b.km).slice(0, 6) : [];
-  const valid = name.trim().length >= 2 && /^0\d{8,9}$/.test(phone.replace(/[-\s]/g, ''));
-  return <div className="page playpage">
-    <span className="kick"><Ico d={I.ball} />הצטרפות לכדוריד</span>
-    <h1 className="pt">בוא לשחק<SrcI url={SITE} /></h1>
-    <p className="note">מצאו מועדון קרוב, הכינו את הפרטים - וחייגו לאיגוד להשלמת ההצטרפות.</p>
-    <div className="steps"><span className="on">1 · עיר וגיל</span><span className={step >= 1 ? 'on' : ''}>2 · מועדון</span><span className={step >= 2 ? 'on' : ''}>3 · פרטים</span></div>
-    {step === 0 && <div className="pstep">
-      <label>עיר<select value={city} onChange={e => setCity(e.target.value)}><option value="">בחרו עיר…</option>{cities.map(c => <option key={c} value={c}>{c}</option>)}</select></label>
-      <div className="chips" role="group" aria-label="קבוצת גיל">{ages.map(a => <button key={a} aria-pressed={age === a} className={age === a ? 'on' : ''} onClick={() => setAge(a)}>{a}</button>)}</div>
-      <div className="chips" role="group" aria-label="מגדר">{(['בנים', 'בנות'] as const).map(gd => <button key={gd} aria-pressed={gen === gd} className={gen === gd ? 'on' : ''} onClick={() => setGen(gd)}>{gd}</button>)}</div>
-      <button className="btn" disabled={!city} onClick={() => setStep(1)}>מצאו לי מועדון</button>
-    </div>}
-    {step === 1 && <div className="pstep">
-      <h3>מועדונים קרובים ל{city}</h3>
-      <p className="note">{nearby[0] && nearby[0].km >= 1 ? `אין מועדון רשום ב${city}; אלו המועדונים הקרובים ביותר. ` : ''}המרחק מחושב בקו ישר בין ערי המועדונים. יצירת קשר עם האיגוד: 03-6495552 (מפורסם באתר האיגוד).</p>
-      <ClubMap clubs={finderClubs} active={city} />
-      <div className="pf-list">{nearby.map(c => <div key={c.siteId} className="pf-cw"><button className="pf-c" onClick={() => { setClub(c.name); setClubCity(c.city); setStep(2); }}><b>{c.name}</b><small>{age} · {gen}</small><span className="pf-km">{c.km < 1 ? 'בעיר' : `כ-${Math.round(c.km)} ק"מ`}</span><span className="act">בחרו מועדון זה</span></button><div className="pf-links"><a className="pf-site" href={`https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lon}`} target="_blank" rel="noopener">ניווט למועדון ‹</a>{c.tid && <a className="pf-site" href={'https://handballisr.co.il/team.asp?TId=' + c.tid + '&cYear=2027'} target="_blank" rel="noopener">עמוד המועדון באתר האיגוד ‹</a>}</div></div>)}</div>
-      <button className="btn ghost" onClick={() => setStep(0)}>חזרה</button>
-    </div>}
-    {step === 2 && !done && <div className="pstep">
-      <h3>משאירים פרטים - וחייגים לאיגוד</h3>
-      <label>שם מלא<input value={name} onChange={e => setName(e.target.value)} placeholder="השם שלכם" /></label>
-      <label>טלפון<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="05X-XXXXXXX" inputMode="tel" /></label>
-      <p className="note">הפרטים נשארים במכשיר שלכם בלבד ולא נשלחים מהאתר. בשלב הבא יוצג נוסח מוכן לשיחה עם האיגוד (03-6495552).</p>
-      <div className="hero-cta"><button className="btn" disabled={!valid} onClick={() => setDone(true)}>הכינו את נוסח הפנייה</button><button className="btn ghost" onClick={() => setStep(1)}>חזרה</button></div>
-    </div>}
-    {done && (() => {
-      const msg = `שמי ${name.trim()}, טלפון ${phone}. אשמח לקבל פרטים על הצטרפות ל${club || 'מועדון כדוריד'} ב${clubCity || city} (${age}, ${gen}).`;
-      return <div className="pstep done-p">
-        <span className="done-ic">✓</span>
-        <h3>הפנייה מוכנה - נשאר רק לחייג</h3>
-        <p>האתר לא שולח את הפרטים בשמכם. חייגו עכשיו לאיגוד הכדוריד ב-03-6495552, מסרו את הנוסח המוכן ובקשו לחבר אתכם ל{club || 'מועדון כדוריד'}.</p>
-        <div className="msgview">{msg}</div>
-        <div className="sendreal">
-          <a className="btn" href="tel:036495552">חיוג לאיגוד · 03-6495552</a>
-          <button className="btn ghost" onClick={() => navigator.clipboard?.writeText(msg)}>העתקת נוסח הפנייה</button>
-        </div>
-        <button className="btn ghost" onClick={() => { setDone(false); setStep(0); setName(''); setPhone(''); setClub(''); }}>התחילו מחדש</button>
-      </div>;
-    })()}
-  </div>;
-}
-
