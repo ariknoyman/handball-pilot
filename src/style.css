@@ -770,3 +770,5 @@ a.skip:focus-visible { top: 10px; }
 .foot-sp-row a { background: #fff; border-radius: 10px; width: 96px; height: 54px; padding: 6px; display: block; }
 .foot-sp-row img { width: 100%; height: 100%; object-fit: contain; }
 .foot-sp > a { color: var(--lime); font-weight: 800; font-size: 14px; }
+.pa-contact { color: var(--ink) !important; font-size: 16px; }
+.pa-contact a { color: var(--lime); }
