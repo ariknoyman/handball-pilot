@@ -118,7 +118,7 @@ function icsUrl(g: Fx) {
 const form = (name: string) => [...results, ...resultsW].filter(r => r.h === name || r.a === name).sort((x, y) => x.r - y.r).slice(-3).map(r => { if (r.hs === r.as) return 'd'; const hw = r.hs > r.as; const mine = r.h === name; return (hw === mine) ? 'w' : 'l'; });
 function FxCard({ g }: { g: Fx }) {
   return <article className="mc">
-    <div className="mc-top"><span className={'pill p-' + g.g}>{g.league}</span><span className="mc-rd">מחזור {g.round}</span>{g.pp && <span className="pill pp">משחק נדחה</span>}{g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}{Date.parse(g.iso) <= Date.now() && <span className="tip" tabIndex={0}><Ico d={I.info} /><span className="tip-p">מועד הפתיחה עבר; התוצאה טרם עודכנה במקור הרשמי, לכן אינה מוצגת.</span></span>}</div>
+    <div className="mc-top"><span className={'pill p-' + g.g}>{g.league}</span><span className="mc-rd">מחזור {g.round}</span>{g.pp && <span className="pill pp">משחק נדחה</span>}{g.tv && <span className="pill live"><i className="dot" />{g.tv}</span>}</div>
     <div className="mc-body">
       <div className="mc-team"><Crest name={g.h} size={56} /><strong>{sn(g.h)}</strong></div>
       <div className="mc-mid"><b>{g.t}</b><span>{g.day} {g.d}</span></div>
@@ -235,7 +235,7 @@ function Table({ n, rows, label, withForm = true, compact = false }: { n?: numbe
         <span className="pts"><CountUp to={r[7]} /></span>
       </div>; })}
   </div></div>;
-  return <div className="lt-wrap"><small className="swipe-hint">▶ גללו לצדדים לצפייה בכל העמודות ◀</small><div className="lt" role="table" aria-label={label}>
+  return <div className="lt-wrap"><div className="lt" role="table" aria-label={label}>
     <div className="lt-r head" role="row"><span className="pos">#</span><span className="tm">קבוצה</span><span className="pts">נקודות</span><span>מש׳</span><span>נצ׳</span><span>ת׳</span><span>הפ׳</span><span>הפרש</span></div>
     {list.map((r, i) => { const gd = r[5] - r[6];
       return <div key={r[0]} className={'lt-r' + (i < 2 ? ' lead' : '')} role="row">
@@ -405,10 +405,10 @@ function ClubPage({ k }: { k: string }) {
     <section className="cp-soc">
       <SecHead t={t.short + ' ברשתות'} />
       {(s || found[k]) ? <>
-        {s && s.scope === 'club' && <div className="scope club">החשבונות מקושרים מאתר המועדון עצמו.</div>}
+        
         <ClubSoc k={k} label />
         {s && <a className="srcl" href={s.src} target="_blank" rel="noopener">מקור האימות: {s.src.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]}</a>}
-      </> : <div className="scope none">לא נמצא חשבון רשמי שמקושר מהאתר של המועדון או מאתר האיגוד. הבלוק ימולא כשהמועדון ימסור כתובות.</div>}
+      </> : <div className="scope none">לא נמצאו חשבונות ברשתות.</div>}
     </section>
   </div>;
 }
@@ -417,11 +417,11 @@ function SocialWall() {
   const [f, setF] = useState('');
   const list = teamKeys.filter(k => !f || k === f).sort((x, y) => Number(!!(clubSocial[y]||found[y])) - Number(!!(clubSocial[x]||found[x])));
   return <div className="page"><h1 className="pt">קירות חברתיים</h1>
-    <p className="note">קישורים לחשבונות הרשמיים של האיגוד והמועדונים. חשבון מופיע רק אם הוא מקושר מאתר האיגוד או מאתר המועדון/האגודה עצמם.</p>
+    
     <div className="chips cscroll"><button className={f ? '' : 'on'} onClick={() => setF('')}>הכל</button>{teamKeys.map(k => <button key={k} className={f === k ? 'on' : ''} onClick={() => setF(k)}>{sn(k)}</button>)}</div>
     {!f && <div className="soc-grid wallhead"><a className="soc-card fb" href={FB} target="_blank" rel="noopener"><span className="soc-ic">{IFb}</span><b>האיגוד · פייסבוק</b><em>לעמוד ‹</em></a><a className="soc-card yt" href={YT} target="_blank" rel="noopener"><span className="soc-ic">{IYt}</span><b>האיגוד · יוטיוב</b><em>לערוץ ‹</em></a></div>}
     <div className="ctg">{list.map(k => <ClubTile key={k} k={k} />)}</div>
-    <p className="note">קישורי הרשתות נאספו מחיפוש פומבי וייתכן שלא כולם רשמיים; הקישורים המסומנים לקוחים מאתרי המועדונים. ללא חשבון שנמצא: {teamKeys.filter(k => !clubSocial[k] && !found[k]).map(sn).join(', ') || 'אין'}. פיד חי מכל החשבונות דורש חיבור נפרד לכל רשת.</p>
+    
   </div>;
 }
 const S5 = 'https://www.sport5.co.il/';
@@ -434,9 +434,9 @@ function Broadcast() {
         {b.length === 0 && <div className="bc-row"><b>שיבוץ השידורים למחזור הקרוב טרם פורסם</b><small>הלוח המעודכן באתר ערוץ הספורט</small></div>}{b.map((x, i) => <div className="bc-row" key={i}><Crest name={x.h} size={30} /><b>{sn(x.h)} - {sn(x.a)}</b><small>{x.day} {x.d} · {x.t} · {x.tv}</small></div>)}
         <div className="bc-act"><a className="btn ghost sm" href={S5SHEET} target="_blank" rel="noopener">לוח השידורים</a><a className="btn ghost sm" href={S5} target="_blank" rel="noopener">ספורט 5</a></div>
       </div>
-      <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img loading="lazy" src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><small className="pixnote">לא אומת איזה משחק קרוב משודר ב-Pixellot. הלוח באתר הערוץ.</small><em className="btn ghost sm">לערוץ ב-Pixellot</em></a>
+      <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img loading="lazy" src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><em className="btn ghost sm">לערוץ ב-Pixellot</em></a>
     </div>
-    <p className="note">זכויות השידור של ערוץ הספורט שמורות לו, לכן הכפתורים מובילים לאתר שלו ואין הטמעת וידאו. שיבוץ המשחק לשידור מופיע באתר האיגוד.</p>
+    
   </section>;
 }
 
@@ -473,7 +473,7 @@ function Matches() {
   const rds = [...new Set(results.map(r => r.r))].sort((a, b) => b - a).slice(0, 3);
   const wrds = [...new Set(resultsW.map(r => r.r))].sort((a, b) => b - a).slice(0, 3);
   return <div className="page"><h1 className="pt">מרכז משחקים<SrcI url={SITE} /></h1>
-    <p className="note">הלוח כפי שמופיע באתר האיגוד. במשחקים שמועד הפתיחה שלהם עבר, התוצאה עדיין לא עודכנה במקור - 0:0 במקור אינו מוצג כתוצאה מאומתת.</p>
+    
     <div className="seg2" role="tablist"><button role="tab" aria-selected={tab === 'up'} className={tab === 'up' ? 'on' : ''} onClick={() => setTab('up')}>לוח משחקים</button><button role="tab" aria-selected={tab === 'res'} className={tab === 'res' ? 'on' : ''} onClick={() => setTab('res')}>תוצאות</button></div>
     {tab === 'up' ? <>
       <div className="chips">{([['all', 'הכל'], ['m', 'ליגת WINNER'], ['w', 'ליגת אתנה']] as const).map(([k, l]) => <button key={k} className={f === k ? 'on' : ''} onClick={() => setF(k)}>{l}</button>)}</div>
@@ -483,7 +483,7 @@ function Matches() {
       {wrds.map(r => <div key={'w' + r} className="day"><h2>מחזור <b>{r}</b> · ליגת אתנה נשים</h2><div className="mc-grid">{resultsW.filter(x => x.r === r).map((x, i) => <ResCard key={i} r={x} w />)}</div></div>)}
     </>}
     <section className="lg-more"><SecHead t="ליגות ומסגרות נוספות באתר האיגוד" src={SITE + '/boards.asp?cYear=2027'} />
-      <p className="note">טבלאות ולוחות המשחקים של שאר הליגות מתעדכנים באתר האיגוד - כל קישור פותח את עמוד הליגה הרשמי.</p>
+      
       <LeagueGroups />
     </section>
   </div>;
@@ -494,7 +494,7 @@ function LeagueGroups() {
 function Leagues() {
   useTitle('ליגות נוער, נערים וילדים');
   return <div className="page"><h1 className="pt">ליגות נוער, נערים וילדים</h1>
-    <p className="note">טבלאות ולוחות המשחקים של כל ליגות האיגוד - ליגות הנוער, הנערים, הנערות, הילדים והגביעים - מתעדכנים באתר האיגוד. כל קישור פותח את עמוד הליגה הרשמי.</p>
+    
     <LeagueGroups /></div>;
 }
 
@@ -515,16 +515,16 @@ function Tables() {
   return <div className="page"><h1 className="pt">טבלאות וסטטיסטיקה<SrcI url={SITE} /></h1>
     <div className="chips"><button className={lg === 'm' ? 'on' : ''} onClick={() => setLg('m')}>ליגת WINNER גברים</button><button className={lg === 'w' ? 'on' : ''} onClick={() => setLg('w')}>ליגת אתנה נשים</button></div>
     {lg === 'm' ? <>
-      <p className="note">כולל מחזור {Math.max(...results.map(r => r.r))} · מעודכן {syncMeta.lastSync} · שתי הראשונות מודגשות</p>
+      <p className="note">אחרי מחזור {Math.max(...results.map(r => r.r))} · עודכן {syncMeta.lastSync}</p>
       <Table label="טבלת ליגת WINNER גברים" />
-      <p className="legend">נ = ניצחון · ת = תיקו · ה = הפסד (3 המשחקים האחרונים) · הפרש = שערי זכות פחות חובה</p>
+      <p className="legend">נ = ניצחון · ת = תיקו · ה = הפסד</p>
       <SecHead t="מלך השערים" src={SITE + '/stats.asp'} />
-      <p className="note">הדירוג הרשמי של איגוד הכדוריד · בסיום מחזור {scorersRound} בליגת WINNER</p>
+      <p className="note">אחרי מחזור {scorersRound}</p>
       <Scorers />
     </> : <>
-      <p className="note">כולל מחזור {Math.max(...resultsW.map(r => r.r))} · מעודכן {syncMeta.lastSync} · שתי הראשונות מודגשות</p>
+      <p className="note">אחרי מחזור {Math.max(...resultsW.map(r => r.r))} · עודכן {syncMeta.lastSync}</p>
       <Table label="טבלת ליגת אתנה נשים" rows={tableW} />
-      <p className="legend">הפרש = שערי זכות פחות חובה. הכושר (נ/ת/ה) מחושב משלושת המשחקים האחרונים של כל קבוצה, בשתי הליגות.</p>
+      <p className="legend">נ = ניצחון · ת = תיקו · ה = הפסד</p>
       <SecHead t="המחזור הקרוב · ליגת אתנה" to="/matches" l="לוח מלא" />
       <div className="mc-grid">{fixtures.filter(f => f.g === 'w').slice(0, 5).map((g, i) => <FxCard key={i} g={g} />)}</div>
     </>}
@@ -552,7 +552,7 @@ function Article() {
 
 function Clubs() {
   useTitle('מועדונים');
-  return <div className="page"><h1 className="pt">מועדונים<SrcI url={SITE} /></h1><p className="note">{clubs.length} מועדונים רשומים באתר האיגוד.</p>
+  return <div className="page"><h1 className="pt">מועדונים<SrcI url={SITE} /></h1>
     <SecHead t="קבוצות ליגת WINNER" to="/social" l="קירות חברתיים" /><div className="ctg">{teamKeys.map(k => <ClubTile key={k} k={k} />)}</div>
     <SecHead t="כל המועדונים" />
     <div className="cg">{clubs.map(([name, id, lg]) => <a key={id} className="cl" href={`${SITE}/teams.asp?AId=${id}`}><span className="cl-c">{lg ? <img loading="lazy" src={logos[lg]} alt="" /> : <b>{name.replace(/[^\u0590-\u05FF ]/g, '').trim().split(' ').map(w => w[0]).join('').slice(0, 2)}</b>}</span><strong>{name}</strong></a>)}</div></div>;
@@ -578,7 +578,7 @@ function Tv() {
         <div className="player-cap">{live.tv ? <span className="pill live"><i className="dot" />{live.tv}</span> : <span className="pill sched">שיבוץ השידור בערוץ הספורט טרם פורסם</span>}<div className="pc-m"><Crest name={live.h} size={36} /><b>{sn(live.h)}</b><em>נגד</em><b>{sn(live.a)}</b><Crest name={live.a} size={36} /></div><small>{live.day} {live.d} · {live.t} · {live.hall}</small></div>
       </a>
       <SecHead t="קליפים ומשחקים מלאים" />
-      <p className="note">סרטונים אמיתיים מערוץ היוטיוב הרשמי של האיגוד. לחיצה פותחת את הסרטון ביוטיוב.</p>
+      
       <div className="rail reels">{ytVideos.map(v => <a key={v.id} className="vcard reel" href={'https://www.youtube.com/watch?v=' + v.id} target="_blank" rel="noopener">
         <div className="vc-img"><img loading="lazy" src={ytThumbs[v.id]} alt="" /><span className="play s"><Ico d={I.play} /></span></div>
         <b>{v.title}</b><small>{v.date}</small></a>)}</div>
