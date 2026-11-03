@@ -438,12 +438,16 @@ def sync_videos(data, summary, keep=6):
         with urllib.request.urlopen(req, timeout=30) as r:
             feed = r.read().decode('utf-8', errors='replace')
         videos = []
-        for entry in re.findall(r'<entry>(.*?)</entry>', feed, re.S)[:keep]:
+        for entry in re.findall(r'<entry>(.*?)</entry>', feed, re.S):
             vid = re.search(r'<yt:videoId>([\w-]+)</yt:videoId>', entry).group(1)
             title = norm_name(re.search(r'<title>(.*?)</title>', entry, re.S).group(1))
             title = re.sub(r'\s*\|\s*', ' · ', title).strip(' ·')
+            if any(v['title'] == title for v in videos):
+                continue  # re-uploads share a title; the feed is newest first, so keep the newest
             pub = re.search(r'<published>(\d{4})-(\d{2})-(\d{2})', entry)
             videos.append({'id': vid, 'title': title, 'date': f'{pub.group(3)}/{pub.group(2)}/{pub.group(1)}'})
+            if len(videos) == keep:
+                break
         if not videos:
             raise ValueError('empty feed')
         os.makedirs(YT_IMG_DIR, exist_ok=True)
