@@ -444,7 +444,7 @@ def sync_videos(data, summary, keep=6):
             title = norm_name(re.search(r'<title>(.*?)</title>', entry, re.S).group(1))
             title = re.sub(r'\s*\|\s*', ' · ', title).strip(' ·')
             # a trailing game date ("· 25.9.2026") repeats the date shown under the card
-            title = re.sub(r'(\s*·)?\s*\d{1,2}[./]\d{1,2}[./]\d{2,4}$', '', title).strip(' ·')
+            title = re.sub(r'(\s*·)?\s*\d{1,2}[./]\d{1,2}[./]\d{2,4}$', '', title).strip(' ·') or title
             if any(v['title'] == title for v in videos):
                 continue  # re-uploads share a title; the feed is newest first, so keep the newest
             pub = re.search(r'<published>(\d{4})-(\d{2})-(\d{2})', entry)
