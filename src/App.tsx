@@ -87,6 +87,7 @@ function Social() {
 function Header() {
   return <header className="top">
     <a className="skip" href="#main">דילוג לתוכן המרכזי</a>
+    <div className="pilot">גרסת פיילוט · האתר הרשמי: <a href="https://handballisr.co.il/" target="_blank" rel="noopener">handballisr.co.il</a></div>
     <div className="top-in">
       <Link to="/" className="brand"><img src={logo} alt="" /><span><b>איגוד הכדוריד</b><small>בישראל</small></span></Link>
       <nav className="dnav" aria-label="ראשי">
