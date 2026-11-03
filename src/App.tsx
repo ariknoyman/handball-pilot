@@ -25,7 +25,7 @@ function Crest({ name, size = 44 }: { name: string; size?: number }) {
   const label = (t?.short || name).replace(/[^\u0590-\u05FFA-Za-z ]/g, '').trim();
   const ini = label.split(' ').map(w => w[0]).join('').slice(0, 2);
   return <span className="crest" style={{ width: size, height: size, fontSize: size * 0.36, ['--h' as string]: t?.hue ?? 220 }}>
-    {src ? <img src={src} alt="" /> : <b>{ini}</b>}
+    {src ? <img loading="lazy" src={src} alt="" /> : <b>{ini}</b>}
   </span>;
 }
 const sn = (n: string) => (teams[n] || wteams[n])?.short || n;
@@ -316,15 +316,15 @@ function SecHead({ t, to, l, src }: { t: string; to?: string; l?: string; src?: 
 
 function NewsCard({ n, big, wide }: { n: News; big?: boolean; wide?: boolean }) {
   const cls = 'nc' + (big ? ' big' : '') + (wide ? ' wide' : '');
-  const inner = <><div className="nc-img"><img src={nimg(n)} alt="" /></div><div className="nc-t"><span className="tag">{n.tag}</span><h3>{n.title}</h3>{big && n.teaser && <p>{n.teaser}</p>}{n.date && <small>{n.date}</small>}</div></>;
+  const inner = <><div className="nc-img"><img loading="lazy" src={nimg(n)} alt="" /></div><div className="nc-t"><span className="tag">{n.tag}</span><h3>{n.title}</h3>{big && n.teaser && <p>{n.teaser}</p>}{n.date && <small>{n.date}</small>}</div></>;
   return n.id === '36458' ? <Link to="/news/36458" className={cls}>{inner}</Link> : <a className={cls} href={n.url}>{inner}</a>;
 }
 
 function TvBand() {
   return <section className="tvband">
-    <div className="tvband-bg"><img src={imgs.gabriel} alt="" /></div>
+    <div className="tvband-bg"><img loading="lazy" src={imgs.gabriel} alt="" /></div>
     <div className="tvband-in">
-      <img className="tvband-logo" src={tv} alt="ערוץ כדוריד TV" />
+      <img loading="lazy" className="tvband-logo" src={tv} alt="ערוץ כדוריד TV" />
       <div className="tvband-txt"><span className="kick"><i className="dot" />שידורים ישירים · VOD</span><h2>כל משחק, בכל מקום</h2><p>משחקי הליגה בשידור ישיר ובצפייה מאוחרת, ישירות מהטלפון.</p>
         <div className="hero-cta"><a className="btn" href={TV_URL}><Ico d={I.play} />לצפייה בכדוריד TV</a><Link to="/tv" className="btn ghost">עוד על הערוץ</Link></div></div>
     </div>
@@ -349,7 +349,7 @@ function Sponsors() {
       </ul>
       <a className="btn play-main" href={SITE + '/contact.asp'} target="_blank" rel="noopener">לשיחה על שיתוף פעולה עם האיגוד</a>
     </div></div>
-    <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img src={s} alt="" /></a>)}<a className="sp-ph" href={SITE + '/contact.asp'} target="_blank" rel="noopener"><b>הלוגו שלך כאן</b><em>הצטרפו כשותפים של האיגוד</em></a></div></section>;
+    <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={SP_LINKS[i]} target="_blank" rel="noopener" aria-label="לאתר השותף"><img loading="lazy" src={s} alt="" /></a>)}<a className="sp-ph" href={SITE + '/contact.asp'} target="_blank" rel="noopener"><b>הלוגו שלך כאן</b><em>הצטרפו כשותפים של האיגוד</em></a></div></section>;
 }
 
 /* ---------- club social (verified from each club's / umbrella org's own site) ---------- */
@@ -443,7 +443,7 @@ function Broadcast() {
         {b.length === 0 && <div className="bc-row"><b>שיבוץ השידורים למחזור הקרוב טרם פורסם</b><small>הלוח המעודכן באתר ערוץ הספורט</small></div>}{b.map((x, i) => <div className="bc-row" key={i}><Crest name={x.h} size={30} /><b>{sn(x.h)} - {sn(x.a)}</b><small>{x.day} {x.d} · {x.t} · {x.tv}</small></div>)}
         <div className="bc-act"><a className="btn ghost sm" href={S5SHEET} target="_blank" rel="noopener">לוח השידורים</a><a className="btn ghost sm" href={S5} target="_blank" rel="noopener">ספורט 5</a></div>
       </div>
-      <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><small className="pixnote">לא אומת איזה משחק קרוב משודר ב-Pixellot. הלוח באתר הערוץ.</small><em className="btn ghost sm">לערוץ ב-Pixellot</em></a>
+      <a className="bc-side" href={TV_URL} target="_blank" rel="noopener"><img loading="lazy" src={tv} alt="" /><span className="pill pix"><i className="dot" />Pixellot</span><b>כדוריד TV · שאר המשחקים</b><small>שידור ישיר ו-VOD באתר Pixellot של האיגוד</small><small className="pixnote">לא אומת איזה משחק קרוב משודר ב-Pixellot. הלוח באתר הערוץ.</small><em className="btn ghost sm">לערוץ ב-Pixellot</em></a>
     </div>
     <p className="note">זכויות השידור של ערוץ הספורט שמורות לו, לכן הכפתורים מובילים לאתר שלו ואין הטמעת וידאו. שיבוץ המשחק לשידור מופיע באתר האיגוד.</p>
   </section>;
@@ -564,7 +564,7 @@ function Clubs() {
   return <div className="page"><h1 className="pt">מועדונים<SrcI url={SITE} /></h1><p className="note">{clubs.length} מועדונים רשומים באתר האיגוד.</p>
     <SecHead t="קבוצות ליגת WINNER" to="/social" l="קירות חברתיים" /><div className="ctg">{teamKeys.map(k => <ClubTile key={k} k={k} />)}</div>
     <SecHead t="כל המועדונים" />
-    <div className="cg">{clubs.map(([name, id, lg]) => <a key={id} className="cl" href={`${SITE}/teams.asp?AId=${id}`}><span className="cl-c">{lg ? <img src={logos[lg]} alt="" /> : <b>{name.replace(/[^\u0590-\u05FF ]/g, '').trim().split(' ').map(w => w[0]).join('').slice(0, 2)}</b>}</span><strong>{name}</strong></a>)}</div></div>;
+    <div className="cg">{clubs.map(([name, id, lg]) => <a key={id} className="cl" href={`${SITE}/teams.asp?AId=${id}`}><span className="cl-c">{lg ? <img loading="lazy" src={logos[lg]} alt="" /> : <b>{name.replace(/[^\u0590-\u05FF ]/g, '').trim().split(' ').map(w => w[0]).join('').slice(0, 2)}</b>}</span><strong>{name}</strong></a>)}</div></div>;
 }
 
 function Tv() {
@@ -582,14 +582,14 @@ function Tv() {
     <div className="page">
       <SecHead t="בשידור הקרוב" />
       <a className="player" href={S5SHEET} target="_blank" rel="noopener">
-        <img src={imgs.round4} alt="" />
+        <img loading="lazy" src={imgs.round4} alt="" />
         <span className="play"><Ico d={I.play} /></span>
         <div className="player-cap">{live.tv ? <span className="pill live"><i className="dot" />{live.tv}</span> : <span className="pill sched">שיבוץ השידור בערוץ הספורט טרם פורסם</span>}<div className="pc-m"><Crest name={live.h} size={36} /><b>{sn(live.h)}</b><em>נגד</em><b>{sn(live.a)}</b><Crest name={live.a} size={36} /></div><small>{live.day} {live.d} · {live.t} · {live.hall}</small></div>
       </a>
       <SecHead t="קליפים ומשחקים מלאים" />
       <p className="note">סרטונים אמיתיים מערוץ היוטיוב הרשמי של האיגוד. לחיצה פותחת את הסרטון ביוטיוב.</p>
       <div className="rail reels">{ytVideos.map(v => <a key={v.id} className="vcard reel" href={'https://www.youtube.com/watch?v=' + v.id} target="_blank" rel="noopener">
-        <div className="vc-img"><img src={ytThumbs[v.id]} alt="" /><span className="play s"><Ico d={I.play} /></span></div>
+        <div className="vc-img"><img loading="lazy" src={ytThumbs[v.id]} alt="" /><span className="play s"><Ico d={I.play} /></span></div>
         <b>{v.title}</b><small>{v.date}</small></a>)}</div>
       <div className="hero-cta" style={{ marginTop: 14 }}><a className="btn ghost" href={YT} target="_blank" rel="noopener">לכל הסרטונים בערוץ האיגוד</a><a className="btn ghost" href={TV_URL} target="_blank" rel="noopener">שידורים מלאים ב-Pixellot</a></div>
     </div>
@@ -645,7 +645,7 @@ function V1() {
     </section>}
     <section className="sec v1-news"><SecHead t="חדשות" to="/news" src={SITE + '/news.asp'} />
       <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${nimg(lead)})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
-      <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={nimg(n)} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
+      <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img loading="lazy" src={nimg(n)} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
     <Ticker items={rd3} label="ליגת WINNER" />
     <Ticker items={rdW} label="ליגת אתנה" />
     <GoalOfWeek />
