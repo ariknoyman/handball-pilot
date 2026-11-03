@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, Route, Routes } from '@instinct/files';
+import { Link, NavLink, Route, Routes, useLocation } from '@instinct/files';
 import './fonts.css';
 import './style.css';
 import { logos, logo, tv, sponsors, imgs, newsImgs, ytThumbs, israelMap } from './assets';
@@ -8,6 +8,7 @@ import { results, resultsW, fixtures, table, tableW, moreLeagues, scorers, score
 
 const TV_URL = 'https://handballisr.watch.pixellot.tv/';
 const SITE = 'https://handballisr.co.il';
+const PILOT_URL = 'https://handball-pilot.pages.dev/';
 const FB = 'https://www.facebook.com/Handballisr/';
 const YT = 'https://www.youtube.com/channel/UC_W0XW-HGewdgzjuudDvQww';
 const IG = 'https://www.instagram.com/israel.handball.federation/';
@@ -47,7 +48,7 @@ function useCountdownSec(iso: string) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, [iso]);
   const ms = new Date(iso).getTime() - now;
-  if (ms <= 0) return null;
+  if (!(ms > 0)) return null;
   const sec = Math.floor(ms / 1000);
   return { d: Math.floor(sec / 86400), h: Math.floor((sec % 86400) / 3600), m: Math.floor((sec % 3600) / 60), s: sec % 60 };
 }
@@ -217,7 +218,7 @@ async function drawStory(kind: 'fx' | 'res', g?: Fx, r?: Res) {
   return cv;
 }
 function ShareBtn({ kind, g, r }: { kind: 'fx' | 'res'; g?: Fx; r?: Res }) {
-  const pageUrl = 'https://files.instinct.com/c5ccechapcle/';
+  const pageUrl = PILOT_URL + '#/matches';
   const text = kind === 'fx' && g
     ? `כדוריד: ${sn(g.h)} - ${sn(g.a)} · ${g.day} ${g.d} · ${g.t}`
     : r ? `תוצאה: ${sn(r.h)} ${r.hs}:${r.as} ${sn(r.a)}` : 'כדוריד ישראל';
@@ -597,8 +598,6 @@ function Tv() {
 
 
 /* ================= TOURNAMENT VARIANTS (home-page concepts) ================= */
-const MEN = fixtures.filter(f => f.g === 'm' && Date.parse(f.iso) > Date.now());
-const NEXT = MEN[0];
 const rd3 = results.slice(-6);
 const rdW = resultsW.filter(r => r.r === Math.max(...resultsW.map(x => x.r)));
 const Ticker = ({ items, label }: { items: Res[]; label: string }) => <div className="tk-wrap"><span className="tk-tag">{label}</span><div className="tk"><div className="tk-in">{[...items, ...items].map((r, i) => <span key={i}><b>{sn(r.h)}</b> {r.hs}:{r.as} <b>{sn(r.a)}</b></span>)}</div></div></div>;
@@ -608,17 +607,23 @@ function PlayStrip() {
 }
 function V1() {
   useTitle('');
-  const cd = useCountdownSec(NEXT.iso);
+  // Computed per render, not at module load: once the last men's game of a round
+  // kicks off there is no upcoming one until the sync stores its results, so fall
+  // back to the most recent men's fixture (shown as final, or without countdown).
+  const menFx = fixtures.filter(f => f.g === 'm');
+  const MEN = menFx.filter(f => Date.parse(f.iso) > Date.now());
+  const NEXT: Fx | undefined = MEN[0] || menFx[menFx.length - 1];
+  const cd = useCountdownSec(NEXT?.iso ?? '');
   const lead = news[0];
-  const finalRes = results.find(r =>
-    (r.h === NEXT.h && r.a === NEXT.a) || (r.h === NEXT.a && r.a === NEXT.h));
-  const past = Date.parse(NEXT.iso) <= Date.now();
-  const th = teams[NEXT.h]?.hue ?? 220, ta = teams[NEXT.a]?.hue ?? 0;
+  const finalRes = NEXT && results.find(r => r.r === Number(NEXT.round) &&
+    ((r.h === NEXT.h && r.a === NEXT.a) || (r.h === NEXT.a && r.a === NEXT.h)));
+  const past = !!NEXT && Date.parse(NEXT.iso) <= Date.now();
+  const th = (NEXT && teams[NEXT.h]?.hue) ?? 220, ta = (NEXT && teams[NEXT.a]?.hue) ?? 0;
   const heroBg = { backgroundImage: `linear-gradient(115deg, hsl(${th} 64% 26%) 0%, hsl(${th} 55% 16%) 38%, #060a16 50%, hsl(${ta} 55% 16%) 62%, hsl(${ta} 64% 26%) 100%)` };
   const pad = (n: number) => String(n).padStart(2, '0');
   return <div className="vx v1">
     <a className="v1-flash" href={lead.url}><span>חדשות</span><b>{lead.title}</b><i>‹</i></a>
-    <section className="v1-hero" style={heroBg}>
+    {NEXT && <section className="v1-hero" style={heroBg}>
       <span className="kick">מחזור {NEXT.round} · ליגת WINNER · {NEXT.day} {NEXT.d}</span>
       {!(past && finalRes) ? <>
         {cd && <div className="v1-count live-cd" role="timer" aria-label="ספירה לאחור לפתיחה">
@@ -637,7 +642,7 @@ function V1() {
         <span className="v1-ch-t"><b>{g.t}</b><small>{g.day} {g.d}</small>{g.tv && <><i className="dot" /><em className="ch-tv">📺 {g.tv}</em></>}</span>
         <span className="v1-ch-m"><Crest name={g.h} size={26} /><b>{sn(g.h)}</b><em>־</em><Crest name={g.a} size={26} /><b>{sn(g.a)}</b></span>
       </div>)}</div>
-    </section>
+    </section>}
     <section className="sec v1-news"><SecHead t="חדשות" to="/news" src={SITE + '/news.asp'} />
       <div className="v1n-grid"><a className="v1n-lead" href={lead.url} style={{ backgroundImage: `linear-gradient(180deg,rgba(6,10,22,.1),rgba(6,10,22,.92)),url(${nimg(lead)})` }}><span className="kick">{lead.tag} · {lead.date}</span><h2>{lead.title}</h2><p>{lead.teaser}</p></a>
       <div className="v1n-side">{news.slice(1, 5).map(n => <a key={n.id} href={n.url}><span className="v1n-thumb"><img src={nimg(n)} alt="" /></span><div><small>{n.tag} · {n.date}</small><b>{n.title}</b></div></a>)}</div></div></section>
@@ -683,7 +688,21 @@ function Access() {
     </div></div>;
 }
 
+/* A render error in one page shows a fallback instead of blanking the whole site; keyed by route so navigating away recovers. */
+class PageBoundary extends React.Component<{ children: React.ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(e: unknown) { console.error(e); }
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return <div className="page"><h1 className="pt">העמוד לא נטען</h1>
+      <p className="note">אירעה תקלה בהצגת העמוד. אפשר לנסות לטעון מחדש, לעבור לעמוד אחר בתפריט, או להמשיך לאתר הרשמי.</p>
+      <div className="hero-cta"><button className="btn" onClick={() => location.reload()}>טעינה מחדש</button><a className="btn ghost" href={SITE}>לאתר האיגוד</a></div></div>;
+  }
+}
+
 export function App() {
+  const { pathname } = useLocation();
   useEffect(() => {
     const reset = () => { const el = document.getElementById('root'); if (el) el.scrollTop = 0; window.scrollTo(0, 0); };
     const orig = history.pushState.bind(history);
@@ -696,7 +715,7 @@ export function App() {
 
     <Header />
     <Tabs top />
-    <main id="main"><Routes>
+    <main id="main"><PageBoundary key={pathname}><Routes>
       <Route path="/" element={<V1 />} /><Route path="/v/0" element={<Home />} />
       <Route path="/matches" element={<Matches />} />
       <Route path="/tables" element={<Tables />} />
@@ -709,7 +728,7 @@ export function App() {
       {teamKeys.map((k, i) => <Route key={k} path={'/club/' + i} element={<ClubPage k={k} />} />)}
       <Route path="/tv" element={<Tv />} />
       <Route path="/access" element={<Access />} />
-    </Routes></main>
+    </Routes></PageBoundary></main>
     <footer className="foot"><div><b>איגוד הכדוריד בישראל</b><p>שטרית 6, תל אביב · 03-6495552</p><p className="foot-links"><Link to="/access">הצהרת נגישות</Link></p><small>התוצאות והטבלאות מתעדכנות מאתר האיגוד · עודכן לאחרונה {syncMeta.lastSync}</small></div></footer>
     <Tabs />
   </div>;

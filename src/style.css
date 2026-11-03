@@ -30,7 +30,7 @@ main > * { animation: rise .45s ease both; }
 .tvbtn { margin-inline-start: 0; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 99px; background: var(--lime); color: #0a1000 !important; font-weight: 800; font-size: 14px; transition: transform .2s; }
 .tvbtn:hover { transform: translateY(-1px); }
 .tvbtn .dot { background: #0a1000; animation: none; }
-.tabs { position: fixed; bottom: 0; inset-inline: 0; z-index: 50; height: 64px; display: grid; grid-template-columns: repeat(6, 1fr); background: rgba(10,16,34,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
+.tabs { position: fixed; bottom: 0; inset-inline: 0; z-index: 50; height: 64px; display: grid; grid-template-columns: repeat(7, 1fr); background: rgba(10,16,34,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
 .tabs a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11.5px; font-weight: 700; color: var(--mut); }
 .tabs a[aria-current="page"] { color: var(--lime); }
 main { width: 100%; }
@@ -608,10 +608,9 @@ a.skip:focus-visible { top: 10px; }
   .lt.compact .frm .ft { width: 16px; height: 16px; font-size: 10px; border-radius: 4px; }
 }
 
-/* NOTE (25/10): a pinned mobile bottom nav is not possible on the current hosting -
-   the viewer extends the iframe as the parent page scrolls (measured: iframe height
-   follows any scroll into the content), so position:fixed always lands at the
-   document's bottom edge. The in-flow top menu (.tabs-top) remains the mobile nav. */
+/* NOTE: below 960px the fixed bottom bar (.tabs) is the mobile nav and the top menu
+   (.tabs-top) is hidden. (The 25/10 iframe limitation on pinning it applied only to
+   the previous hosting viewer, not to Cloudflare Pages.) */
 
 /* gen43: women's latest results strip on homepage */
 .wc-res { margin-top: 8px; }
