@@ -387,7 +387,8 @@ function Partners() {
       <div className="sp-row">{sponsors.map((s, i) => <a key={i} href={partners[i].url} target="_blank" rel="noopener" title={partners[i].name}><img loading="lazy" src={s} alt={partners[i].name} /></a>)}</div></section>
     <section className="sec"><div className="pa-cta">
       <h2>בואו נדבר</h2>
-      {c && (c.name || c.phone || c.email) ? <p>{[c.name, c.phone, c.email].filter(Boolean).join(' · ')}</p> : <p>נשמח לבנות יחד חבילה שמתאימה לכם.</p>}
+      <p>נשמח לבנות יחד חבילה שמתאימה לכם.</p>
+      {c && (c.name || c.phone || c.email) && <p className="pa-contact">איש קשר: <b>{c.name}</b>{c.phone && <> · <a href={'tel:' + c.phone.replace(/[^\d+]/g, '')}>{c.phone}</a></>}{c.email && <> · <a href={'mailto:' + c.email}>{c.email}</a></>}</p>}
       <ContactBtn label="ליצירת קשר" />
     </div></section>
   </div>;
