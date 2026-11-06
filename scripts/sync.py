@@ -319,7 +319,8 @@ def sync_news(data, summary):
         if fetch_news_image(art, nid):
             summary['newsImages'] = summary.get('newsImages', 0) + 1
         summary['newNews'].append(f'{nid}: {title}')
-        data['meta']['latestNewsId'] = nid
+        # ids run newest first, so keep the highest instead of the last one seen.
+        data['meta']['latestNewsId'] = max(nid, int(data['meta']['latestNewsId']))
     data['news'].sort(key=lambda n: int(n['id']), reverse=True)
 
 
