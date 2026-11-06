@@ -508,7 +508,8 @@ def main():
                             [f'table {x}' for x in summary['tableChanged']] +
                             ([f"scorers r{summary['scorersRound']}"] if 'scorersRound' in summary else []) +
                             [f'video {x}' for x in summary.get('newVideos', [])])
-            f.write(f"summary={flat[:900]}\n")
+            # GITHUB_OUTPUT is line based, so a line break in a scraped title must not reach it.
+            f.write(f"summary={' '.join(flat.split())[:900]}\n")
 
 
 if __name__ == '__main__':
