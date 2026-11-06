@@ -37,9 +37,13 @@ jobs:
 
       - name: Commit and push synced data
         if: steps.sync.outputs.changed == 'true'
+        # The summary holds text scraped from the official site (team names with
+        # quotes, news titles), so it goes through env and never into the script.
+        env:
+          SYNC_SUMMARY: ${{ steps.sync.outputs.summary }}
         run: |
           git config user.name "handball-sync-bot"
           git config user.email "handball-sync-bot@users.noreply.github.com"
           git add src/sync-data.json
-          git commit -m "Auto-sync from official association site: ${{ steps.sync.outputs.summary }}"
+          git commit -m "Auto-sync from official association site: $SYNC_SUMMARY"
           git push
